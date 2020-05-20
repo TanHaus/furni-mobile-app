@@ -8,6 +8,7 @@ const Tab = createBottomTabNavigator();
 
 function App() {
   return (
+    // Currently have these 2 screens. To view one, comment out the other
     // <StartScreen />
     <MainScreen />
   );
