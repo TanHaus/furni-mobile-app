@@ -10,4 +10,5 @@
 - npm
 - react-native
 - expo
-- react-navigation   dk
+- react-navigation 
+- hello
