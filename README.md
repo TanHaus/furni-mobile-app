@@ -11,4 +11,4 @@
 - react-native
 - expo
 - react-navigation 
-- hello
+- AWS
