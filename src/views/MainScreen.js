@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 
 function MainScreen() {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
@@ -39,11 +39,11 @@ function MainScreen() {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Chat" component={ChatScreen} />
-        <Tab.Screen name="Add" component={AddScreen} />
+        <Tab.Screen name="Add" component={AddScreen} options={{ tabBarVisible: false }} />
         <Tab.Screen name="Notification" component={NotificationScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 }
 

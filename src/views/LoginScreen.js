@@ -1,15 +1,16 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function LoginScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Login!</Text>
       <Button
-        title="Go back"
-        onPress={() => navigation.navigate('welcome')}
+        title="Log in"
+        onPress={() => navigation.navigate('main')}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
