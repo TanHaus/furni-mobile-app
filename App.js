@@ -10,10 +10,9 @@ const Stack = createStackNavigator();
 
 function App() {
   return (
-    // Currently have these 2 screens. To view one, comment out the other
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator  headerMode='none'>
+        <Stack.Navigator headerMode='none'>
           <Stack.Screen name="start" component={StartScreen}/>
           <Stack.Screen name="main" component={MainScreen} />
         </Stack.Navigator>

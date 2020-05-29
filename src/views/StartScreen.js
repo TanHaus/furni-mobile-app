@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import WelcomeScreen from './WelcomeScreen';
@@ -12,14 +11,12 @@ const Stack = createStackNavigator();
 
 function App() {
   return (
-    // <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTransparent: true }}>
-        <Stack.Screen name="welcome" component={WelcomeScreen} options={{ headerShown: false }}/>
+      <Stack.Navigator headerMode='none'>
+        <Stack.Screen name="welcome" component={WelcomeScreen} />
         <Stack.Screen name="signup" component={SignupScreen} />
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="forget-password" component={ForgetPasswordScreen} />
       </Stack.Navigator>
-    // </NavigationContainer>
   );
 }
 
