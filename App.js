@@ -1,16 +1,25 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import StartScreen from './src/views/StartScreen';
 import MainScreen from './src/views/MainScreen';
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function App() {
   return (
     // Currently have these 2 screens. To view one, comment out the other
-    // <StartScreen />
-    <MainScreen />
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator  headerMode='none'>
+          <Stack.Screen name="start" component={StartScreen}/>
+          <Stack.Screen name="main" component={MainScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+
   );
 }
 
