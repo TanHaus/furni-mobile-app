@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import HomeScreen from './HomeScreen';
-import ChatScreen from './ChatScreen';
+import ChatsScreen from './ChatsScreen';
 import AddScreen from './AddScreen';
 import NotificationScreen from './NotificationScreen';
 import ProfileScreen from './ProfileScreen';
@@ -36,7 +36,7 @@ function MainScreen() {
         }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Chat" component={ChatsScreen} />
         <Tab.Screen name="Add" component={AddScreen} options={{ tabBarVisible: false }} />
         <Tab.Screen name="Notification" component={NotificationScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />

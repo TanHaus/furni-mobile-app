@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function ChatScreen() {
+function ChatsScreen() {
   return (
     <SafeAreaView>
       <Text style ={{padding: 15}}>Chats</Text>
@@ -15,11 +15,6 @@ function ChatScreen() {
               backgroundColor: 'powderblue'
             }} 
           />
-          <View style={{width: 200, height: 50, backgroundColor: 'skyblue'}}>
-            <Text>fARniture</Text>
-            <Text>Purple Chair</Text>
-            <Text>I really like the chair!</Text>
-          </View>
           <View 
             style={{
               width: 50, 
@@ -40,4 +35,4 @@ function ChatScreen() {
   );
 }
 
-export default ChatScreen;
+export default ChatSessionScreen;
