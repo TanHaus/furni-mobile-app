@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons'; 
 
 function HomeHeader({ state, descriptors, navigation, position }) {
-  const [value, onChangeText] = useState('Search');
+  const [searchString, setSearchString] = useState('Search');
   const tabGen = (route, index) => {
     const { options } = descriptors[route.key];
     const isFocused = state.index === index;
@@ -60,11 +60,11 @@ function HomeHeader({ state, descriptors, navigation, position }) {
           alignItems: 'center',
           paddingTop: 10, paddingLeft: 10, paddingRight: 10
         }}>
-        <Ionicons name="ios-search" size={24} color="black" />
+        <Ionicons name="ios-search" size={24} color="black" style={{paddingRight: 10}}/>
         <TextInput
-          style={{ height: 40, paddingLeft: 10, color: '#c4c4c4' }}
-          onChangeText={text => onChangeText(text)}
-          value={value}
+          style={{ height: 40, color: '#c4c4c4', borderBottomWidth: 1, width: '100%' }}
+          onChangeText={setSearchString}
+          value={searchString}
         />
       </View>
       <View

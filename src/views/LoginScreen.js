@@ -1,27 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons'; 
 
-function LoginScreen({ navigation }) {
+function LoginScreen(props) {
+  const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [password, setPassword] = useState('');
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>LOG IN</Text>
-      <Text>EMAIL OR USERNAME</Text>
-      <TextInput
-      style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-      onChangeText={text => onChangeText(text)}
+    <SafeAreaView style={{paddingLeft: 20, paddingRight: 20}}>
+      <Ionicons 
+        name="ios-arrow-back" 
+        size={24} color="black" 
+        style={{paddingTop:10, paddingBottom: 10}}
+        onPress={() => props.navigation.goBack()}
       />
-      <Text>PASSWORD</Text>
+      <Text style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 18}}>LOG IN</Text>
+      <Text style={{color: '#d0d0d0', textTransform: 'uppercase', fontSize: 16, paddingTop: 20}}>EMAIL OR USERNAME</Text>
       <TextInput
-      style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-      onChangeText={text => onChangeText(text)}
+      style={{ height: 40, borderBottomWidth: 1 }}
+      value={emailOrUsername}
+      onChangeText={setEmailOrUsername}
+      />
+      <Text style={{color: '#d0d0d0', textTransform: 'uppercase', fontSize: 16, paddingTop: 20}}>PASSWORD</Text>
+      <TextInput
+      style={{ height: 40, borderBottomWidth: 1 }}
+      value={password}
+      onChangeText={setPassword}
       />
       <Button
         title="Log in"
-        onPress={() => navigation.navigate('main')}
+        onPress={() => props.navigation.navigate('main')}
+        backgroundColor="black"
+        color="white"
       />
-      <Text>or <Text style={{textDecorationLine: 'underline'}}>register</Text> instead</Text>
+      <View style={{flexDirection: 'row', paddingTop: 10, fontSize: 16}}>
+        <Text>or </Text>
+        <Text 
+          onPress={() => props.navigation.navigate('signup')}
+          style={{textDecorationLine: 'underline'}}
+        >
+          register
+        </Text>
+        <Text> instead</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -41,16 +63,15 @@ const Button = (props) => (
 )
 
 const ButtonWrapper = styled.TouchableOpacity`
-  width: 300;
   background-color: ${props => props.backgroundColor};
-  border-radius: 10;
+  border-radius: 10px;
   border: 2px solid ${props => !!props.borderColor ? props.borderColor : "black"};
   padding: 10px;
-  margin: 5px;
+  margin-top: 20px
 `;
 
 const ButtonText = styled.Text`
-  font-size: 18;
+  font-size: 18px;
   color: ${props => props.color};
   text-align: center;
 `;

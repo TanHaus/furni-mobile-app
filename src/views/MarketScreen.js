@@ -1,33 +1,33 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function MarketScreen() {
   const col1 = [
     {
       name: 'Bedroom',
-      source: require('../../assets/HomeScreen/Bedroom.png')
+      source: require('../../assets/home-screen/bedroom.png')
     },
     {
       name: 'Bathroom',
-      source: require('../../assets/HomeScreen/Bathroom.png')
+      source: require('../../assets/home-screen/bathroom.png')
     },
     {
       name: 'Study',
-      source: require('../../assets/HomeScreen/Study.png')
+      source: require('../../assets/home-screen/study.png')
     }];
   const col2 = [
     {
       name: 'Dining room',
-      source: require('../../assets/HomeScreen/DiningRoom.png')
+      source: require('../../assets/home-screen/dining-room.png')
     },
     {
       name: 'Living room',
-      source: require('../../assets/HomeScreen/LivingRoom.png')
+      source: require('../../assets/home-screen/living-room.png')
     },
     {
       name: 'Kitchen',
-      source: require('../../assets/HomeScreen/Kitchen.png')
+      source: require('../../assets/home-screen/kitchen.png')
     }];
   
   return (
@@ -50,21 +50,10 @@ function MarketScreen() {
 function ImgTextCard(props) {
   const { textContent, imgSrc } = props;
   return (
-    <View
-      style={{
-        padding: 15
-      }}>
-      <Image source={imgSrc} />
-      <View 
-        style={{
-          position: 'absolute', 
-          top: 0, left: 0, right: 0, bottom: 0, 
-          justifyContent: 'center', 
-          alignItems: 'center'
-        }}
-      >
+    <View style={{padding: 15}}>
+      <ImageBackground source={imgSrc} style={{height: 120, width: 160, alignItems: 'center', justifyContent: 'center'}}>
         <Text style={{ color: '#ffffff' }}>{textContent}</Text>
-      </View>
+      </ImageBackground>
     </View>
   )
 }
