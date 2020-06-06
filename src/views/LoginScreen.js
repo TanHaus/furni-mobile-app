@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { View, Text, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons'; 
 
+import { loginUser } from '../actions/auth';
+
 function LoginScreen(props) {
+  const { navigation, submitLoginData, isLoggingIn, isAuthenticated } = props;
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
+  const handleSubmitLogin = () => {
+    submitLoginData({email: emailOrUsername, password});
+  }
   return (
     <SafeAreaView style={{paddingLeft: 20, paddingRight: 20}}>
       <Ionicons 
@@ -30,7 +37,7 @@ function LoginScreen(props) {
       />
       <Button
         title="Log in"
-        onPress={() => props.navigation.navigate('main')}
+        onPress={handleSubmitLogin}
         backgroundColor="black"
         color="white"
       />
@@ -48,7 +55,21 @@ function LoginScreen(props) {
   );
 }
 
-export default LoginScreen;
+function mapStateToProps(state) {
+  return {
+    isLoggingIn: state.auth.isLoggingIn,
+    loginError: state.auth.loginError,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    submitLoginData: (loginData) => dispatch(loginUser(loginData))
+  }
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(LoginScreen);
 
 // =============================================================================
 // STYLING
