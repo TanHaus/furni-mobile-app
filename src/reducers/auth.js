@@ -2,23 +2,20 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  AUTH_REQUEST,
+  AUTH_SUCCESS,
+  AUTH_FAILURE,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
   LOGOUT_FAILURE,
-  VERIFY_REQUEST,
-  VERIFY_SUCCESS
 } from "../actions/auth";
 
 const defaultState = {
-  isLoggingIn: false,
-  isLoggingOut: false,
-  isVerifying: false,
-  loginError: false,
-  logoutError: false,
+  user: {},
+  loginLoading: false,
+  authLoading: false,
   isAuthenticated: false,
-  user: {
-    role: null
-  }
+  logoutLoading: false,
 };
 
 export default (state = defaultState, action) => {
@@ -26,47 +23,47 @@ export default (state = defaultState, action) => {
     case LOGIN_REQUEST:
       return {
         ...state,
-        isLoggingIn: true,
-        loginError: false
+        loginLoading: true,
       };
     case LOGIN_SUCCESS:
       return {
         ...state,
-        isLoggingIn: false,
+        loginLoading: false,
         isAuthenticated: true,
-        user: action.user
+        user: action.user,
       };
     case LOGIN_FAILURE:
       return {
         ...state,
-        isLoggingIn: false,
-        isAuthenticated: false,
-        loginError: true
+        loginLoading: false,
+      };
+    case AUTH_REQUEST:
+      return {
+        ...state,
+        authLoading: true,
+      };
+    case AUTH_SUCCESS:
+      return {
+        ...state,
+        authLoading: false,
+        isAuthenticated: true,
+      };
+    case AUTH_FAILURE:
+      return {
+        ...state,
+        authLoading: false,
       };
     case LOGOUT_REQUEST:
       return {
         ...state,
-        isLoggingOut: true,
-        logoutError: false
+        logoutLoading: true,
       };
     case LOGOUT_SUCCESS:
       return defaultState;
     case LOGOUT_FAILURE:
       return {
         ...state,
-        isLoggingOut: false,
-        logoutError: true
-      };
-    case VERIFY_REQUEST:
-      return {
-        ...state,
-        isVerifying: true,
-        verifyingError: false
-      };
-    case VERIFY_SUCCESS:
-      return {
-        ...state,
-        isVerifying: false
+        logoutLoading: false,
       };
     default:
       return state;

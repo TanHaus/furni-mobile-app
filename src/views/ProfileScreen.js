@@ -1,13 +1,45 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from "react";
+import { connect } from "react-redux";
+import { StyleSheet, Text, View, Button } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { logoutUser } from "../actions/auth";
+import { deleteUser } from "../actions/users";
 
-function ProfileScreen() {
-    return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Profile!</Text>
-      </SafeAreaView>
-    );
+function ProfileScreen(props) {
+  const { userId, submitLogout, submitDeleteUser } = props;
+  const handleLogout = () => {
+    submitLogout();
+  };
+  const handleDeleteUser = () => {
+    submitDeleteUser(userId);
+    submitLogout();
+  };
+  return (
+    <SafeAreaView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
+      <Text>Profile!</Text>
+      <Button title="Log out" onPress={handleLogout} />
+      <Button
+        title="Deactivate account (ACTION IS IRREVERSIBLE)"
+        onPress={handleDeleteUser}
+      />
+    </SafeAreaView>
+  );
 }
 
-export default ProfileScreen;
+function mapStateToProps(state) {
+  return {
+    userId: state.auth.user.userId,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    submitLogout: () => dispatch(logoutUser()),
+    submitDeleteUser: (userId) => dispatch(deleteUser(userId)),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(ProfileScreen);
