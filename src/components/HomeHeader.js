@@ -1,82 +1,93 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons'; 
+import React from "react";
+import { View } from "react-native";
+import styled from "styled-components/native";
+import { CustomText, TextWeight, Searchbar } from "../components";
+import { Color } from "../styles";
 
-function HomeHeader({ state, descriptors, navigation, position }) {
-  const [searchString, setSearchString] = useState('Search');
-  const tabGen = (route, index) => {
+function HomeHeader(props) {
+  const { state, descriptors, navigation, position } = props;
+
+  return (
+    <View>
+      <Searchbar />
+      <FeatureContainer>
+        {state.routes.map(tabGen(state, descriptors, navigation, position))}
+      </FeatureContainer>
+    </View>
+  );
+}
+
+export default HomeHeader;
+
+// -----------------------------------------------------------------------------
+// HELPER FUNCTION
+// -----------------------------------------------------------------------------
+function tabGen(state, descriptors, navigation, position) {
+  return (route, index) => {
     const { options } = descriptors[route.key];
     const isFocused = state.index === index;
-    
+
     const onPress = () => {
       const event = navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-      canPreventDefault: true,
+        type: "tabPress",
+        target: route.key,
+        canPreventDefault: true,
       });
       if (!isFocused && !event.defaultPrevented) {
-      navigation.navigate(route.name);
+        navigation.navigate(route.name);
       }
     };
 
     const onLongPress = () => {
       navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
+        type: "tabLongPress",
+        target: route.key,
       });
     };
 
     return (
-      <TouchableOpacity
+      <Feature
         accessibilityRole="button"
         key={index}
-        accessibilityStates={isFocused ? ['selected'] : []}
+        accessibilityStates={isFocused ? ["selected"] : []}
         accessibilityLabel={options.tabBarAccessibilityLabel}
         testID={options.tabBarTestID}
         onPress={onPress}
         onLongPress={onLongPress}
-        style={{padding: 5}}
       >
-        <Text
-          style={{
-            color: isFocused ? '#000000' : '#d0d0d0',
-            textDecorationLine: isFocused ? 'underline' : 'none',
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-          }}
-        >
+        <FeatureText weight={TextWeight.Bold} isFocused={isFocused}>
           {route.name}
-        </Text>
-      </TouchableOpacity>
+        </FeatureText>
+      </Feature>
     );
-  }
-
-  return (
-    <SafeAreaView>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: 10, paddingLeft: 10, paddingRight: 10
-        }}>
-        <Ionicons name="ios-search" size={24} color="black" style={{paddingRight: 10}}/>
-        <TextInput
-          style={{ height: 40, color: '#c4c4c4', borderBottomWidth: 1, width: '100%' }}
-          onChangeText={setSearchString}
-          value={searchString}
-        />
-      </View>
-      <View
-        style={{
-            flexDirection: 'row',
-            justifyContent: 'center'
-        }}
-      >
-        {state.routes.map(tabGen)}
-      </View>
-    </SafeAreaView>
-  );
+  };
 }
 
-export default HomeHeader;
+// -----------------------------------------------------------------------------
+// STYLING
+// -----------------------------------------------------------------------------
+const FeatureText = styled(CustomText.Small)`
+  text-transform: uppercase;
+
+  ${(props) => {
+    if (props.isFocused) {
+      return `
+          color: ${Color.Primary};
+          text-decoration-line: underline;
+        `;
+    } else {
+      return `
+          color: ${Color.Palette[6]};
+        `;
+    }
+  }}
+`;
+
+const Feature = styled.TouchableOpacity`
+  padding: 5px;
+`;
+
+const FeatureContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+`;
