@@ -1,13 +1,54 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from "react";
+import styled from "styled-components/native";
+import { ExploreCard } from "../components";
 
-function ExploreScreen() {
-    return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Explore</Text>
-        </SafeAreaView>
-    );
+function MarketScreen() {
+  const recommendations = RecommendationList.map((category) => {
+    return <ExploreCard key={category.title} {...category} />;
+  });
+
+  return <ExploreWrapper>{recommendations}</ExploreWrapper>;
 }
 
-export default ExploreScreen;
+export default MarketScreen;
+
+// -----------------------------------------------------------------------------
+// CONSTANT DECLARATIONS
+// -----------------------------------------------------------------------------
+const RecommendationList = [
+  {
+    title: "Purple Chair",
+    src: require("../../assets/listings/purple-chair.png"),
+    price: "$75",
+    status: "used",
+    likeCount: 12,
+  },
+  {
+    title: "Bedroom",
+    src: require("../../assets/listings/white-chair.png"),
+    price: "$20",
+    status: "used",
+    likeCount: 30,
+  },
+  {
+    title: "Bedroom",
+    src: require("../../assets/listings/rattan-chair.png"),
+    price: "$35",
+    status: "new",
+    likeCount: 28,
+  },
+  {
+    title: "Bedroom",
+    src: require("../../assets/listings/translucent-chair.png"),
+    price: "$18",
+    status: "new",
+    likeCount: 19,
+  },
+];
+
+// ---------------------------------------------------------------------------
+// STYLING
+// ---------------------------------------------------------------------------
+const ExploreWrapper = styled.View`
+  // display: flex;
+`;
