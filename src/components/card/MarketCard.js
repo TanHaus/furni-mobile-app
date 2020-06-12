@@ -7,7 +7,7 @@ export const MarketCard = (props) => {
   const { title, imgSrc } = props;
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity style={{ padding: 2 }}>
       <Image source={imgSrc}>
         <CustomText.Regular color="white">{title}</CustomText.Regular>
       </Image>
@@ -20,7 +20,7 @@ export const MarketCard = (props) => {
 // -----------------------------------------------------------------------------
 const Image = styled.ImageBackground`
   height: 120px;
-  width: 160px;
-  alignitems: center;
-  justifycontent: center;
+  width: 150px;
+  align-items: center;
+  justify-content: center;
 `;

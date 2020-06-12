@@ -1,3 +1,4 @@
+import { renewToken } from "./auth";
 export const CREATE_USER_REQUEST = "CREATE_USER_REQUEST";
 export const CREATE_USER_SUCCESS = "CREATE_USER_SUCCESS";
 export const CREATE_USER_FAILURE = "CREATE_USER_FAILURE";
@@ -14,25 +15,25 @@ export const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
 export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
 export const DELETE_USER_FAILURE = "DELETE_USER_FAILURE";
 
-const requestCreateUser = () => {
+const createUserRequest = () => {
   return {
     type: CREATE_USER_REQUEST,
   };
 };
 
-const receiveCreateUser = () => {
+const createUserSuccess = () => {
   return {
     type: CREATE_USER_SUCCESS,
   };
 };
 
-const errorCreateUser = () => {
+const createUserFailure = () => {
   return {
     type: CREATE_USER_FAILURE,
   };
 };
 
-const getUsers = () => {
+const getUsersRequest = () => {
   return {
     type: GET_USERS_REQUEST,
   };
@@ -51,7 +52,26 @@ const getUsersFailure = () => {
   };
 };
 
-const requestEditUser = () => {
+const getUserRequest = () => {
+  return {
+    type: GET_USER_REQUEST,
+  };
+};
+
+const getUserSuccess = (user) => {
+  return {
+    type: GET_USER_SUCCESS,
+    user,
+  };
+};
+
+const getUserFailure = () => {
+  return {
+    type: GET_USER_FAILURE,
+  };
+};
+
+const editUserRequest = () => {
   return {
     type: EDIT_USER_REQUEST,
   };
@@ -70,7 +90,7 @@ const editUserFailure = () => {
   };
 };
 
-const deleteUserLoading = () => {
+const deleteUserRequest = () => {
   return {
     type: DELETE_USER_REQUEST,
   };
@@ -88,71 +108,106 @@ const deleteUserFailure = () => {
   };
 };
 
-export const createUser = ({ name, email, password }) => (dispatch) => {
-  const payload = { name, email, password };
-  const requestUrl = "http://localhost:4000/users";
-  dispatch(requestCreateUser());
-  fetch(requestUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((resJson) => {
-      if (resJson.success) {
-        dispatch(receiveCreateUser());
-      } else {
-        dispatch(errorCreateUser());
-      }
-    });
-};
-
-export const editUser = ({ name, email, password, profilePicUrl }) => (
-  dispatch
-) => {
-  const payload = { name, email, password, profilePicUrl };
-  const requestUrl = "http://localhost:4000/users";
-  dispatch(requestEditUser());
-  fetch(requestUrl, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((resJson) => {
-      if (resJson.success) {
-        dispatch(editUserSuccess(resJson.data[0]));
-      } else {
-        dispatch(editUserFailure());
-      }
-    })
-    .catch(function () {
-      dispatch(editUserFailure());
-    });
-};
-
-export const deleteUser = (userId) => (dispatch) => {
+export const getUser = ({ userId }) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/users/${userId}`;
-  dispatch(deleteUserLoading());
-  fetch(requestUrl, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((resJson) => {
-      if (resJson.success) {
-        dispatch(deleteUserSuccess(userId));
-      } else {
-        dispatch(deleteUserFailure());
-      }
-    })
-    .catch(() => {
-      dispatch(deleteUserFailure());
-    });
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getUserRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getUserSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getUserSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getUserFailure());
+  }
+};
+
+export const createUser = ({ name, email, password }) => async (dispatch) => {
+  const requestUrl = "http://localhost:4000/users";
+  const payload = { name, email, password };
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
+  dispatch(createUserRequest());
+  try {
+    const response = makeRequest();
+    if (response.success) dispatch(createUserSuccess());
+    else throw "e";
+  } catch (e) {
+    dispatch(createUserFailer());
+  }
+};
+
+export const editUser = ({ name, email, password, profilePicUrl }) => async (
+  dispatch,
+  getState
+) => {
+  const userId = getState().auth.user.userId;
+  const requestUrl = `http://localhost:4000/users/${userId}`;
+  const payload = { name, email, password, profilePicUrl };
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
+  dispatch(editUserRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(editUserSuccess(payload));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(editUserSuccess());
+      // need to update store with updated data
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(editUserFailure());
+  }
+};
+
+export const deleteUser = () => async (dispatch, getState) => {
+  const userId = getState().auth.user.userId;
+  const requestUrl = `http://localhost:4000/users/${userId}`;
+  dispatch(deleteUserRequest());
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(deleteUserSuccess());
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(deleteUserSuccess());
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(deleteUserFailure());
+  }
 };

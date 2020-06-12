@@ -19,6 +19,7 @@ import { LOGOUT_SUCCESS } from "../actions/auth";
 
 const defaultState = {
   users: [],
+  user: {},
   createUserLoading: false,
   getUsersLoading: false,
   getUserLoading: false,
@@ -66,21 +67,11 @@ export default (state = defaultState, action) => {
         getUserLoading: true,
       };
     case GET_USER_SUCCESS:
-      if (!users) {
-        return {
-          ...state,
-          getUserLoading: false,
-          users: [action.user],
-        };
-      } else {
-        users[users.findIndex((user) => user.userId === action.userId)] =
-          action.user;
-        return {
-          ...state,
-          getUserLoading: false,
-          users,
-        };
-      }
+      return {
+        ...state,
+        getUserLoading: false,
+        user: action.user,
+      };
     case GET_USER_FAILURE:
       return {
         ...state,
@@ -97,12 +88,10 @@ export default (state = defaultState, action) => {
         editUserLoading: false,
       };
     case EDIT_USER_SUCCESS:
-      users[users.findIndex((user) => user.userId === action.userId)] =
-        action.user;
       return {
         ...state,
         editUserLoading: false,
-        users,
+        user: action.user,
       };
     case DELETE_USER_REQUEST:
       return {
@@ -110,14 +99,10 @@ export default (state = defaultState, action) => {
         deleteUserLoading: true,
       };
     case DELETE_USER_SUCCESS:
-      users.splice(
-        users.findIndex((user) => user.userId === action.userId),
-        1
-      );
       return {
         ...state,
         deleteUserLoading: false,
-        users,
+        user: {},
       };
     case DELETE_USER_FAILURE:
       return {

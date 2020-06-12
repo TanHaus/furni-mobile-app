@@ -52,5 +52,8 @@ const CategoryList = [
 // STYLING
 // ---------------------------------------------------------------------------
 const CategoryWrapper = styled.View`
-  // display: flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
