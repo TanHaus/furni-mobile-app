@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { createListing } from "../actions/listings";
+import { getListing, editListing, deleteListing } from "../actions/listings";
 
 import {
   StyleSheet,
@@ -17,8 +17,8 @@ import { Feather } from "@expo/vector-icons";
 import { SafeAreaViewWrapper, Button } from "../components";
 
 function AddScreen(props) {
-  const { submitListingData } = props;
-  const [listing, setListing] = useState({
+  const { listing, onPageLoad, submitListingData, submitDeleteListing } = props;
+  const [editListing, setEditListing] = useState({
     title: "",
     price: 0,
     itemCondition: "new",
@@ -40,8 +40,18 @@ function AddScreen(props) {
     }
   };
 
+  useEffect(() => {
+    onPageLoad();
+  }, []);
+  useEffect(() => {
+    setEditListing(listing);
+  }, [listing]);
+
   const handleSubmit = () => {
-    submitListingData(listing);
+    submitListingData(editListing);
+  };
+  const handleDelete = () => {
+    submitDeleteListing(listing.listingId);
   };
 
   return (
@@ -64,24 +74,28 @@ function AddScreen(props) {
         <Text>Title</Text>
         <TextInput
           style={{ height: 40, borderBottomWidth: 1 }}
-          value={listing.title}
-          onChangeText={(text) => setListing({ ...listing, title: text })}
+          value={editListing.title}
+          onChangeText={(text) =>
+            setEditListing({ ...editListing, title: text })
+          }
         />
         <View style={{ display: "flex", flexDirection: "row" }}>
           <View>
             <Text>Price</Text>
             <TextInput
               style={{ height: 40, borderBottomWidth: 1 }}
-              value={listing.price}
-              onChangeText={(num) => setListing({ ...listing, price: num })} // todo: filter out number. maybe use regex?
+              value={editListing.price}
+              onChangeText={(num) =>
+                setEditListing({ ...editListing, price: num })
+              } // todo: filter out number. maybe use regex?
             />
           </View>
           <View>
             <Text>Item condition</Text>
             <Picker
-              selectedValue={listing.itemCondition}
+              selectedValue={editListing.itemCondition}
               onValueChange={(value, index) =>
-                setListing({ ...listing, itemCondition: value })
+                setEditListing({ ...editListing, itemCondition: value })
               }
             >
               {["new", "used"].map((condition) => (
@@ -96,20 +110,23 @@ function AddScreen(props) {
         </Text>
         <TextInput
           style={{ height: 40, borderBottomWidth: 1 }}
-          value={listing.description}
-          onChangeText={(text) => setListing({ ...listing, description: text })}
+          value={editListing.description}
+          onChangeText={(text) =>
+            setEditListing({ ...editListing, description: text })
+          }
         />
         <Text>Delivery option</Text>
         <TextInput
           style={{ height: 40, borderBottomWidth: 1 }}
-          value={listing.deliveryOption}
+          value={editListing.deliveryOption}
           onChangeText={(text) =>
-            setListing({ ...listing, deliveryOption: text })
+            setEditListing({ ...editListing, deliveryOption: text })
           }
         />
       </View>
-      <Button onPress={handleSubmit} title="Create listing" />
-      <Text>{JSON.stringify(listing)}</Text>
+      <Button onPress={handleSubmit} title="Edit listing" />
+      <Button onPress={handleDelete} title="Delete listing" />
+      <Text>{JSON.stringify(editListing)}</Text>
       {/* <TouchableOpacity onPress={openImagePickerAsync}>
         <Text>Pick a photo</Text>
       </TouchableOpacity>
@@ -119,13 +136,17 @@ function AddScreen(props) {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    listing: state.listings.listing,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    submitListingData: (newListingData) =>
-      dispatch(createListing(newListingData)),
+    onPageLoad: () => dispatch(getListing({ listingId: 30 })),
+    submitListingData: (editListingData) =>
+      dispatch(editListing(editListingData)),
+    submitDeleteListing: (listingId) => dispatch(deleteListing({ listingId })),
   };
 }
 

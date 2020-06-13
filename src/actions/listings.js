@@ -16,19 +16,19 @@ export const DELETE_LISTING_REQUEST = "DELETE_LISTING_REQUEST";
 export const DELETE_LISTING_SUCCESS = "DELETE_LISTING_SUCCESS";
 export const DELETE_LISTING_FAILURE = "DELETE_LISTING_FAILURE";
 
-const requestCreateListing = () => {
+const createListingRequest = () => {
   return {
     type: CREATE_LISTING_REQUEST,
   };
 };
 
-const receiveCreateListing = () => {
+const createListingSuccess = () => {
   return {
     type: CREATE_LISTING_SUCCESS,
   };
 };
 
-const errorCreateListing = () => {
+const createListingFailure = () => {
   return {
     type: CREATE_LISTING_FAILURE,
   };
@@ -53,7 +53,26 @@ const getUserListingsFailure = () => {
   };
 };
 
-const requestEditListing = () => {
+const getListingRequest = () => {
+  return {
+    type: GET_LISTING_REQUEST,
+  };
+};
+
+const getListingSuccess = (listing) => {
+  return {
+    type: GET_LISTING_SUCCESS,
+    listing,
+  };
+};
+
+const getListingFailure = () => {
+  return {
+    type: GET_LISTING_FAILURE,
+  };
+};
+
+const editListingRequest = () => {
   return {
     type: EDIT_LISTING_REQUEST,
   };
@@ -115,8 +134,34 @@ export const getUserListings = ({ userId }) => async (dispatch, getState) => {
   }
 };
 
+export const getListing = ({ listingId }) => async (dispatch, getState) => {
+  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getListingRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getListingSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = makeRequest();
+      if (response.success) dispatch(getListingSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getListingFailure());
+  }
+};
+
 export const createListing = ({
-  name,
+  sellerId,
+  title,
   price,
   itemCondition,
   description,
@@ -126,7 +171,8 @@ export const createListing = ({
 }) => async (dispatch, getState) => {
   const requestUrl = "http://localhost:4000/listings";
   const payload = {
-    name,
+    sellerId: sellerId || getState().auth.user.userId,
+    title,
     timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
     price,
     itemCondition,
@@ -135,7 +181,6 @@ export const createListing = ({
     deliveryOption,
     picUrls,
   };
-  dispatch(requestCreateUser());
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "POST",
@@ -145,6 +190,7 @@ export const createListing = ({
       },
       body: JSON.stringify(payload),
     }).then((response) => response.json());
+  dispatch(createListingRequest());
   try {
     let response = await makeRequest();
     if (response.success) dispatch(createListingSuccess());
@@ -179,7 +225,7 @@ export const editListing = ({
     deliveryOption,
     picUrls,
   };
-  dispatch(requestCreateUser());
+  dispatch(editListingRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "PUT",
@@ -206,7 +252,7 @@ export const editListing = ({
 
 export const deleteListing = ({ listingId }) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
-  dispatch(requestCreateUser());
+  dispatch(deleteListingRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",

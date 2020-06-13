@@ -19,7 +19,7 @@ import {
 const defaultState = {
   userListings: [],
   searchListings: [],
-  listing: [],
+  listing: {},
   createListingLoading: false,
   getUserListingsLoading: false,
   getSearchListingsLoading: false,
@@ -45,6 +45,69 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         getUserListingsLoading: false,
+      };
+    case CREATE_LISTING_REQUEST:
+      return {
+        ...state,
+        createListingLoading: true,
+      };
+    case CREATE_LISTING_SUCCESS:
+      return {
+        ...state,
+        createListingLoading: false,
+      };
+    case CREATE_LISTING_FAILURE:
+      return {
+        ...state,
+        createListingLoading: false,
+      };
+    case GET_LISTING_REQUEST:
+      return {
+        ...state,
+        getListingLoading: true,
+      };
+    case GET_LISTING_SUCCESS:
+      return {
+        ...state,
+        listing: action.listing,
+        getListingLoading: false,
+      };
+    case GET_LISTING_FAILURE:
+      return {
+        ...state,
+        getListingLoading: false,
+      };
+    case EDIT_LISTING_REQUEST:
+      return {
+        ...state,
+        editListingLoading: true,
+      };
+    case EDIT_LISTING_SUCCESS:
+      return {
+        ...state,
+        listing: action.listing,
+        editListingLoading: false,
+      };
+    case EDIT_LISTING_FAILURE:
+      return {
+        ...state,
+        editListingLoading: false,
+      };
+    case DELETE_LISTING_REQUEST:
+      return {
+        ...state,
+        deleteListingLoading: true,
+      };
+    case DELETE_LISTING_SUCCESS:
+      return {
+        ...state,
+        listing: {},
+        deleteListingLoading: false,
+      };
+    case DELETE_LISTING_FAILURE:
+      return {
+        ...state,
+        deleteListingLoading: false,
       };
     default:
       return state;
