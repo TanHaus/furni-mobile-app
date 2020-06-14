@@ -5,14 +5,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { loginUser } from "../actions/auth";
+import { createUser } from "../../actions/users";
 
-function LoginScreen(props) {
-  const { navigation, submitLoginData, isLoggingIn, isAuthenticated } = props;
-  const [emailOrUsername, setEmailOrUsername] = useState("");
+function SignupScreen(props) {
+  const { navigation, createUserLoading, submitSignupData } = props;
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmitLogin = () => {
-    submitLoginData({ email: emailOrUsername, password });
+  const handleSubmitSignup = () => {
+    submitSignupData({ name: username, email, password });
   };
   return (
     <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
@@ -21,12 +22,12 @@ function LoginScreen(props) {
         size={24}
         color="black"
         style={{ paddingTop: 10, paddingBottom: 10 }}
-        onPress={() => props.navigation.goBack()}
+        onPress={() => navigation.goBack()}
       />
       <Text
         style={{ fontWeight: "bold", textTransform: "uppercase", fontSize: 18 }}
       >
-        LOG IN
+        Create an account
       </Text>
       <Text
         style={{
@@ -36,12 +37,27 @@ function LoginScreen(props) {
           paddingTop: 20,
         }}
       >
-        EMAIL OR USERNAME
+        Username
       </Text>
       <TextInput
         style={{ height: 40, borderBottomWidth: 1 }}
-        value={emailOrUsername}
-        onChangeText={setEmailOrUsername}
+        value={username}
+        onChangeText={setUsername}
+      />
+      <Text
+        style={{
+          color: "#d0d0d0",
+          textTransform: "uppercase",
+          fontSize: 16,
+          paddingTop: 20,
+        }}
+      >
+        Email
+      </Text>
+      <TextInput
+        style={{ height: 40, borderBottomWidth: 1 }}
+        value={email}
+        onChangeText={setEmail}
       />
       <Text
         style={{
@@ -59,18 +75,18 @@ function LoginScreen(props) {
         onChangeText={setPassword}
       />
       <Button
-        title="Log in"
-        onPress={handleSubmitLogin}
+        title="Sign up"
+        onPress={handleSubmitSignup}
         backgroundColor="black"
         color="white"
       />
       <View style={{ flexDirection: "row", paddingTop: 10, fontSize: 16 }}>
         <Text>or </Text>
         <Text
-          onPress={() => props.navigation.navigate("signup")}
+          onPress={() => props.navigation.navigate("login")}
           style={{ textDecorationLine: "underline" }}
         >
-          register
+          log in
         </Text>
         <Text> instead</Text>
       </View>
@@ -80,19 +96,18 @@ function LoginScreen(props) {
 
 function mapStateToProps(state) {
   return {
-    isLoggingIn: state.auth.isLoggingIn,
-    loginError: state.auth.loginError,
+    createUserLoading: state.users.createUserLoading,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    submitLoginData: (loginData) => dispatch(loginUser(loginData)),
+    submitSignupData: (signupData) => dispatch(createUser(signupData)),
   };
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default withConnect(LoginScreen);
+export default withConnect(SignupScreen);
 
 // =============================================================================
 // STYLING

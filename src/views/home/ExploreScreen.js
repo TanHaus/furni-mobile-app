@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components/native";
-import { ExploreCard } from "../components";
+import { ExploreCard } from "../../components";
 
-function MarketScreen() {
+function ExploreScreen() {
   const recommendations = RecommendationList.map((category) => {
     return <ExploreCard key={category.title} {...category} />;
   });
@@ -10,7 +10,7 @@ function MarketScreen() {
   return <ExploreWrapper>{recommendations}</ExploreWrapper>;
 }
 
-export default MarketScreen;
+export default ExploreScreen;
 
 // -----------------------------------------------------------------------------
 // CONSTANT DECLARATIONS

@@ -16,10 +16,10 @@ const Stack = createStackNavigator();
 
 function App() {
   let [fontsLoaded] = useFonts({
-    'Roboto Bold': require('./assets/fonts/Roboto-Bold.ttf'),
-    'Roboto Semibold': require('./assets/fonts/Roboto-Medium.ttf'),
-    'Roboto': require('./assets/fonts/Roboto-Regular.ttf'),
-    'Roboto Light': require('./assets/fonts/Roboto-Light.ttf')
+    'Roboto Bold': require('./src/assets/fonts/Roboto-Bold.ttf'),
+    'Roboto Semibold': require('./src/assets/fonts/Roboto-Medium.ttf'),
+    'Roboto': require('./src/assets/fonts/Roboto-Regular.ttf'),
+    'Roboto Light': require('./src/assets/fonts/Roboto-Light.ttf')
   });
 
   if (!fontsLoaded) {

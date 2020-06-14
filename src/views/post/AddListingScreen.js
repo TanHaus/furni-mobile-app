@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 
-import { createListing } from "../actions/listings";
+import { createListing } from "../../actions/listings";
 
 import {
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 import { Picker } from "@react-native-community/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Feather } from "@expo/vector-icons";
-import { SafeAreaViewWrapper, Button } from "../components";
+import { SafeAreaViewWrapper, Button } from "../../components";
 
 function AddScreen(props) {
   const { submitListingData } = props;

@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
-
-import WelcomeScreen from "./WelcomeScreen";
-import SignupScreen from "./SignupScreen";
-import LoginScreen from "./LoginScreen";
-import ForgetPasswordScreen from "./ForgetPasswordScreen";
+import ForgetPasswordScreen from "./login/ForgetPasswordScreen";
+import LaunchScreen from "./login/LaunchScreen";
+import LoginScreen from "./login/LoginScreen";
+import SignupScreen from "./login/SignupScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +16,7 @@ function StartScreen(props) {
   }
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
+      <Stack.Screen name="launch" component={LaunchScreen} />
       <Stack.Screen name="signup" component={SignupScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="forget-password" component={ForgetPasswordScreen} />

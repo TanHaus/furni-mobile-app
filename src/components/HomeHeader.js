@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { CustomText, TextWeight, Searchbar } from "../components";
 import { Color } from "../styles";
 
-function HomeHeader(props) {
+export const HomeHeader = (props) => {
   const { state, descriptors, navigation, position } = props;
 
   return (
@@ -15,9 +15,7 @@ function HomeHeader(props) {
       </FeatureContainer>
     </View>
   );
-}
-
-export default HomeHeader;
+};
 
 // -----------------------------------------------------------------------------
 // HELPER FUNCTION

@@ -2,12 +2,12 @@ import React from "react";
 import { ImageBackground } from "react-native";
 import { useHeaderHeight } from "@react-navigation/stack";
 import styled from "styled-components/native";
-import { Button, ButtonType, SafeAreaViewWrapper } from "../components";
+import { Button, ButtonType, SafeAreaViewWrapper } from "../../components";
 
-function WelcomeScreen(props) {
+function LaunchScreen(props) {
   return (
     <ImageBackground
-      source={require("../../assets/launch-screen/background.png")}
+      source={require("../../assets/launch/background.png")}
       style={{ flex: 1, backgroundPosition: "right" }}
     >
       <SafeAreaViewWrapper>
@@ -30,7 +30,7 @@ function WelcomeScreen(props) {
   );
 }
 
-export default WelcomeScreen;
+export default LaunchScreen;
 
 // =============================================================================
 // STYLING

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { logoutUser } from "../actions/auth";
-import { getUser, deleteUser } from "../actions/users";
-import { getUserListings } from "../actions/listings";
+import { logoutUser } from "../../actions/auth.js";
+import { getUser, deleteUser } from "../../actions/users";
+import { getUserListings } from "../../actions/listings";
 
 function ProfileScreen(props) {
   const {

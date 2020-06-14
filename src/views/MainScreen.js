@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import HomeScreen from "./HomeScreen";
-import ChatsScreen from "./ChatsScreen";
-import AddScreen from "./AddScreen";
-import NotificationScreen from "./NotificationScreen";
-import ProfileScreen from "./ProfileScreen";
+import HomeScreen from "./home/HomeScreen";
+import ChatOverviewScreen from "./chat/ChatOverviewScreen";
+import AddListingScreen from "./post/AddListingScreen";
+import ActivityScreen from "./activity/ActivityScreen";
+import ProfileScreen from "./profile/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +28,7 @@ function MainScreen(props) {
               ? "chat"
               : route.name === "Add"
               ? "library-plus"
-              : route.name === "Notification"
+              : route.name === "Activity"
               ? "bell"
               : "account";
 
@@ -43,13 +43,13 @@ function MainScreen(props) {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Chat" component={ChatsScreen} />
+      <Tab.Screen name="Chat" component={ChatOverviewScreen} />
       <Tab.Screen
         name="Add"
-        component={AddScreen}
+        component={AddListingScreen}
         options={{ tabBarVisible: false }}
       />
-      <Tab.Screen name="Notification" component={NotificationScreen} />
+      <Tab.Screen name="Activity" component={ActivityScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

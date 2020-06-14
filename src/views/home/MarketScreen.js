@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { MarketCard } from "../components";
+import { MarketCard } from "../../components";
 
 function MarketScreen() {
   const categories = CategoryList.map((category) => {
@@ -24,27 +24,27 @@ export default MarketScreen;
 const CategoryList = [
   {
     title: "Bedroom",
-    src: require("../../assets/home-screen/bedroom.png"),
+    src: require("../../assets/categories/bedroom.png"),
   },
   {
     title: "Dining room",
-    src: require("../../assets/home-screen/dining-room.png"),
+    src: require("../../assets/categories/dining-room.png"),
   },
   {
     title: "Bathroom",
-    src: require("../../assets/home-screen/bathroom.png"),
+    src: require("../../assets/categories/bathroom.png"),
   },
   {
     title: "Living room",
-    src: require("../../assets/home-screen/living-room.png"),
+    src: require("../../assets/categories/living-room.png"),
   },
   {
     title: "Study",
-    src: require("../../assets/home-screen/study.png"),
+    src: require("../../assets/categories/study.png"),
   },
   {
     title: "Kitchen",
-    src: require("../../assets/home-screen/kitchen.png"),
+    src: require("../../assets/categories/kitchen.png"),
   },
 ];
 
