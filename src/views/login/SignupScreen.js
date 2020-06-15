@@ -9,6 +9,7 @@ import { createUser } from "../../actions/users";
 
 function SignupScreen(props) {
   const { navigation, createUserLoading, submitSignupData } = props;
+  // to refactor: const [user, setUser] = useState({name: "", email: "", password: ""});
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

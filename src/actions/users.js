@@ -150,7 +150,7 @@ export const createUser = ({ name, email, password }) => async (dispatch) => {
     if (response.success) dispatch(createUserSuccess());
     else throw "e";
   } catch (e) {
-    dispatch(createUserFailer());
+    dispatch(createUserFailure());
   }
 };
 
