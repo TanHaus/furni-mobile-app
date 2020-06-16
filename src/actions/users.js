@@ -146,7 +146,7 @@ export const createUser = ({ name, email, password }) => async (dispatch) => {
     }).then((response) => response.json());
   dispatch(createUserRequest());
   try {
-    const response = makeRequest();
+    const response = await makeRequest();
     if (response.success) dispatch(createUserSuccess());
     else throw "e";
   } catch (e) {
