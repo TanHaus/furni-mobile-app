@@ -8,6 +8,9 @@ import {
   GET_LISTING_REQUEST,
   GET_LISTING_SUCCESS,
   GET_LISTING_FAILURE,
+  GET_LISTINGS_REQUEST,
+  GET_LISTINGS_SUCCESS,
+  GET_LISTINGS_FAILURE,
   EDIT_LISTING_REQUEST,
   EDIT_LISTING_SUCCESS,
   EDIT_LISTING_FAILURE,
@@ -18,17 +21,19 @@ import {
 
 const defaultState = {
   userListings: [], // to put under user instead
-  searchListings: [],
+  listings: [{ dumpass: "more dumb" }],
   listing: {},
   createListingLoading: false,
   getUserListingsLoading: false,
   getSearchListingsLoading: false,
   getListingLoading: false,
+  getListingsLoading: false,
   editListingLoading: false,
   deleteListingLoading: false,
 };
 
 export default (state = defaultState, action) => {
+  console.log(action.listings);
   switch (action.type) {
     case GET_USER_LISTINGS_REQUEST:
       return {
@@ -76,6 +81,23 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         getListingLoading: false,
+      };
+    case GET_LISTINGS_REQUEST:
+      return {
+        ...state,
+        listings: [],
+        getListingsLoading: true,
+      };
+    case GET_LISTINGS_SUCCESS:
+      return {
+        ...state,
+        listings: action.listings,
+        getListingsLoading: false,
+      };
+    case GET_LISTINGS_FAILURE:
+      return {
+        ...state,
+        getListingsLoading: false,
       };
     case EDIT_LISTING_REQUEST:
       return {

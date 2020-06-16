@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Color } from "../styles";
 import HomeScreen from "./home/HomeScreen";
+import SearchScreen from "./home/SearchScreen";
 import ChatOverviewScreen from "./chat/ChatOverviewScreen";
 import AddListingScreen from "./post/AddListingScreen";
 import ActivityScreen from "./activity/ActivityScreen";
@@ -43,7 +44,8 @@ function MainScreen(props) {
         inactiveTintColor: Color.Palette[6],
       }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      {/* <Tab.Screen name="Home" component={HomeScreen} /> */}
+      <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Chat" component={ChatOverviewScreen} />
       <Tab.Screen
         name="Add"
