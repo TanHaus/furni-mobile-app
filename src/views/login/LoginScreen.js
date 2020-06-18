@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { View, Text, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-
+import {
+  BackButton,
+  Button,
+  CustomText,
+  SafeAreaViewWrapper,
+} from "../../components";
+import { TextWeight } from "../../components/custom-text/types";
+import { Color } from "../../styles";
 import { loginUser } from "../../actions/auth";
 
 function LoginScreen(props) {
@@ -14,67 +18,36 @@ function LoginScreen(props) {
   const handleSubmitLogin = () => {
     submitLoginData({ email: emailOrUsername, password });
   };
+
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
-      <Ionicons
-        name="ios-arrow-back"
-        size={24}
-        color="black"
-        style={{ paddingTop: 10, paddingBottom: 10 }}
-        onPress={() => props.navigation.goBack()}
-      />
-      <Text
-        style={{ fontWeight: "bold", textTransform: "uppercase", fontSize: 18 }}
-      >
-        LOG IN
-      </Text>
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        EMAIL OR USERNAME
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={emailOrUsername}
-        onChangeText={setEmailOrUsername}
-      />
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        PASSWORD
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button
-        title="Log in"
-        onPress={handleSubmitLogin}
-        backgroundColor="black"
-        color="white"
-      />
-      <View style={{ flexDirection: "row", paddingTop: 10, fontSize: 16 }}>
-        <Text>or </Text>
-        <Text
-          onPress={() => props.navigation.navigate("signup")}
-          style={{ textDecorationLine: "underline" }}
-        >
+    <SafeAreaViewWrapper>
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <Title weight={TextWeight.Bold}>LOG IN</Title>
+      </TitleContainer>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          EMAIL OR USERNAME
+        </CustomText.Regular>
+        <Input value={emailOrUsername} onChangeText={setEmailOrUsername} />
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          PASSWORD
+        </CustomText.Regular>
+        <Input value={password} onChangeText={setPassword} />
+      </Container>
+      <Container>
+        <Button title="Log in" onPress={handleSubmitLogin} />
+      </Container>
+      <TextContainer>
+        <CustomText.Small>or </CustomText.Small>
+        <RegisterText onPress={() => props.navigation.navigate("signup")}>
           register
-        </Text>
-        <Text> instead</Text>
-      </View>
-    </SafeAreaView>
+        </RegisterText>
+        <CustomText.Small> instead</CustomText.Small>
+      </TextContainer>
+    </SafeAreaViewWrapper>
   );
 }
 
@@ -97,28 +70,30 @@ export default withConnect(LoginScreen);
 // =============================================================================
 // STYLING
 // =============================================================================
-
-const Button = (props) => (
-  <ButtonWrapper
-    onPress={props.onPress}
-    backgroundColor={props.backgroundColor}
-    borderColor={props.borderColor}
-  >
-    <ButtonText color={props.color}>{props.title}</ButtonText>
-  </ButtonWrapper>
-);
-
-const ButtonWrapper = styled.TouchableOpacity`
-  background-color: ${(props) => props.backgroundColor};
-  border-radius: 10px;
-  border: 2px solid
-    ${(props) => (!!props.borderColor ? props.borderColor : "black")};
-  padding: 10px;
-  margin-top: 20px;
+const TitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${(props) => props.color};
-  text-align: center;
+const Title = styled(CustomText.Large)`
+  padding-left: 20px;
+`;
+
+const Input = styled.TextInput`
+  height: 40px;
+  border-bottom-width: 1;
+`;
+
+const Container = styled.View`
+  margin-top: 30px;
+`;
+
+const TextContainer = styled.View`
+  flex-direction: row;
+  margin-top: 10px;
+`;
+
+const RegisterText = styled(CustomText.Small)`
+  text-decoration-line: underline;
 `;

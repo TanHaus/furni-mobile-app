@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { View, Text, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  BackButton,
+  Button,
+  CustomText,
+  SafeAreaViewWrapper,
+} from "../../components";
+import { TextWeight } from "../../components/custom-text/types";
+import { Color } from "../../styles";
 
 import { createUser } from "../../actions/users";
 
@@ -14,84 +19,42 @@ function SignupScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmitSignup = () => {
+    props.navigation.navigate("verification");
     submitSignupData({ name: username, email, password });
   };
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
-      <Ionicons
-        name="ios-arrow-back"
-        size={24}
-        color="black"
-        style={{ paddingTop: 10, paddingBottom: 10 }}
-        onPress={() => navigation.goBack()}
-      />
-      <Text
-        style={{ fontWeight: "bold", textTransform: "uppercase", fontSize: 18 }}
-      >
-        Create an account
-      </Text>
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        Username
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={username}
-        onChangeText={setUsername}
-      />
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        Email
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        PASSWORD
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button
-        title="Sign up"
-        onPress={handleSubmitSignup}
-        backgroundColor="black"
-        color="white"
-      />
-      <View style={{ flexDirection: "row", paddingTop: 10, fontSize: 16 }}>
-        <Text>or </Text>
-        <Text
-          onPress={() => props.navigation.navigate("login")}
-          style={{ textDecorationLine: "underline" }}
-        >
+    <SafeAreaViewWrapper>
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <Title weight={TextWeight.Bold}>CREATE AN ACCOUNT</Title>
+      </TitleContainer>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          USERNAME
+        </CustomText.Regular>
+        <Input value={username} onChangeText={setUsername} />
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>EMAIL</CustomText.Regular>
+        <Input value={email} onChangeText={setEmail} />
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          PASSWORD
+        </CustomText.Regular>
+        <Input value={password} onChangeText={setPassword} />
+      </Container>
+      <Container>
+        <Button title="Sign up" onPress={handleSubmitSignup} />
+      </Container>
+      <TextContainer>
+        <CustomText.Small>or </CustomText.Small>
+        <RegisterText onPress={() => props.navigation.navigate("login")}>
           log in
-        </Text>
-        <Text> instead</Text>
-      </View>
-    </SafeAreaView>
+        </RegisterText>
+        <CustomText.Small> instead</CustomText.Small>
+      </TextContainer>
+    </SafeAreaViewWrapper>
   );
 }
 
@@ -113,28 +76,30 @@ export default withConnect(SignupScreen);
 // =============================================================================
 // STYLING
 // =============================================================================
-
-const Button = (props) => (
-  <ButtonWrapper
-    onPress={props.onPress}
-    backgroundColor={props.backgroundColor}
-    borderColor={props.borderColor}
-  >
-    <ButtonText color={props.color}>{props.title}</ButtonText>
-  </ButtonWrapper>
-);
-
-const ButtonWrapper = styled.TouchableOpacity`
-  background-color: ${(props) => props.backgroundColor};
-  border-radius: 10px;
-  border: 2px solid
-    ${(props) => (!!props.borderColor ? props.borderColor : "black")};
-  padding: 10px;
-  margin-top: 20px;
+const TitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${(props) => props.color};
-  text-align: center;
+const Title = styled(CustomText.Large)`
+  padding-left: 20px;
+`;
+
+const Input = styled.TextInput`
+  height: 40px;
+  border-bottom-width: 1;
+`;
+
+const Container = styled.View`
+  margin-top: 30px;
+`;
+
+const TextContainer = styled.View`
+  flex-direction: row;
+  margin-top: 10px;
+`;
+
+const RegisterText = styled(CustomText.Small)`
+  text-decoration-line: underline;
 `;

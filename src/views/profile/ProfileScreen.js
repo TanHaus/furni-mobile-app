@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components/native";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logoutUser } from "../../actions/auth.js";
 import { getUser, deleteUser } from "../../actions/users";
 import { getUserListings } from "../../actions/users";
+import { SafeAreaViewWrapper } from "../../components";
 
 function ProfileScreen(props) {
   const {
@@ -29,15 +31,20 @@ function ProfileScreen(props) {
   };
 
   return (
-    <SafeAreaView
+    <SafeAreaViewWrapper
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
-      <Text>Profile!</Text>
-      <Text>{user.name}</Text>
-      <Text>{user.email}</Text>
+      <ProfileDescription>
+        <Image source={require("../../../assets/splash.png")} />
+
+        <Text>{user.name}</Text>
+        <Text>★★★★★</Text>
+      </ProfileDescription>
+
       <Text style={{ textTransform: "uppercase", fontWeight: "bold" }}>
         My listings:{" "}
       </Text>
+
       {userListings.map((listing) => (
         <Text key={listing.listingId}>{listing.title}</Text>
       ))}
@@ -46,7 +53,7 @@ function ProfileScreen(props) {
         title="Deactivate account (ACTION IS IRREVERSIBLE)"
         onPress={handleDeleteUser}
       />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 }
 
@@ -71,3 +78,14 @@ function mapDispatchToProps(dispatch) {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withConnect(ProfileScreen);
+
+// -----------------------------------------------------------------------------
+// STYLING
+// -----------------------------------------------------------------------------
+const ProfileDescription = styled.View``;
+
+const Image = styled.ImageBackground`
+  height: 50px;
+  object-fit: cover;
+  border: 1px solid blue;
+`;
