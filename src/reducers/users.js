@@ -91,7 +91,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         editUserLoading: false,
-        user: action.user,
+        user: action.editedUser,
       };
     case DELETE_USER_REQUEST:
       return {

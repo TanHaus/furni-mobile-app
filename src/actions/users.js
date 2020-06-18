@@ -108,7 +108,7 @@ const deleteUserFailure = () => {
   };
 };
 
-export const getUser = ({ userId }) => async (dispatch, getState) => {
+export const getUser = (userId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/users/${userId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -154,13 +154,13 @@ export const createUser = ({ name, email, password }) => async (dispatch) => {
   }
 };
 
-export const editUser = ({ name, email, password, profilePicUrl }) => async (
+export const editUser = ({ name, email, profilePicUrl }) => async (
   dispatch,
   getState
 ) => {
   const userId = getState().auth.user.userId;
   const requestUrl = `http://localhost:4000/users/${userId}`;
-  const payload = { name, email, password, profilePicUrl };
+  const payload = { name, email, profilePicUrl };
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "PUT",

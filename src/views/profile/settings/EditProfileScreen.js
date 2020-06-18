@@ -8,15 +8,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { getUser, editUser } from "../../../actions/users";
 
 function EditProfileScreen(props) {
-  const { navigation, userId, user, onPageLoad, submitEditData } = props;
-  const [editUser, setEditUser] = useState({ name: "", email: "" }); // editUser is a variable, setEditUser is the corresponding function to update/assign new values of editUser
+  const { navigation, userId, user, loadUserData, submitEditData } = props;
+  const [editUser, setEditUser] = useState({ name: "", email: "" });
 
   useEffect(() => {
-    onPageLoad(userId);
+    loadUserData(userId);
   }, [userId]);
 
   useEffect(() => {
-    setEditUser(user); // assign user to editUser
+    setEditUser(user);
   }, [user]);
 
   return (
@@ -60,6 +60,7 @@ function EditProfileScreen(props) {
       </Text>
       <TextInput
         style={{ height: 40, borderBottomWidth: 1 }}
+        disabled={true}
         value={editUser.email}
         onChangeText={(text) => setEditUser({ ...editUser, email: text })}
       />
@@ -72,21 +73,18 @@ function EditProfileScreen(props) {
     </SafeAreaView>
   );
 }
-// 1. we alr have the userId after we logged in
-// 2. we now use userId from state.auth.user.userId to get the info about my account getUser({userId}). the info will be loaded into state.users.user
-// 3. access my info from state.users.user and render the UI
-// 4. onSubmit, submit the editData by dispatching editUser(editData)
+
 function mapStateToProps(state) {
   return {
-    userId: state.auth.user.userId, // 1
-    user: state.users.user, // 3
+    userId: state.auth.user.userId,
+    user: state.users.user,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onPageLoad: (userId) => dispatch(getUser({ userId })), // 2
-    submitEditData: (editData) => dispatch(editUser(editData)), // 4
+    loadUserData: (userId) => dispatch(getUser(userId)),
+    submitEditData: (editData) => dispatch(editUser(editData)),
   };
 }
 
