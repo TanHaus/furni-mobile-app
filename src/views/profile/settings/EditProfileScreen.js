@@ -83,13 +83,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-<<<<<<< HEAD
     loadUserData: (userId) => dispatch(getUser(userId)),
     submitEditData: (editData) => dispatch(editUser(editData)),
-=======
-    onPageLoad: (userId) => dispatch(getUser(userId)), // 2
-    submitEditData: (editData) => dispatch(editUser(editData)), // 4
->>>>>>> 5bef666... Fix search bug
   };
 }
 
