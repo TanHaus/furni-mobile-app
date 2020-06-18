@@ -17,7 +17,7 @@ import {
 } from "../actions/listings";
 
 const defaultState = {
-  userListings: [],
+  userListings: [], // to put under user instead
   searchListings: [],
   listing: {},
   createListingLoading: false,
