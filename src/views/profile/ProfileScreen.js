@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logoutUser } from "../../actions/auth.js";
 import { getUser, deleteUser } from "../../actions/users";
-import { getUserListings } from "../../actions/listings";
+import { getUserListings } from "../../actions/users";
 
 function ProfileScreen(props) {
   const {
@@ -58,8 +58,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onPageLoad: async (userId) => {
-      await dispatch(getUser({ userId }));
-      await dispatch(getUserListings({ userId }));
+      await dispatch(getUser(userId));
+      await dispatch(getUserListings(userId));
     },
     submitLogout: () => dispatch(logoutUser()),
     submitDeleteUser: (userId) => dispatch(deleteUser(userId)),

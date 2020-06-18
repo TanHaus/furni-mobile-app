@@ -143,10 +143,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onPageLoad: () => dispatch(getListing({ listingId: 30 })),
+    onPageLoad: () => dispatch(getListing(30)),
     submitListingData: (editListingData) =>
       dispatch(editListing(editListingData)),
-    submitDeleteListing: (listingId) => dispatch(deleteListing({ listingId })),
+    submitDeleteListing: (listingId) => dispatch(deleteListing(listingId)),
   };
 }
 
