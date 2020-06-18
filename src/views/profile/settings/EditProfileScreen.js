@@ -85,7 +85,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onPageLoad: (userId) => dispatch(getUser({ userId })), // 2
+    onPageLoad: (userId) => dispatch(getUser(userId)), // 2
     submitEditData: (editData) => dispatch(editUser(editData)), // 4
   };
 }

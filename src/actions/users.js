@@ -108,7 +108,7 @@ const deleteUserFailure = () => {
   };
 };
 
-export const getUser = ({ userId }) => async (dispatch, getState) => {
+export const getUser = (userId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/users/${userId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -209,5 +209,30 @@ export const deleteUser = () => async (dispatch, getState) => {
     } else throw "e";
   } catch (e) {
     dispatch(deleteUserFailure());
+  }
+};
+
+export const getUserListings = (userId) => async (dispatch, getState) => {
+  const requestUrl = `http://localhost:4000/users/${userId}/listings`;
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getUserListingsRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getUserListingsSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getUserListingsSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getUserListingsFailure());
   }
 };

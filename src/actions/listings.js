@@ -3,9 +3,6 @@ import { renewToken } from "./auth";
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
 export const CREATE_LISTING_FAILURE = "CREATE_LISTING_FAILURE";
-export const GET_USER_LISTINGS_REQUEST = "GET_LISTINGS_REQUEST";
-export const GET_USER_LISTINGS_SUCCESS = "GET_LISTINGS_SUCCESS";
-export const GET_USER_LISTINGS_FAILURE = "GET_LISTINGS_FAILURE";
 export const GET_LISTING_REQUEST = "GET_LISTING_REQUEST";
 export const GET_LISTING_SUCCESS = "GET_LISTING_SUCCESS";
 export const GET_LISTING_FAILURE = "GET_LISTING_FAILURE";
@@ -37,25 +34,6 @@ const createListingFailure = () => {
   };
 };
 
-const getUserListingsRequest = () => {
-  return {
-    type: GET_USER_LISTINGS_REQUEST,
-  };
-};
-
-const getUserListingsSuccess = (userListings) => {
-  return {
-    type: GET_USER_LISTINGS_SUCCESS,
-    userListings,
-  };
-};
-
-const getUserListingsFailure = () => {
-  return {
-    type: GET_USER_LISTINGS_FAILURE,
-  };
-};
-
 const getListingRequest = () => {
   return {
     type: GET_LISTING_REQUEST,
@@ -82,6 +60,7 @@ const editListingRequest = () => {
 };
 
 const editListingSuccess = (editedUser) => {
+  // to check
   return {
     type: EDIT_LISTING_SUCCESS,
     editedUser,
@@ -131,32 +110,7 @@ const getListingsFailure = () => {
   };
 };
 
-export const getUserListings = ({ userId }) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/users/${userId}/listings`;
-  const makeRequest = () =>
-    fetch(requestUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + getState().auth.token.access_token,
-      },
-    }).then((response) => response.json());
-  dispatch(getUserListingsRequest());
-  try {
-    let response = await makeRequest();
-    if (response.success) dispatch(getUserListingsSuccess(response.data));
-    else if (response.message === "Expired access token") {
-      await dispatch(renewToken());
-      response = await makeRequest();
-      if (response.success) dispatch(getUserListingsSuccess(response.data));
-      else throw "e";
-    } else throw "e";
-  } catch (e) {
-    dispatch(getUserListingsFailure());
-  }
-};
-
-export const getListing = ({ listingId }) => async (dispatch, getState) => {
+export const getListing = (listingId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -272,7 +226,7 @@ export const editListing = ({
   }
 };
 
-export const deleteListing = ({ listingId }) => async (dispatch, getState) => {
+export const deleteListing = (listingId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -298,8 +252,7 @@ export const deleteListing = ({ listingId }) => async (dispatch, getState) => {
 };
 
 export const getListings = (q) => async (dispatch, getState) => {
-  // const requestUrl = "http://localhost:4000/listings" + q ? `?q=${q}` : "";
-  const requestUrl = "http://localhost:4000/listings?q=test";
+  const requestUrl = "http://localhost:4000/listings" + (q ? `?q=${q}` : "");
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",

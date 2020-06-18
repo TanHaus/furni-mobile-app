@@ -2,9 +2,6 @@ import {
   CREATE_LISTING_REQUEST,
   CREATE_LISTING_SUCCESS,
   CREATE_LISTING_FAILURE,
-  GET_USER_LISTINGS_REQUEST,
-  GET_USER_LISTINGS_SUCCESS,
-  GET_USER_LISTINGS_FAILURE,
   GET_LISTING_REQUEST,
   GET_LISTING_SUCCESS,
   GET_LISTING_FAILURE,
@@ -20,11 +17,9 @@ import {
 } from "../actions/listings";
 
 const defaultState = {
-  userListings: [], // to put under user instead
   listings: [{ dumpass: "more dumb" }],
   listing: {},
   createListingLoading: false,
-  getUserListingsLoading: false,
   getSearchListingsLoading: false,
   getListingLoading: false,
   getListingsLoading: false,
@@ -35,22 +30,6 @@ const defaultState = {
 export default (state = defaultState, action) => {
   console.log(action.listings);
   switch (action.type) {
-    case GET_USER_LISTINGS_REQUEST:
-      return {
-        ...state,
-        getUserListingsLoading: true,
-      };
-    case GET_USER_LISTINGS_SUCCESS:
-      return {
-        ...state,
-        userListings: action.userListings,
-        getUserListingsLoading: false,
-      };
-    case GET_USER_LISTINGS_FAILURE:
-      return {
-        ...state,
-        getUserListingsLoading: false,
-      };
     case CREATE_LISTING_REQUEST:
       return {
         ...state,
