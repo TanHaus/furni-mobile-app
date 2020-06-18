@@ -14,6 +14,9 @@ export const EDIT_USER_FAILURE = "EDIT_USER_FAILURE";
 export const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
 export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
 export const DELETE_USER_FAILURE = "DELETE_USER_FAILURE";
+export const GET_USER_LISTINGS_REQUEST = "GET_USER_LISTINGS_REQUEST";
+export const GET_USER_LISTINGS_SUCCESS = "GET_USER_LISTINGS_SUCCESS";
+export const GET_USER_LISTINGS_FAILURE = "GET_USER_LISTINGS_FAILURE";
 
 const createUserRequest = () => {
   return {
@@ -108,6 +111,25 @@ const deleteUserFailure = () => {
   };
 };
 
+const getUserListingsRequest = () => {
+  return {
+    type: GET_USER_LISTINGS_REQUEST,
+  };
+};
+
+const getUserListingsSuccess = (userListings) => {
+  return {
+    type: GET_USER_LISTINGS_SUCCESS,
+    userListings,
+  };
+};
+
+const getUserListingsFailure = () => {
+  return {
+    type: GET_USER_LISTINGS_FAILURE,
+  };
+};
+
 export const getUser = (userId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/users/${userId}`;
   const makeRequest = () =>
@@ -146,7 +168,7 @@ export const createUser = ({ name, email, password }) => async (dispatch) => {
     }).then((response) => response.json());
   dispatch(createUserRequest());
   try {
-    const response = makeRequest();
+    const response = await makeRequest();
     if (response.success) dispatch(createUserSuccess());
     else throw "e";
   } catch (e) {
@@ -209,5 +231,30 @@ export const deleteUser = () => async (dispatch, getState) => {
     } else throw "e";
   } catch (e) {
     dispatch(deleteUserFailure());
+  }
+};
+
+export const getUserListings = (userId) => async (dispatch, getState) => {
+  const requestUrl = `http://localhost:4000/users/${userId}/listings`;
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getUserListingsRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getUserListingsSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getUserListingsSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getUserListingsFailure());
   }
 };

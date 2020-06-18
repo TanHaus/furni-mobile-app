@@ -3,12 +3,12 @@ import { renewToken } from "./auth";
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
 export const CREATE_LISTING_FAILURE = "CREATE_LISTING_FAILURE";
-export const GET_USER_LISTINGS_REQUEST = "GET_LISTINGS_REQUEST";
-export const GET_USER_LISTINGS_SUCCESS = "GET_LISTINGS_SUCCESS";
-export const GET_USER_LISTINGS_FAILURE = "GET_LISTINGS_FAILURE";
 export const GET_LISTING_REQUEST = "GET_LISTING_REQUEST";
 export const GET_LISTING_SUCCESS = "GET_LISTING_SUCCESS";
 export const GET_LISTING_FAILURE = "GET_LISTING_FAILURE";
+export const GET_LISTINGS_REQUEST = "GET_LISTINGS_REQUEST";
+export const GET_LISTINGS_SUCCESS = "GET_LISTINGS_SUCCESS";
+export const GET_LISTINGS_FAILURE = "GET_LISTINGS_FAILURE";
 export const EDIT_LISTING_REQUEST = "EDIT_LISTING_REQUEST";
 export const EDIT_LISTING_SUCCESS = "EDIT_LISTING_SUCCESS";
 export const EDIT_LISTING_FAILURE = "EDIT_LISTING_FAILURE";
@@ -31,25 +31,6 @@ const createListingSuccess = () => {
 const createListingFailure = () => {
   return {
     type: CREATE_LISTING_FAILURE,
-  };
-};
-
-const getUserListingsRequest = () => {
-  return {
-    type: GET_USER_LISTINGS_REQUEST,
-  };
-};
-
-const getUserListingsSuccess = (userListings) => {
-  return {
-    type: GET_USER_LISTINGS_SUCCESS,
-    userListings,
-  };
-};
-
-const getUserListingsFailure = () => {
-  return {
-    type: GET_USER_LISTINGS_FAILURE,
   };
 };
 
@@ -79,6 +60,7 @@ const editListingRequest = () => {
 };
 
 const editListingSuccess = (editedUser) => {
+  // to check
   return {
     type: EDIT_LISTING_SUCCESS,
     editedUser,
@@ -109,32 +91,26 @@ const deleteListingFailure = () => {
   };
 };
 
-export const getUserListings = ({ userId }) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/users/${userId}/listings`;
-  const makeRequest = () =>
-    fetch(requestUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + getState().auth.token.access_token,
-      },
-    }).then((response) => response.json());
-  dispatch(getUserListingsRequest());
-  try {
-    let response = await makeRequest();
-    if (response.success) dispatch(getUserListingsSuccess(response.data));
-    else if (response.message === "Expired access token") {
-      await dispatch(renewToken());
-      response = makeRequest();
-      if (response.success) dispatch(getUserListingsSuccess(response.data));
-      else throw "e";
-    } else throw "e";
-  } catch (e) {
-    dispatch(getUserListingsFailure());
-  }
+const getListingsRequest = () => {
+  return {
+    type: GET_LISTINGS_REQUEST,
+  };
 };
 
-export const getListing = ({ listingId }) => async (dispatch, getState) => {
+const getListingsSuccess = (listings) => {
+  return {
+    type: GET_LISTINGS_SUCCESS,
+    listings,
+  };
+};
+
+const getListingsFailure = () => {
+  return {
+    type: GET_LISTINGS_FAILURE,
+  };
+};
+
+export const getListing = (listingId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -150,7 +126,7 @@ export const getListing = ({ listingId }) => async (dispatch, getState) => {
     if (response.success) dispatch(getListingSuccess(response.data));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = makeRequest();
+      response = await makeRequest();
       if (response.success) dispatch(getListingSuccess(response.data));
       else throw "e";
     } else throw "e";
@@ -196,7 +172,7 @@ export const createListing = ({
     if (response.success) dispatch(createListingSuccess());
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = makeRequest();
+      response = await makeRequest();
       if (response.success) dispatch(createListingSuccess());
       else throw "e";
     } else throw "e";
@@ -241,7 +217,7 @@ export const editListing = ({
     // need to update store with updated data
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = makeRequest();
+      response = await makeRequest();
       if (response.success) dispatch(editListingSuccess());
       else throw "e";
     } else throw "e";
@@ -250,9 +226,8 @@ export const editListing = ({
   }
 };
 
-export const deleteListing = ({ listingId }) => async (dispatch, getState) => {
+export const deleteListing = (listingId) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
-  dispatch(deleteListingRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",
@@ -261,16 +236,42 @@ export const deleteListing = ({ listingId }) => async (dispatch, getState) => {
         Authorization: "Bearer " + getState().auth.token.access_token,
       },
     }).then((response) => response.json());
+  dispatch(deleteListingRequest());
   try {
     let response = await makeRequest();
     if (response.success) dispatch(deleteListingSuccess());
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = makeRequest();
+      response = await makeRequest();
       if (response.success) dispatch(deleteListingSuccess());
       else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(deleteListingFailure());
+  }
+};
+
+export const getListings = (q) => async (dispatch, getState) => {
+  const requestUrl = "http://localhost:4000/listings" + (q ? `?q=${q}` : "");
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getListingsRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getListingsSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getListingsSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getListingsFailure());
   }
 };

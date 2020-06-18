@@ -4,20 +4,20 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logoutUser } from "../../actions/auth.js";
 import { getUser, deleteUser } from "../../actions/users";
-import { getUserListings } from "../../actions/listings";
+import { getUserListings } from "../../actions/users";
 
 function ProfileScreen(props) {
   const {
     userId,
     user,
     userListings,
-    onPageLoad,
+    loadUserData,
     submitLogout,
     submitDeleteUser,
   } = props;
 
   useEffect(() => {
-    onPageLoad(userId);
+    loadUserData(userId);
   }, [userId]);
 
   const handleLogout = () => {
@@ -35,8 +35,11 @@ function ProfileScreen(props) {
       <Text>Profile!</Text>
       <Text>{user.name}</Text>
       <Text>{user.email}</Text>
+      <Text style={{ textTransform: "uppercase", fontWeight: "bold" }}>
+        My listings:{" "}
+      </Text>
       {userListings.map((listing) => (
-        <Text key={listing.listingId}>{listing.name}</Text>
+        <Text key={listing.listingId}>{listing.title}</Text>
       ))}
       <Button title="Log out" onPress={handleLogout} />
       <Button
@@ -51,15 +54,15 @@ function mapStateToProps(state) {
   return {
     userId: state.auth.user.userId,
     user: state.users.user,
-    userListings: state.listings.userListings,
+    userListings: state.users.userListings,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onPageLoad: async (userId) => {
-      await dispatch(getUser({ userId }));
-      await dispatch(getUserListings({ userId }));
+    loadUserData: async (userId) => {
+      await dispatch(getUser(userId));
+      await dispatch(getUserListings(userId));
     },
     submitLogout: () => dispatch(logoutUser()),
     submitDeleteUser: (userId) => dispatch(deleteUser(userId)),

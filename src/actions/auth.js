@@ -54,7 +54,7 @@ const renewTokenRequest = () => {
   };
 };
 
-const renewTokenSuccess = ({ token }) => {
+const renewTokenSuccess = (token) => {
   return {
     type: RENEW_TOKEN_SUCCESS,
     token,
@@ -120,7 +120,7 @@ export const renewToken = () => async (dispatch, getState) => {
       body: payload,
     }).then((response) => response.json());
     if (response.success) {
-      dispatch(renewTokenSuccess({ token: response.data }));
+      dispatch(renewTokenSuccess(response.data));
     } else throw "e";
   } catch (e) {
     dispatch(renewTokenFailure());
