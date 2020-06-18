@@ -11,13 +11,13 @@ function ProfileScreen(props) {
     userId,
     user,
     userListings,
-    onPageLoad,
+    loadUserData,
     submitLogout,
     submitDeleteUser,
   } = props;
 
   useEffect(() => {
-    onPageLoad(userId);
+    loadUserData(userId);
   }, [userId]);
 
   const handleLogout = () => {
@@ -35,8 +35,11 @@ function ProfileScreen(props) {
       <Text>Profile!</Text>
       <Text>{user.name}</Text>
       <Text>{user.email}</Text>
+      <Text style={{ textTransform: "uppercase", fontWeight: "bold" }}>
+        My listings:{" "}
+      </Text>
       {userListings.map((listing) => (
-        <Text key={listing.listingId}>{listing.name}</Text>
+        <Text key={listing.listingId}>{listing.title}</Text>
       ))}
       <Button title="Log out" onPress={handleLogout} />
       <Button
@@ -51,13 +54,13 @@ function mapStateToProps(state) {
   return {
     userId: state.auth.user.userId,
     user: state.users.user,
-    userListings: state.listings.userListings,
+    userListings: state.users.userListings,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onPageLoad: async (userId) => {
+    loadUserData: async (userId) => {
       await dispatch(getUser(userId));
       await dispatch(getUserListings(userId));
     },

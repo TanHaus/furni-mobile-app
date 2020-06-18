@@ -14,17 +14,22 @@ import {
   DELETE_USER_REQUEST,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
+  GET_USER_LISTINGS_REQUEST,
+  GET_USER_LISTINGS_SUCCESS,
+  GET_USER_LISTINGS_FAILURE,
 } from "../actions/users";
 import { LOGOUT_SUCCESS } from "../actions/auth";
 
 const defaultState = {
   users: [],
   user: {},
+  userListings: [],
   createUserLoading: false,
   getUsersLoading: false,
   getUserLoading: false,
   editUserLoading: false,
   deleteUserLoading: false,
+  getUserListingsLoading: false,
 };
 
 export default (state = defaultState, action) => {
@@ -108,6 +113,22 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         deleteUserLoading: false,
+      };
+    case GET_USER_LISTINGS_REQUEST:
+      return {
+        ...state,
+        getUserListingsLoading: true,
+      };
+    case GET_USER_LISTINGS_SUCCESS:
+      return {
+        ...state,
+        userListings: action.userListings,
+        getUserListingsLoading: false,
+      };
+    case GET_USER_LISTINGS_FAILURE:
+      return {
+        ...state,
+        getUserListingsLoading: false,
       };
     case LOGOUT_SUCCESS:
       return defaultState;

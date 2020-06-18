@@ -14,6 +14,9 @@ export const EDIT_USER_FAILURE = "EDIT_USER_FAILURE";
 export const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
 export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
 export const DELETE_USER_FAILURE = "DELETE_USER_FAILURE";
+export const GET_USER_LISTINGS_REQUEST = "GET_USER_LISTINGS_REQUEST";
+export const GET_USER_LISTINGS_SUCCESS = "GET_USER_LISTINGS_SUCCESS";
+export const GET_USER_LISTINGS_FAILURE = "GET_USER_LISTINGS_FAILURE";
 
 const createUserRequest = () => {
   return {
@@ -105,6 +108,25 @@ const deleteUserSuccess = (userToDelete) => {
 const deleteUserFailure = () => {
   return {
     type: DELETE_USER_FAILURE,
+  };
+};
+
+const getUserListingsRequest = () => {
+  return {
+    type: GET_USER_LISTINGS_REQUEST,
+  };
+};
+
+const getUserListingsSuccess = (userListings) => {
+  return {
+    type: GET_USER_LISTINGS_SUCCESS,
+    userListings,
+  };
+};
+
+const getUserListingsFailure = () => {
+  return {
+    type: GET_USER_LISTINGS_FAILURE,
   };
 };
 
