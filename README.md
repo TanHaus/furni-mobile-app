@@ -18,3 +18,59 @@
 - expo
 - react-navigation 
 - AWS
+
+### Client's local store
+```javascript
+auth: {
+  token: {
+    access_token: String,
+    refresh_token: String,
+    token_type: String
+  },
+  user: {
+    userId: Integer,
+    role: String
+  },
+  loginLoading: Boolean,
+  authLoading: Boolean,
+  isAuthenticated: Boolean,
+  logoutLoading: Boolean,
+  renewTokenLoading: Boolean
+},
+users: {
+  users: Array,
+  user: {
+    userId: Integer,
+    name: String,
+    email: String,
+    profilePicUrl: String
+  },
+  userListings: Array,
+  createUserLoading: Boolean,
+  getUserLoading: Boolean,
+  editUserLoading: Boolean,
+  deleteUserLoading: Boolean,
+  getUserListingsLoading: Boolean
+},
+listings: {
+  listings: Array,
+  listing: {
+    listingId: Integer,
+    sellerId: Integer,
+    title: String,
+    timeCreated: Datetime,
+    timeSold: Datetime,
+    price: Decimal,
+    itemCondition: String, ('new', 'used')
+    description: String,
+    category: String,
+    deliveryOption: String,
+    status: String ('open', 'closed')
+  },
+  createListingLoading: Boolean,
+  getListingsLoading: Boolean,
+  getListingLoading: Boolean,
+  editListingLoading: Boolean,
+  deleteListingLoading: Boolean
+}
+```
