@@ -1,3 +1,7 @@
+const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+dotenv.config();
+
 import { renewToken } from "./auth";
 
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
@@ -135,39 +139,68 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const createListing = ({
-  sellerId,
-  title,
-  price,
-  itemCondition,
-  description,
-  category,
-  deliveryOption,
-  picUrls,
-}) => async (dispatch, getState) => {
-  const requestUrl = "http://localhost:4000/listings";
-  const payload = {
-    sellerId: sellerId || getState().auth.user.userId,
+export const createListing = ({ listing, pics }) => async (
+  dispatch,
+  getState
+) => {
+  const {
+    sellerId,
     title,
-    timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
     price,
     itemCondition,
     description,
     category,
     deliveryOption,
-    picUrls,
+  } = listing;
+  const requestUrl = "http://localhost:4000/listings";
+  const s3Config = {
+    region: process.env.S3_REGION,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
   };
-  const makeRequest = () =>
-    fetch(requestUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + getState().auth.token.access_token,
-      },
-      body: JSON.stringify(payload),
-    }).then((response) => response.json());
-  dispatch(createListingRequest());
+  const s3 = new AWS.S3(s3Config);
+  const picUrls = [];
   try {
+    await Promise.all(
+      pics.map(async (pic) => {
+        const buf = Buffer.from(
+          pic.replace(/^data:image\/\w+;base64,/, ""),
+          "base64"
+        );
+        const params = {
+          Bucket: "furni-s3-bucket",
+          Key: `${process.env.LISTING_PICS_DIRNAME}/${Date.now()}`,
+          Body: buf,
+          ACL: "public-read",
+          ContentEncoding: "base64",
+          ContentType: "image/jpeg",
+          ContentDisposition: "attachment",
+        };
+        const data = await s3.upload(params).promise();
+        picUrls.push(data.Location);
+      })
+    );
+    const payload = {
+      sellerId: sellerId || getState().auth.user.userId,
+      title,
+      timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
+      price,
+      itemCondition,
+      description,
+      category,
+      deliveryOption,
+      picUrls,
+    };
+    const makeRequest = () =>
+      fetch(requestUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + getState().auth.token.access_token,
+        },
+        body: JSON.stringify(payload),
+      }).then((response) => response.json());
+    dispatch(createListingRequest());
     let response = await makeRequest();
     if (response.success) dispatch(createListingSuccess());
     else if (response.message === "Expired access token") {

@@ -1,3 +1,6 @@
+const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+dotenv.config();
 import React, { useState } from "react";
 import { connect } from "react-redux";
 
@@ -25,23 +28,19 @@ function AddScreen(props) {
     description: "",
     deliveryOption: "",
   });
-  const [pic, setPic] = useState("");
-
+  const [pics, setPics] = useState([]);
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
-      let pickerResult = await ImagePicker.launchImageLibraryAsync();
-      console.log(pickerResult);
-      if (!pickerResult.cancelled) {
-        setPic(pickerResult.uri);
-      }
-    } else {
-      alert("Permission to access camera roll is required!");
+      const pickerResult = await ImagePicker.launchImageLibraryAsync();
+      if (!pickerResult.cancelled)
+        setPics((pics) => [...pics, pickerResult.uri]);
+      else alert("Permission to access camera roll is required!");
     }
   };
 
   const handleSubmit = () => {
-    submitListingData(listing);
+    submitListingData({ listing, pics });
   };
 
   return (
@@ -109,11 +108,16 @@ function AddScreen(props) {
         />
       </View>
       <Button onPress={handleSubmit} title="Create listing" />
-      <Text>{JSON.stringify(listing)}</Text>
-      {/* <TouchableOpacity onPress={openImagePickerAsync}>
+      <TouchableOpacity onPress={openImagePickerAsync}>
         <Text>Pick a photo</Text>
       </TouchableOpacity>
-      {pic ? <Image source={{uri: pic}} style={{width: 300, height: 300, resizeMode: 'contain'}}/> : <View />} */}
+      {pics ? (
+        pics.map((pic) => (
+          <Image source={{ uri: pic }} style={{ width: 300, height: 300 }} />
+        ))
+      ) : (
+        <View />
+      )}
     </SafeAreaViewWrapper>
   );
 }
