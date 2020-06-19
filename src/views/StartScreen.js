@@ -11,10 +11,10 @@ const Stack = createStackNavigator();
 
 function StartScreen(props) {
   const { isAuthenticated, navigation } = props;
-  // if (isAuthenticated) {
-  //   navigation.popToTop();
-  //   navigation.navigate("main");
-  // }
+  if (isAuthenticated) {
+    navigation.popToTop();
+    navigation.navigate("main");
+  }
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="launch" component={LaunchScreen} />
