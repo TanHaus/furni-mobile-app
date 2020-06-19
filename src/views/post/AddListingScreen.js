@@ -1,26 +1,20 @@
-const AWS = require("aws-sdk");
-const dotenv = require("dotenv");
-dotenv.config();
 import React, { useState } from "react";
 import { connect } from "react-redux";
-
 import { createListing } from "../../actions/listings";
-
+import styled from "styled-components/native";
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+  BackButton,
+  Button,
+  CustomText,
+  SafeAreaViewWrapper,
+} from "../../components";
 import { Picker } from "@react-native-community/picker";
 import * as ImagePicker from "expo-image-picker";
-import { Feather } from "@expo/vector-icons";
-import { SafeAreaViewWrapper, Button } from "../../components";
+import { TextWeight } from "../../components/custom-text/types";
+import { Color } from "../../styles";
 
 function AddScreen(props) {
-  const { submitListingData } = props;
+  const { navigation, submitListingData } = props;
   const [listing, setListing] = useState({
     title: "",
     price: 0,
@@ -45,70 +39,64 @@ function AddScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <Feather
-          name="x"
-          size={24}
-          color="#d0d0d0"
-          onPress={() => props.navigation.goBack()}
-        />
-        <Text>New listing</Text>
-      </View>
-      <View>
-        <Text>Title</Text>
-        <TextInput
-          style={{ height: 40, borderBottomWidth: 1 }}
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <Title weight={TextWeight.Bold}>ADD A NEW LISTING</Title>
+      </TitleContainer>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>Title</CustomText.Regular>
+        <Input
           value={listing.title}
           onChangeText={(text) => setListing({ ...listing, title: text })}
         />
-        <View style={{ display: "flex", flexDirection: "row" }}>
-          <View>
-            <Text>Price</Text>
-            <TextInput
-              style={{ height: 40, borderBottomWidth: 1 }}
-              value={listing.price}
-              onChangeText={(num) => setListing({ ...listing, price: num })} // todo: filter out number. maybe use regex?
-            />
-          </View>
-          <View>
-            <Text>Item condition</Text>
-            <Picker
-              selectedValue={listing.itemCondition}
-              onValueChange={(value, index) =>
-                setListing({ ...listing, itemCondition: value })
-              }
-            >
-              {["new", "used"].map((condition) => (
-                <Picker.Item label={condition} value={condition} />
-              ))}
-            </Picker>
-          </View>
-        </View>
-        <Text>
-          Description (please specify the materials and dimensions height width
-          length in cm if possible)
-        </Text>
-        <TextInput
-          style={{ height: 40, borderBottomWidth: 1 }}
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>Price</CustomText.Regular>
+        <Input
+          value={listing.price}
+          onChangeText={(value) => setListing({ ...listing, price: value })}
+        />
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          Item condition
+        </CustomText.Regular>
+        <Picker
+          selectedValue={listing.itemCondition}
+          onValueChange={(value, index) =>
+            setListing({ ...listing, itemCondition: value })
+          }
+        >
+          {["new", "used"].map((condition) => (
+            <Picker.Item label={condition} value={condition} />
+          ))}
+        </Picker>
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          Description (tip: specify the materials and dimensions to attract more
+          buyers)
+        </CustomText.Regular>
+        <Input
           value={listing.description}
           onChangeText={(text) => setListing({ ...listing, description: text })}
         />
-        <Text>Delivery option</Text>
-        <TextInput
-          style={{ height: 40, borderBottomWidth: 1 }}
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          Delivery option
+        </CustomText.Regular>
+        <Input
           value={listing.deliveryOption}
           onChangeText={(text) =>
             setListing({ ...listing, deliveryOption: text })
           }
         />
-      </View>
-      <Button onPress={handleSubmit} title="Create listing" />
-      <TouchableOpacity onPress={openImagePickerAsync}>
+      </Container>
+      <Container>
+        <Button title="Add a new listing" onPress={handleSubmit} />
+      </Container>
+      {/* <TouchableOpacity onPress={openImagePickerAsync}>
         <Text>Pick a photo</Text>
       </TouchableOpacity>
       {pics ? (
@@ -117,7 +105,7 @@ function AddScreen(props) {
         ))
       ) : (
         <View />
-      )}
+      )} */}
     </SafeAreaViewWrapper>
   );
 }
@@ -135,3 +123,34 @@ function mapDispatchToProps(dispatch) {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withConnect(AddScreen);
+
+// =============================================================================
+// STYLING
+// =============================================================================
+const TitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Title = styled(CustomText.Large)`
+  padding-left: 20px;
+`;
+
+const Input = styled.TextInput`
+  height: 40px;
+  border-bottom-width: 1;
+`;
+
+const Container = styled.View`
+  margin-top: 30px;
+`;
+
+const TextContainer = styled.View`
+  flex-direction: row;
+  margin-top: 10px;
+`;
+
+const RegisterText = styled(CustomText.Small)`
+  text-decoration-line: underline;
+`;
