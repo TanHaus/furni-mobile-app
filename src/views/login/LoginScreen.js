@@ -16,7 +16,8 @@ function LoginScreen(props) {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmitLogin = () => {
-    submitLoginData({ email: emailOrUsername, password });
+    // submitLoginData({ email: emailOrUsername, password });
+    navigation.navigate("main");
   };
 
   return (

@@ -5,19 +5,21 @@ import ForgetPasswordScreen from "./login/ForgetPasswordScreen";
 import LaunchScreen from "./login/LaunchScreen";
 import LoginScreen from "./login/LoginScreen";
 import SignupScreen from "./login/SignupScreen";
+import VerificationScreen from "./login/VerificationScreen";
 
 const Stack = createStackNavigator();
 
 function StartScreen(props) {
   const { isAuthenticated, navigation } = props;
-  if (isAuthenticated) {
-    navigation.popToTop();
-    navigation.navigate("main");
-  }
+  // if (isAuthenticated) {
+  //   navigation.popToTop();
+  //   navigation.navigate("main");
+  // }
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="launch" component={LaunchScreen} />
       <Stack.Screen name="signup" component={SignupScreen} />
+      <Stack.Screen name="verification" component={VerificationScreen} />
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="forget-password" component={ForgetPasswordScreen} />
     </Stack.Navigator>

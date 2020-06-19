@@ -33,9 +33,9 @@ const renderIcons = ({ route }) => ({
 
 function MainScreen(props) {
   const { navigation, isAuthenticated } = props;
-  if (!isAuthenticated) {
-    navigation.navigate("start");
-  }
+  // if (!isAuthenticated) {
+  //   navigation.navigate("start");
+  // }
   return (
     <Tab.Navigator
       screenOptions={renderIcons}
