@@ -20,7 +20,6 @@ const defaultState = {
   listings: [{ dumpass: "more dumb" }],
   listing: {},
   createListingLoading: false,
-  getSearchListingsLoading: false,
   getListingLoading: false,
   getListingsLoading: false,
   editListingLoading: false,
