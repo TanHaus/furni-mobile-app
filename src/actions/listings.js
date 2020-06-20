@@ -154,9 +154,9 @@ export const createListing = ({ listing, pics }) => async (
   } = listing;
   const requestUrl = "http://localhost:4000/listings";
   const s3Config = {
-    region: "ap-southeast-1",
-    accessKeyId: "AKIATHHTTSCTO2Z5OKLS",
-    secretAccessKey: "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",
+    region: process.env.S3_REGION,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
   };
   const s3 = new AWS.S3(s3Config);
   const picUrls = [];
