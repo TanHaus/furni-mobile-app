@@ -17,7 +17,7 @@ import {
 } from "../actions/listings";
 
 const defaultState = {
-  listings: [{ dumpass: "more dumb" }],
+  listings: [],
   listing: {},
   createListingLoading: false,
   getListingLoading: false,
@@ -85,7 +85,7 @@ export default (state = defaultState, action) => {
     case EDIT_LISTING_SUCCESS:
       return {
         ...state,
-        listing: action.listing,
+        listing: action.editedListing,
         editListingLoading: false,
       };
     case EDIT_LISTING_FAILURE:
