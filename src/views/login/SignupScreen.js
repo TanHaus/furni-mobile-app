@@ -19,13 +19,13 @@ function SignupScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmitSignup = () => {
-    props.navigation.navigate("verification");
+    navigation.navigate("verification", { email: email });
     // submitSignupData({ name: username, email, password });
   };
   return (
     <SafeAreaViewWrapper>
       <TitleContainer>
-        <BackButton onPress={() => navigation.goBack()} />
+        <BackButton onPress={() => navigation.navigate("launch")} />
         <Title weight={TextWeight.Bold}>CREATE AN ACCOUNT</Title>
       </TitleContainer>
       <Container>
@@ -49,9 +49,9 @@ function SignupScreen(props) {
       </Container>
       <TextContainer>
         <CustomText.Small>or </CustomText.Small>
-        <RegisterText onPress={() => props.navigation.navigate("login")}>
+        <UnderlinedText onPress={() => props.navigation.navigate("login")}>
           log in
-        </RegisterText>
+        </UnderlinedText>
         <CustomText.Small> instead</CustomText.Small>
       </TextContainer>
     </SafeAreaViewWrapper>
@@ -100,6 +100,6 @@ const TextContainer = styled.View`
   margin-top: 10px;
 `;
 
-const RegisterText = styled(CustomText.Small)`
+const UnderlinedText = styled(CustomText.Small)`
   text-decoration-line: underline;
 `;
