@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { createListing } from "../../actions/listings";
+import { TouchableOpacity, Image, View } from "react-native";
 import styled from "styled-components/native";
 import {
   BackButton,
@@ -12,6 +13,7 @@ import { Picker } from "@react-native-community/picker";
 import * as ImagePicker from "expo-image-picker";
 import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
+import { AntDesign } from "@expo/vector-icons";
 
 function AddScreen(props) {
   const { navigation, submitListingData } = props;
@@ -41,8 +43,25 @@ function AddScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>ADD A NEW LISTING</Title>
+        <Title weight={TextWeight.Bold}>NEW LISTING</Title>
       </TitleContainer>
+      <Container
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        {pics ? (
+          pics.map((pic) => (
+            <Image
+              source={{ uri: pic }}
+              style={{ width: 80, height: 80, margin: 10 }}
+            />
+          ))
+        ) : (
+          <View />
+        )}
+        <TouchableOpacity onPress={openImagePickerAsync}>
+          <AntDesign name="plussquareo" size={80} color="black" />
+        </TouchableOpacity>
+      </Container>
       <Container>
         <CustomText.Regular color={Color.Palette[4]}>Title</CustomText.Regular>
         <Input
@@ -96,16 +115,6 @@ function AddScreen(props) {
       <Container>
         <Button title="Add a new listing" onPress={handleSubmit} />
       </Container>
-      {/* <TouchableOpacity onPress={openImagePickerAsync}>
-        <Text>Pick a photo</Text>
-      </TouchableOpacity>
-      {pics ? (
-        pics.map((pic) => (
-          <Image source={{ uri: pic }} style={{ width: 300, height: 300 }} />
-        ))
-      ) : (
-        <View />
-      )} */}
     </SafeAreaViewWrapper>
   );
 }
@@ -143,7 +152,7 @@ const Input = styled.TextInput`
 `;
 
 const Container = styled.View`
-  margin-top: 30px;
+  margin-bottom: 30px;
 `;
 
 const TextContainer = styled.View`

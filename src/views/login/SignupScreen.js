@@ -49,7 +49,7 @@ function SignupScreen(props) {
       </Container>
       <TextContainer>
         <CustomText.Small>or </CustomText.Small>
-        <UnderlinedText onPress={() => props.navigation.navigate("login")}>
+        <UnderlinedText onPress={() => navigation.navigate("login")}>
           log in
         </UnderlinedText>
         <CustomText.Small> instead</CustomText.Small>

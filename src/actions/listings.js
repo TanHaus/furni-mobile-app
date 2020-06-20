@@ -154,12 +154,13 @@ export const createListing = ({ listing, pics }) => async (
   } = listing;
   const requestUrl = "http://localhost:4000/listings";
   const s3Config = {
-    region: process.env.S3_REGION,
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    region: "ap-southeast-1",
+    accessKeyId: "AKIATHHTTSCTO2Z5OKLS",
+    secretAccessKey: "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",
   };
   const s3 = new AWS.S3(s3Config);
   const picUrls = [];
+  dispatch(createListingRequest());
   try {
     await Promise.all(
       pics.map(async (pic) => {
@@ -189,7 +190,7 @@ export const createListing = ({ listing, pics }) => async (
       description,
       category,
       deliveryOption,
-      picUrls,
+      picUrls: picUrls.join(","),
     };
     const makeRequest = () =>
       fetch(requestUrl, {
@@ -200,7 +201,6 @@ export const createListing = ({ listing, pics }) => async (
         },
         body: JSON.stringify(payload),
       }).then((response) => response.json());
-    dispatch(createListingRequest());
     let response = await makeRequest();
     if (response.success) dispatch(createListingSuccess());
     else if (response.message === "Expired access token") {
@@ -210,6 +210,7 @@ export const createListing = ({ listing, pics }) => async (
       else throw "e";
     } else throw "e";
   } catch (e) {
+    console.log(e);
     dispatch(createListingFailure());
   }
 };
