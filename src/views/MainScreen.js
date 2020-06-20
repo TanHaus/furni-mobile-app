@@ -9,6 +9,7 @@ import AddListingScreen from "./post/AddListingScreen";
 import ActivityScreen from "./activity/ActivityScreen";
 import ProfileScreen from "./profile/ProfileScreen";
 import SearchScreen from "./home/SearchScreen";
+// import ListingScreen from "./listing/ListingScreen";
 // import EditProfileScreen from "./profile/settings/EditProfileScreen";
 
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,7 @@ function MainScreen(props) {
         inactiveTintColor: Color.Palette[6],
       }}
     >
+      {/* <Tab.Screen name="Listing" component={ListingScreen} /> */}
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Chat" component={ChatOverviewScreen} />
