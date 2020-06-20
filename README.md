@@ -61,16 +61,32 @@ listings: {
     timeCreated: Datetime,
     timeSold: Datetime,
     price: Decimal,
-    itemCondition: String, ('new', 'used')
+    itemCondition: String ('new', 'used'),
     description: String,
     category: String,
     deliveryOption: String,
-    status: String ('open', 'closed')
+    status: String ('open', 'closed'),
+    picUrls: Array
   },
   createListingLoading: Boolean,
   getListingsLoading: Boolean,
   getListingLoading: Boolean,
   editListingLoading: Boolean,
   deleteListingLoading: Boolean
+}
+offers: {
+  offers: Array,
+  offer: {
+    offerId: Integer,
+    listingId: Integer,
+    buyerId: Integer,
+    priceBidded: Decimal,
+    status: String ('pending', 'accepted', 'rejected')
+  },
+  createOfferLoading,
+  getOffersLoading,
+  getOfferLoading,
+  editOfferLoading,
+  deleteOfferLoading
 }
 ```

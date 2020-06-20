@@ -127,12 +127,18 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   dispatch(getListingRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(getListingSuccess(response.data));
-    else if (response.message === "Expired access token") {
+    if (response.success) {
+      const listing = response.data;
+      listing.picUrls = listing.picUrls.split(",");
+      dispatch(getListingSuccess(listing));
+    } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(getListingSuccess(response.data));
-      else throw "e";
+      if (response.success) {
+        const listing = response.data;
+        listing.picUrls = listing.picUrls.split(",");
+        dispatch(getListingSuccess(response.data));
+      } else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(getListingFailure());

@@ -40,22 +40,6 @@ export default (state = defaultState, action) => {
         ...state,
         loginLoading: false,
       };
-    case AUTH_REQUEST:
-      return {
-        ...state,
-        authLoading: true,
-      };
-    case AUTH_SUCCESS:
-      return {
-        ...state,
-        authLoading: false,
-        isAuthenticated: true,
-      };
-    case AUTH_FAILURE:
-      return {
-        ...state,
-        authLoading: false,
-      };
     case LOGOUT_REQUEST:
       return {
         ...state,
