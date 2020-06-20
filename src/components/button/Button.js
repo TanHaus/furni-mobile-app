@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
-import { ButtonType } from "./types";
-import { CustomText, TextWeight } from "../index";
+import { CustomText } from "../index";
+import { ButtonType, TextWeight } from "../types";
 import { Color } from "../../styles";
 
 export const Button = (props) => {

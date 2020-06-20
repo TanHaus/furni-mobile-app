@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
-import { CustomText, TextWeight } from "../../components";
+import { CustomText } from "../index";
+import { TextWeight } from "../types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Color } from "../../styles";
 

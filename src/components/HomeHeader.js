@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components/native";
-import { CustomText, TextWeight, Searchbar } from "../components";
+import { CustomText, Searchbar } from "./index";
+import { TextWeight } from "./types";
 import { Color } from "../styles";
 
 export const HomeHeader = (props) => {
