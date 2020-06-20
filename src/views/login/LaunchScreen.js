@@ -1,8 +1,8 @@
 import React from "react";
 import { ImageBackground } from "react-native";
-import { useHeaderHeight } from "@react-navigation/stack";
 import styled from "styled-components/native";
-import { Button, ButtonType, SafeAreaViewWrapper } from "../../components";
+import { Button, SafeAreaViewWrapper } from "../../components";
+import { ButtonType, TextWeight } from "../../components/types";
 
 function LaunchScreen(props) {
   return (

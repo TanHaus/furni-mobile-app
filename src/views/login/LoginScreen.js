@@ -16,13 +16,14 @@ function LoginScreen(props) {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmitLogin = () => {
-    submitLoginData({ email: emailOrUsername, password });
+    // submitLoginData({ email: emailOrUsername, password });
+    navigation.navigate("main");
   };
 
   return (
     <SafeAreaViewWrapper>
       <TitleContainer>
-        <BackButton onPress={() => navigation.goBack()} />
+        <BackButton onPress={() => navigation.navigate("launch")} />
         <Title weight={TextWeight.Bold}>LOG IN</Title>
       </TitleContainer>
       <Container>
@@ -36,15 +37,22 @@ function LoginScreen(props) {
           PASSWORD
         </CustomText.Regular>
         <Input value={password} onChangeText={setPassword} />
+        <TextContainer>
+          <UnderlinedText
+            onPress={() => navigation.navigate("forgot-password")}
+          >
+            Forgot password?
+          </UnderlinedText>
+        </TextContainer>
       </Container>
       <Container>
         <Button title="Log in" onPress={handleSubmitLogin} />
       </Container>
       <TextContainer>
         <CustomText.Small>or </CustomText.Small>
-        <RegisterText onPress={() => props.navigation.navigate("signup")}>
+        <UnderlinedText onPress={() => navigation.navigate("signup")}>
           register
-        </RegisterText>
+        </UnderlinedText>
         <CustomText.Small> instead</CustomText.Small>
       </TextContainer>
     </SafeAreaViewWrapper>
@@ -94,6 +102,6 @@ const TextContainer = styled.View`
   margin-top: 10px;
 `;
 
-const RegisterText = styled(CustomText.Small)`
+const UnderlinedText = styled(CustomText.Small)`
   text-decoration-line: underline;
 `;

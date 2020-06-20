@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { TextInput } from "react-native";
 import {
   BackButton,
   Button,
   CustomText,
   SafeAreaViewWrapper,
 } from "../../components";
-import { TextWeight } from "../../components/custom-text/types";
+import { ButtonType, TextWeight } from "../../components/types";
 
 function VerificationScreen(props) {
-  const { navigation } = props;
+  const { route, navigation } = props;
+  const { email } = route.params;
   const [code, setCode] = useState("");
 
   return (
@@ -23,7 +23,9 @@ function VerificationScreen(props) {
         <CustomText.Regular>
           Enter the 4-digit code sent to your email
         </CustomText.Regular>
-        <CustomText.Regular>(email)</CustomText.Regular>
+        <EmailContainer>
+          <CustomText.Regular>{email}</CustomText.Regular>
+        </EmailContainer>
       </TextContainer>
       <CodeContainer>
         <Input
@@ -35,7 +37,7 @@ function VerificationScreen(props) {
         />
       </CodeContainer>
       <Button title="Verify" onPress={() => navigation.navigate("main")} />
-      <Button title="Resend Code" onPress={null} />
+      <Button title="Resend Code" onPress={null} type={ButtonType.Secondary} />
     </SafeAreaViewWrapper>
   );
 }
@@ -63,8 +65,12 @@ const TextContainer = styled.View`
   align-items: center;
 `;
 
+const EmailContainer = styled.View`
+  border-bottom-width: 2;
+`;
+
 const CodeContainer = styled.View`
-  margin: 100px 0 25px;
+  margin: 50px 0 25px;
   align-items: center;
   flex-direction: row;
   justify-content: center;
@@ -72,7 +78,7 @@ const CodeContainer = styled.View`
 
 const Input = styled.TextInput`
   height: 40px;
-  width: 75%;
+  width: 50%;
   border-bottom-width: 1;
   text-align: center;
   font-size: 28px;
