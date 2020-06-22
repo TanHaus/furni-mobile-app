@@ -159,9 +159,6 @@ export const createListing = ({ listing, pics }) => async (
     // region: process.env.S3_REGION,
     // accessKeyId: process.env.ACCESS_KEY_ID,
     // secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    region: "ap-southeast-1",
-    accessKeyId: "AKIATHHTTSCTMXQQNBE4",
-    secretAccessKey: "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",
   };
   const s3 = new AWS.S3(s3Config);
   const picUrls = [];
