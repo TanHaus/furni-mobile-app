@@ -1,63 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Color } from "../styles";
-import HomeScreen from "./home/HomeScreen";
-import ChatOverviewScreen from "./chat/ChatOverviewScreen";
-import AddListingScreen from "./post/AddListingScreen";
-import ActivityScreen from "./activity/ActivityScreen";
-import ProfileScreen from "./profile/ProfileScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+import MainTabNavScreen from "./MainTabNavScreen";
+import ListingScreen from "./listing/ListingScreen";
 import SearchScreen from "./home/SearchScreen";
-// import ListingScreen from "./listing/ListingScreen";
-// import EditProfileScreen from "./profile/settings/EditProfileScreen";
+import SearchResultsScreen from "./home/SearchResultsScreen";
 
-const Tab = createBottomTabNavigator();
-
-const renderIcons = ({ route }) => ({
-  tabBarIcon: ({ color, size }) => {
-    let iconName;
-    iconName =
-      route.name === "Home"
-        ? "home"
-        : route.name === "Chat"
-        ? "chat"
-        : route.name === "Add"
-        ? "library-plus"
-        : route.name === "Activity"
-        ? "bell"
-        : "account";
-
-    return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
-  },
-});
+const Stack = createStackNavigator();
 
 function MainScreen(props) {
-  const { navigation, isAuthenticated } = props;
+  // const { navigation, isAuthenticated } = props;
   // if (!isAuthenticated) {
   //   navigation.navigate("start");
   // }
   return (
-    <Tab.Navigator
-      screenOptions={renderIcons}
-      tabBarOptions={{
-        activeTintColor: Color.Palette[1],
-        inactiveTintColor: Color.Palette[6],
-      }}
-    >
-      {/* <Tab.Screen name="Listing" component={ListingScreen} /> */}
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Chat" component={ChatOverviewScreen} />
-      <Tab.Screen
-        name="Add"
-        component={AddListingScreen}
-        options={{ tabBarVisible: false }}
-      />
-      <Tab.Screen name="Activity" component={ActivityScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-      {/* <Tab.Screen name="Edit Profile" component={EditProfileScreen} /> */}
-    </Tab.Navigator>
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="main-tab-nav" component={MainTabNavScreen} />
+      <Stack.Screen name="listing" component={ListingScreen} />
+      <Stack.Screen name="search-results" component={SearchResultsScreen} />
+      <Stack.Screen name="search" component={SearchScreen} />
+    </Stack.Navigator>
   );
 }
 

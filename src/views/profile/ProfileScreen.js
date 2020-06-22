@@ -86,6 +86,6 @@ const ProfileDescription = styled.View``;
 
 const Image = styled.ImageBackground`
   height: 50px;
-  object-fit: cover;
+  resize-mode: cover;
   border: 1px solid blue;
 `;

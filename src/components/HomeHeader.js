@@ -1,16 +1,20 @@
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { CustomText, Searchbar } from "./index";
 import { TextWeight } from "./types";
 import { Color } from "../styles";
+import { Ionicons } from "@expo/vector-icons";
 
 export const HomeHeader = (props) => {
   const { state, descriptors, navigation, position } = props;
 
   return (
     <View>
-      <Searchbar />
+      <SearchbarWrapper onPress={() => navigation.navigate("search")}>
+        <SearchIcon name="ios-search" />
+        <CustomText.Regular color={Color.Palette[4]}>Search</CustomText.Regular>
+      </SearchbarWrapper>
       <FeatureContainer>
         {state.routes.map(tabGen(state, descriptors, navigation, position))}
       </FeatureContainer>
@@ -89,4 +93,14 @@ const Feature = styled.TouchableOpacity`
 const FeatureContainer = styled.View`
   flex-direction: row;
   justify-content: center;
+`;
+
+const SearchbarWrapper = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const SearchIcon = styled(Ionicons)`
+  padding-right: 10px;
+  font-size: 24px;
 `;

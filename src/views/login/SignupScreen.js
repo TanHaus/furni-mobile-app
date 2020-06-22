@@ -88,7 +88,7 @@ const Title = styled(CustomText.Large)`
 
 const Input = styled.TextInput`
   height: 40px;
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
 `;
 
 const Container = styled.View`
