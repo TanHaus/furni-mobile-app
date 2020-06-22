@@ -1,8 +1,9 @@
 import React from "react";
+import { Button, View } from "react-native";
 import styled from "styled-components/native";
 import { MarketCard } from "../../components";
 
-function MarketScreen() {
+function MarketScreen(props) {
   const categories = CategoryList.map((category) => {
     return (
       <MarketCard
@@ -13,7 +14,11 @@ function MarketScreen() {
     );
   });
 
-  return <CategoryWrapper>{categories}</CategoryWrapper>;
+  return (
+    <View>
+      <CategoryWrapper>{categories}</CategoryWrapper>
+    </View>
+  );
 }
 
 export default MarketScreen;

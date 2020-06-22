@@ -42,5 +42,5 @@ const Subtitle = styled(CustomText.Regular)`
 `;
 
 const EmailContainer = styled.View`
-  border-bottom-width: 2;
+  border-bottom-width: 2px;
 `;

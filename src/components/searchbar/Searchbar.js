@@ -27,7 +27,7 @@ const SearchbarWrapper = styled.View`
 
 const SearchIcon = styled(Ionicons)`
   padding-right: 10px;
-  font-size: 24;
+  font-size: 24px;
 `;
 
 const SearchField = styled.TextInput`

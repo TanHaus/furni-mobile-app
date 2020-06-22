@@ -25,11 +25,11 @@ function ListingScreen(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [priceBidded, setPriceBidded] = useState("");
   const deviceWidth = Dimensions.get("window").width;
-  // const listingId = route.params.listingId;
+  const listingId = route.params.listingId;
   useEffect(() => {
-    loadListingData(38);
-  }, []);
-  // }, [listingId]);
+    loadListingData(listingId);
+    // }, []);
+  }, [listingId]);
   const handleCreateOffer = () => {
     submitCreateOffer({ listingId: listing.listingId, priceBidded });
   };
@@ -45,12 +45,15 @@ function ListingScreen(props) {
         </View>
       </Modal>
       <BackButton onPress={() => navigation.goBack()} />
-      <Image
-        source={{ uri: listing.picUrls[0] }}
-        // source="https://furni-s3-bucket.s3.ap-southeast-1.amazonaws.com/undefined/1592585896708"
-        key={listing.picUrls[0]}
-        style={{ width: deviceWidth, height: deviceWidth }}
-      />
+      {listing.picUrls ? (
+        <Image
+          source={{ uri: listing.picUrls[0] }}
+          key={listing.picUrls[0]}
+          style={{ width: deviceWidth, height: deviceWidth }}
+        />
+      ) : (
+        <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
+      )}
       <CustomText.Regular color={Color.Palette[4]}>
         {listing.title}
       </CustomText.Regular>
@@ -96,7 +99,7 @@ const Title = styled(CustomText.Large)`
 
 const Input = styled.TextInput`
   height: 40px;
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
 `;
 
 const Container = styled.View`

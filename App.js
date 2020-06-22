@@ -12,7 +12,7 @@ import StartScreen from './src/views/StartScreen';
 import MainScreen from './src/views/MainScreen';
 
 const { store, persistor } = configureStore();
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator();
 
 function App() {
   let [fontsLoaded] = useFonts({
@@ -30,10 +30,10 @@ function App() {
         <PersistGate loading={null} persistor={persistor}>
           <SafeAreaProvider>
             <NavigationContainer>
-              <Stack.Navigator headerMode='none'>
-                <Stack.Screen name="start" component={StartScreen}/>
-                <Stack.Screen name="main" component={MainScreen} />
-              </Stack.Navigator>
+              <RootStack.Navigator headerMode='none'>
+                <RootStack.Screen name="start" component={StartScreen}/>
+                <RootStack.Screen name="main" component={MainScreen} />
+              </RootStack.Navigator>
             </NavigationContainer>
           </SafeAreaProvider>
         </PersistGate>

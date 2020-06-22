@@ -1,7 +1,3 @@
-const AWS = require("aws-sdk");
-const dotenv = require("dotenv");
-dotenv.config();
-
 import { renewToken } from "./auth";
 
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
@@ -160,9 +156,12 @@ export const createListing = ({ listing, pics }) => async (
   } = listing;
   const requestUrl = "http://localhost:4000/listings";
   const s3Config = {
-    region: process.env.S3_REGION,
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    // region: process.env.S3_REGION,
+    // accessKeyId: process.env.ACCESS_KEY_ID,
+    // secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    region: "ap-southeast-1",
+    accessKeyId: "AKIATHHTTSCTMXQQNBE4",
+    secretAccessKey: "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",
   };
   const s3 = new AWS.S3(s3Config);
   const picUrls = [];
@@ -176,7 +175,8 @@ export const createListing = ({ listing, pics }) => async (
         );
         const params = {
           Bucket: "furni-s3-bucket",
-          Key: `${process.env.LISTING_PICS_DIRNAME}/${Date.now()}`,
+          // Key: `${process.env.LISTING_PICS_DIRNAME}/${Date.now()}`,
+          Key: `${Date.now()}`,
           Body: buf,
           ACL: "public-read",
           ContentEncoding: "base64",
@@ -304,12 +304,23 @@ export const getListings = (q) => async (dispatch, getState) => {
   dispatch(getListingsRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(getListingsSuccess(response.data));
-    else if (response.message === "Expired access token") {
+    if (response.success) {
+      let listings = response.data;
+      listings = listings.map((listing) => {
+        listing.picUrls = listing.picUrls.split(",");
+        return listing;
+      });
+      dispatch(getListingsSuccess(response.data));
+    } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(getListingsSuccess(response.data));
-      else throw "e";
+      if (response.success) {
+        listings = listings.map((listing) => {
+          listing.picUrls = listing.picUrls.split(",");
+          return listing;
+        });
+        dispatch(getListingsSuccess(response.data));
+      } else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(getListingsFailure());
