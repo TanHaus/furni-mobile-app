@@ -17,7 +17,7 @@ export const ExploreCard = (props) => {
           {price} {status}
         </Description>
         <LikeView>
-          <MaterialCommunityIcons name="heart-outline" size="35px" />
+          <MaterialCommunityIcons name="heart-outline" size={35} />
           <LikeCount weight={TextWeight.Bold}>{likeCount}</LikeCount>
         </LikeView>
       </TextContainer>

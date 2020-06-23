@@ -117,5 +117,3 @@ function ProfileScreen() {
     </SafeAreaViewWrapper>
   );
 }
-
-export default ProfileScreen;

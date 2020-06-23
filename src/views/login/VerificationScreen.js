@@ -66,7 +66,7 @@ const TextContainer = styled.View`
 `;
 
 const EmailContainer = styled.View`
-  border-bottom-width: 2;
+  border-bottom-width: 2px;
 `;
 
 const CodeContainer = styled.View`
@@ -79,7 +79,7 @@ const CodeContainer = styled.View`
 const Input = styled.TextInput`
   height: 40px;
   width: 50%;
-  border-bottom-width: 1;
+  border-bottom-width: 1px;
   text-align: center;
   font-size: 28px;
 `;

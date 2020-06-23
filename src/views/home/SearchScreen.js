@@ -1,17 +1,27 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
-
+import {
+  BackButton,
+  Button,
+  CustomText,
+  SafeAreaViewWrapper,
+  PreviewCard,
+} from "../../components";
 import { getListings } from "../../actions/listings";
 
 function SearchScreen(props) {
-  const { navigation, submitSearch, listings } = props;
+  const { navigation, listings, submitSearch } = props;
   const [searchString, setSearchString] = useState("");
+  const handleSubmitSearch = () => {
+    submitSearch(searchString);
+    navigation.navigate("search-results");
+  };
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
+    <SafeAreaViewWrapper>
       <Ionicons
         name="ios-arrow-back"
         size={24}
@@ -40,22 +50,12 @@ function SearchScreen(props) {
         onChangeText={setSearchString}
       />
       <Button
-        title="Log in"
-        onPress={() => submitSearch(searchString)}
+        title="Search"
+        onPress={handleSubmitSearch}
         backgroundColor="black"
         color="white"
       />
-      <Text
-        style={{
-          height: "100px",
-          marginTop: "25px",
-          border: "2px solid black",
-        }}
-      >
-        {" "}
-        {"hello!!" + JSON.stringify(listings)}
-      </Text>
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 }
 
@@ -77,16 +77,6 @@ export default withConnect(SearchScreen);
 // =============================================================================
 // STYLING
 // =============================================================================
-
-const Button = (props) => (
-  <ButtonWrapper
-    onPress={props.onPress}
-    backgroundColor={props.backgroundColor}
-    borderColor={props.borderColor}
-  >
-    <ButtonText color={props.color}>{props.title}</ButtonText>
-  </ButtonWrapper>
-);
 
 const ButtonWrapper = styled.TouchableOpacity`
   background-color: ${(props) => props.backgroundColor};

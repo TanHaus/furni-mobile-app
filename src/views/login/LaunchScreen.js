@@ -39,7 +39,6 @@ const Tagline = styled.Text`
   position: absolute;
   color: white;
   font-size: 24px;
-  font-family: Verdana;
   top: 34%;
 `;
 

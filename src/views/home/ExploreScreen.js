@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { ExploreCard } from "../../components";
 
@@ -7,7 +8,7 @@ function ExploreScreen() {
     return <ExploreCard key={category.title} {...category} />;
   });
 
-  return <ExploreWrapper>{recommendations}</ExploreWrapper>;
+  return <View>{recommendations}</View>;
 }
 
 export default ExploreScreen;
@@ -24,31 +25,24 @@ const RecommendationList = [
     likeCount: 12,
   },
   {
-    title: "Bedroom",
+    title: "Purple Chair 2",
     src: require("../../assets/listings/white-chair.png"),
     price: "$20",
     status: "used",
     likeCount: 30,
   },
   {
-    title: "Bedroom",
+    title: "Purple Chair 3",
     src: require("../../assets/listings/rattan-chair.png"),
     price: "$35",
     status: "new",
     likeCount: 28,
   },
   {
-    title: "Bedroom",
+    title: "Purple Chair 4",
     src: require("../../assets/listings/translucent-chair.png"),
     price: "$18",
     status: "new",
     likeCount: 19,
   },
 ];
-
-// ---------------------------------------------------------------------------
-// STYLING
-// ---------------------------------------------------------------------------
-const ExploreWrapper = styled.View`
-  // display: flex;
-`;
