@@ -23,25 +23,20 @@ function AddScreen(props) {
     itemCondition: "new",
     description: "",
     deliveryOption: "",
-    pics: [],
   });
-  // const [pics, setPics] = useState([]);
+  const [pics, setPics] = useState([]);
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
       const pickerResult = await ImagePicker.launchImageLibraryAsync();
       if (!pickerResult.cancelled)
-        // setPics((pics) => [...pics, pickerResult.uri]);
-        setListing((listing) => {
-          return { ...listing, pics: [...listing.pics, pickerResult.uri] };
-        });
+        setPics((pics) => [...pics, pickerResult.uri]);
       else alert("Permission to access camera roll is required!");
     }
   };
 
   const handleSubmit = () => {
-    // submitListingData({ listing, pics });
-    submitListingData(listing);
+    submitListingData({ listing, pics });
   };
 
   return (
@@ -53,8 +48,8 @@ function AddScreen(props) {
       <Container
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        {pics ? (
-          pics.map((pic) => (
+        {listing.pics ? (
+          listing.pics.map((pic) => (
             <Image
               source={{ uri: pic }}
               style={{ width: 80, height: 80, margin: 10 }}
