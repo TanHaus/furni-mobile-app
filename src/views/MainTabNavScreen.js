@@ -9,6 +9,8 @@ import AddListingScreen from "./post/AddListingScreen";
 import ActivityScreen from "./activity/ActivityScreen";
 import ProfileScreen from "./profile/ProfileScreen";
 import SearchScreen from "./home/SearchScreen";
+import LikedScreen from "./profile/LikedScreen";
+import SettingsScreen from "./profile/settings/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +49,7 @@ function MainTabNavScreen(props) {
         options={{ tabBarVisible: false }}
       />
       <Tab.Screen name="Activity" component={ActivityScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }

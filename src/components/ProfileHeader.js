@@ -22,12 +22,12 @@ export const ProfileHeader = (props) => {
         <IconContainer>
           <MaterialCommunityIcons
             name="heart-outline"
-            size="35px"
+            size={35}
             onPress={() => navigation.navigate("liked")}
           />
           <MaterialCommunityIcons
             name="account"
-            size="35px"
+            size={35}
             onPress={() => navigation.navigate("settings")}
           />
         </IconContainer>

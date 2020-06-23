@@ -7,7 +7,7 @@ export const BackButton = (props) => {
   return (
     <Ionicons
       name="ios-arrow-back"
-      // size={size || 24}
+      size={size || 24}
       color={color || Color.Palette[3]}
       style={{ paddingTop: 10, paddingBottom: 10 }}
       onPress={onPress}

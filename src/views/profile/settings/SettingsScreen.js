@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
   BackButton,
-  Button,
   CustomText,
   SafeAreaViewWrapper,
 } from "../../../components";
@@ -17,14 +16,36 @@ function SettingsScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>LOG IN</Title>
+        <Title weight={TextWeight.Bold}>SETTINGS</Title>
       </TitleContainer>
-      <Container>
-        <CustomText.Regular color={Color.Palette[4]}>
-          SETTINGS
-        </CustomText.Regular>
-        <Input value={emailOrUsername} onChangeText={setEmailOrUsername} />
-      </Container>
+      <SettingContainer>
+        <SettingButton>
+          <SettingTitle weight={TextWeight.Semibold}>Profile</SettingTitle>
+        </SettingButton>
+      </SettingContainer>
+      <SettingContainer>
+        <SettingButton>
+          <SettingTitle weight={TextWeight.Semibold}>
+            Change Password
+          </SettingTitle>
+        </SettingButton>
+      </SettingContainer>
+      <SettingContainer>
+        <SettingButton>
+          <SettingTitle weight={TextWeight.Semibold}>Preferences</SettingTitle>
+        </SettingButton>
+      </SettingContainer>
+      <SettingContainer>
+        <SettingButton>
+          <SettingTitle weight={TextWeight.Semibold}>Purchases</SettingTitle>
+        </SettingButton>
+      </SettingContainer>
+      <SettingContainer>
+        <SettingButton>
+          <SettingTitle weight={TextWeight.Semibold}>Log out</SettingTitle>
+        </SettingButton>
+      </SettingContainer>
+      <SettingContainer />
     </SafeAreaViewWrapper>
   );
 }
@@ -53,26 +74,20 @@ const TitleContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const Title = styled(CustomText.Large)`
   padding-left: 20px;
 `;
 
-const Input = styled.TextInput`
-  height: 40px;
-  border-bottom-width: 1;
+const SettingContainer = styled.View`
+  border-top-width: 1px;
+  border-top-color: ${Color.Palette[5]};
 `;
 
-const Container = styled.View`
-  margin-top: 30px;
-`;
+const SettingButton = styled.TouchableOpacity``;
 
-const TextContainer = styled.View`
-  flex-direction: row;
-  margin-top: 10px;
-`;
-
-const UnderlinedText = styled(CustomText.Small)`
-  text-decoration-line: underline;
+const SettingTitle = styled(CustomText.Regular)`
+  padding: 10px 0 10px 10px;
 `;

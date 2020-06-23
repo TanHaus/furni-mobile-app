@@ -5,6 +5,9 @@ import MainTabNavScreen from "./MainTabNavScreen";
 import ListingScreen from "./listing/ListingScreen";
 import SearchScreen from "./home/SearchScreen";
 import SearchResultsScreen from "./home/SearchResultsScreen";
+// import ListingScreen from "./listing/ListingScreen";
+// import EditProfileScreen from "./profile/settings/EditProfileScreen";
+import LikedScreen from "./profile/LikedScreen";
 
 const Stack = createStackNavigator();
 

@@ -18,13 +18,12 @@ function LikedScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>LOG IN</Title>
+        <Title weight={TextWeight.Bold}>LIKED</Title>
       </TitleContainer>
       <Container>
         <CustomText.Regular color={Color.Palette[4]}>
-          LIKED SCREEN
+          LIKED SCREEN THAT SHOWS LIKED LISTINGS
         </CustomText.Regular>
-        <Input value={emailOrUsername} onChangeText={setEmailOrUsername} />
       </Container>
     </SafeAreaViewWrapper>
   );
