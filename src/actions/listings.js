@@ -141,60 +141,15 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const createListing = ({ listing, pics }) => async (
-  dispatch,
-  getState
-) => {
-  const {
-    sellerId,
-    title,
-    price,
-    itemCondition,
-    description,
-    category,
-    deliveryOption,
-  } = listing;
+export const createListing = (listing) => async (dispatch, getState) => {
   const requestUrl = "http://localhost:4000/listings";
-  const s3Config = {
-    // region: process.env.S3_REGION,
-    // accessKeyId: process.env.ACCESS_KEY_ID,
-    // secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  const payload = {
+    ...listing,
+    sellerId: listing.sellerId || getState().auth.user.userId,
+    timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
   };
-  const s3 = new AWS.S3(s3Config);
-  const picUrls = [];
   dispatch(createListingRequest());
   try {
-    await Promise.all(
-      pics.map(async (pic) => {
-        const buf = Buffer.from(
-          pic.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-        const params = {
-          Bucket: "furni-s3-bucket",
-          // Key: `${process.env.LISTING_PICS_DIRNAME}/${Date.now()}`,
-          Key: `${Date.now()}`,
-          Body: buf,
-          ACL: "public-read",
-          ContentEncoding: "base64",
-          ContentType: "image/jpeg",
-          ContentDisposition: "attachment",
-        };
-        const data = await s3.upload(params).promise();
-        picUrls.push(data.Location);
-      })
-    );
-    const payload = {
-      sellerId: sellerId || getState().auth.user.userId,
-      title,
-      timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
-      price,
-      itemCondition,
-      description,
-      category,
-      deliveryOption,
-      picUrls: picUrls.join(","),
-    };
     const makeRequest = () =>
       fetch(requestUrl, {
         method: "POST",
@@ -218,25 +173,11 @@ export const createListing = ({ listing, pics }) => async (
   }
 };
 
-export const editListing = ({
-  listingId,
-  name,
-  price,
-  itemCondition,
-  description,
-  category,
-  deliveryOption,
-  picUrls,
-}) => async (dispatch, getState) => {
+export const editListing = (editedListing) => async (dispatch, getState) => {
   const requestUrl = `http://localhost:4000/listings/${listingId}`;
   const payload = {
-    name,
-    price,
-    itemCondition,
-    description,
-    category,
-    deliveryOption,
-    picUrls,
+    ...listing,
+    timeUpdated: new Date().toISOString().slice(0, 19).replace("T", " "),
   };
   dispatch(editListingRequest());
   const makeRequest = () =>
@@ -251,7 +192,6 @@ export const editListing = ({
   try {
     let response = await makeRequest();
     if (response.success) dispatch(editListingSuccess());
-    // need to update store with updated data
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
