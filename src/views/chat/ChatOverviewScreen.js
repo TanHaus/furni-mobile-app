@@ -1,8 +1,17 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getOffersByBuyer } from "../../actions/offers";
 
-function ChatOverviewScreen() {
+function ChatOverviewScreen(props) {
+  const { userId, buyerOffers, loadBuyerOffersData } = props;
+  const [editOffer, setEditOffer] = useState({});
+  useEffect(() => {
+    loadBuyerOffersData(userId);
+  }, [userId]);
+  const handleEditOffer = (offer) => {
+    setEditOffer(offer);
+  };
   const event = new Date("05 October 2011 14:48 UTC");
   return (
     <SafeAreaView>
@@ -25,6 +34,15 @@ function ChatOverviewScreen() {
           />
         </View>
       </View>
+      {buyerOffers &&
+        buyerOffers.map((offer) => (
+          <View>
+            <Text>{`offerId: ${offer.offerId}`}</Text>
+            <Text>{`listingId: ${offer.listingId}`}</Text>
+            <Text>{`Price bidded: ${offer.priceBidded}`}</Text>
+            <Button title="Edit offer" onPress={() => handleEditOffer(offer)} />
+          </View>
+        ))}
     </SafeAreaView>
   );
 }
@@ -68,4 +86,18 @@ function ChatCard(props) {
   );
 }
 
-export default ChatOverviewScreen;
+function mapStateToProps(state) {
+  return {
+    userId: state.auth.user.userId,
+    buyerOffers: state.offers.buyerOffers,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    loadBuyerOffersData: (buyerId) => dispatch(getOffersByBuyer(buyerId)),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(ChatOverviewScreen);
