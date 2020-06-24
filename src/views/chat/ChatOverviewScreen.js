@@ -1,20 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getOffersByBuyer } from "../../actions/offers";
+import { getOffersByBuyer, editOffer } from "../../actions/offers";
 
 function ChatOverviewScreen(props) {
-  const { userId, buyerOffers, loadBuyerOffersData } = props;
-  const [editOffer, setEditOffer] = useState({});
+  const {
+    userId,
+    buyerOffers,
+    loadBuyerOffersData,
+    submitEditOffer,
+    submitDeleteOffer,
+  } = props;
+  const [editedOffer, setEditedOffer] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     loadBuyerOffersData(userId);
   }, [userId]);
-  const handleEditOffer = (offer) => {
-    setEditOffer(offer);
+  const openEditModal = (offer) => {
+    setEditedOffer(offer);
+    setModalVisible(true);
+  };
+  const handleEditOffer = () => {
+    submitEditOffer(editedOffer);
   };
   const event = new Date("05 October 2011 14:48 UTC");
   return (
     <SafeAreaView>
+      <Modal visible={modalVisible}>
+        <View>
+          <CustomText.Regular color={Color.Palette[4]}>
+            {`offerId: ${editedOffer.offerId}`}
+          </CustomText.Regular>
+          <CustomText.Regular color={Color.Palette[4]}>
+            {"Your bid: "}
+          </CustomText.Regular>
+          <Input
+            value={editedOffer.priceBidded}
+            onChangeText={setPriceBidded}
+          />
+          <Button title="Confirm" onPress={handleEditOffer} />
+          <Button
+            title="Delete"
+            onPress={() => submitDeleteOffer(editedOffer.offerId)}
+          />
+        </View>
+      </Modal>
       <Text
         style={{
           padding: 20,
@@ -40,7 +70,7 @@ function ChatOverviewScreen(props) {
             <Text>{`offerId: ${offer.offerId}`}</Text>
             <Text>{`listingId: ${offer.listingId}`}</Text>
             <Text>{`Price bidded: ${offer.priceBidded}`}</Text>
-            <Button title="Edit offer" onPress={() => handleEditOffer(offer)} />
+            <Button title="Edit offer" onPress={() => openEditModal(offer)} />
           </View>
         ))}
     </SafeAreaView>
@@ -96,6 +126,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     loadBuyerOffersData: (buyerId) => dispatch(getOffersByBuyer(buyerId)),
+    submitEditOffer: (editedOffer) => dispatch(editOffer(editedOffer)),
+    submitDeleteOffer: (offerId) => dispatch(deleteOffer(offerId)),
   };
 }
 
