@@ -63,13 +63,25 @@ function ListingScreen(props) {
       <CustomText.Regular color={Color.Palette[4]}>
         {listing.condition}
       </CustomText.Regular>
-      <Button title="Make offer" onPress={() => setModalVisible(true)} />
+      {listing.sellerId === user.userId ? (
+        <Button
+          title="View offers"
+          onPress={() =>
+            navigation.navigate("OffersByListingScreen", {
+              listingId: listing.listingId,
+            })
+          }
+        />
+      ) : (
+        <Button title="Make offer" onPress={() => setModalVisible(true)} />
+      )}
     </SafeAreaViewWrapper>
   );
 }
 
 function mapStateToProps(state) {
   return {
+    user: state.auth.user,
     listing: state.listings.listing,
   };
 }
