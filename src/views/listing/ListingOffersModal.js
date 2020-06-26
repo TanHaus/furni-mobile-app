@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dimensions, Modal, View, Image } from "react-native";
 import { connect } from "react-redux";
 import { getListing } from "../../actions/listings";
-import { createOffer, editOffer } from "../../actions/offers";
+import { createOffer } from "../../actions/offers";
 import styled from "styled-components/native";
 import {
   BackButton,
@@ -15,53 +15,14 @@ import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
 function ListingScreen(props) {
-  const {
-    route,
-    navigation,
-    user,
-    listing,
-    loadListingData,
-    loadOffersData,
-    submitCreateOffer,
-  } = props;
-
-  const deviceWidth = Dimensions.get("window").width;
+  const { route, navigation, listing, listingOffers } = props;
   const listingId = route.params.listingId;
-  const [isSeller, setIsSeller] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [priceBidded, setPriceBidded] = useState("");
-
   useEffect(() => {
-    loadListingData(listingId);
-    setIsSeller(listing.sellerId === user.userId);
-    loadOffersData({ listingId, buyerId: user.userId });
-  }, []);
-
-  const handleCreateOffer = () => {
-    submitCreateOffer({ listingId, priceBidded });
-  };
-
+    loadOffersData(listingId);
+  }, [listingId]);
   return (
     <SafeAreaViewWrapper>
-      <Modal visible={modalVisible}>
-        <View>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Your bid:{" "}
-          </CustomText.Regular>
-          <Input value={priceBidded} onChangeText={setPriceBidded} />
-          <Button title="Confirm" onPress={handleCreateOffer} />
-        </View>
-      </Modal>
       <BackButton onPress={() => navigation.goBack()} />
-      {listing.picUrls ? (
-        <Image
-          source={{ uri: listing.picUrls[0] }}
-          key={listing.picUrls[0]}
-          style={{ width: deviceWidth, height: deviceWidth }}
-        />
-      ) : (
-        <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
-      )}
       <CustomText.Regular color={Color.Palette[4]}>
         {listing.title}
       </CustomText.Regular>
@@ -71,14 +32,19 @@ function ListingScreen(props) {
       <CustomText.Regular color={Color.Palette[4]}>
         {listing.condition}
       </CustomText.Regular>
-      {isSeller ? (
-        <Button
-          title="View offers"
-          onPress={() => navigation.navigate("ListingOffers", { listingId })}
-        />
-      ) : (
-        <Button title="Make offer" onPress={() => setModalVisible(true)} />
-      )}
+      {listingOffers.map((offer) => (
+        <TouchableOpacity onPress={() => navigation.navigate("ChatSession")}>
+          <CustomText.Regular color={Color.Palette[4]}>
+            {`offerId: ${offer.offerId}`}
+          </CustomText.Regular>
+          <CustomText.Regular color={Color.Palette[4]}>
+            {`priceBidded: ${offer.priceBidded}`}
+          </CustomText.Regular>
+          <CustomText.Regular color={Color.Palette[4]}>
+            {`priceBidded: ${offer.priceBidded}`}
+          </CustomText.Regular>
+        </TouchableOpacity>
+      ))}
     </SafeAreaViewWrapper>
   );
 }
@@ -87,13 +53,13 @@ function mapStateToProps(state) {
   return {
     user: state.auth.user,
     listing: state.listings.listing,
+    listingOffers: state.offers.listingOffers,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    loadListingData: (listingId) => dispatch(getListing(listingId)),
-    loadOffersData: (params) => dispatch(getOffersByListing(params)),
+    loadOffersData: (listingId) => dispatch(getListing(listingId)),
     submitCreateOffer: (offerData) => dispatch(createOffer(offerData)),
   };
 }
