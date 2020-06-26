@@ -5,14 +5,22 @@ import {
   BackButton,
   Button,
   CustomText,
+  PreviewCard,
   SafeAreaViewWrapper,
 } from "../../components";
 import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
-import { loginUser } from "../../actions/auth";
+import { Text } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 function LikedScreen(props) {
-  const { navigation, submitLoginData, isLoggingIn, isAuthenticated } = props;
+  const {
+    navigation,
+    submitLoginData,
+    isLoggingIn,
+    isAuthenticated,
+    listings,
+  } = props;
 
   return (
     <SafeAreaViewWrapper>
@@ -24,26 +32,34 @@ function LikedScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>
           LIKED SCREEN THAT SHOWS LIKED LISTINGS
         </CustomText.Regular>
+
+        {/* <Text>{JSON.stringify(listings)}</Text>
+        {listings.map((listing) => (
+          <TouchableOpacity
+            onPress={() => {
+              console.log("going to listing");
+              navigation.navigate("listing", { listingId: listing.listingId });
+            }}
+          >
+            <PreviewCard key={listing.listingId} listing={listing} />
+          </TouchableOpacity>
+        ))} */}
       </Container>
     </SafeAreaViewWrapper>
   );
 }
 
-// function mapStateToProps(state) {
-//   return {
-//     isLoggingIn: state.auth.isLoggingIn,
-//     loginError: state.auth.loginError,
-//   };
-// }
+function mapStateToProps(state) {
+  return {
+    listings: state.listings.listings,
+  };
+}
 
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     submitLoginData: (loginData) => dispatch(loginUser(loginData)),
-//   };
-// }
+function mapDispatchToProps(dispatch) {
+  return {};
+}
 
-// const withConnect = connect(mapStateToProps, mapDispatchToProps);
-// export default withConnect(LoginScreen);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default LikedScreen;
 
 // =============================================================================
@@ -59,20 +75,6 @@ const Title = styled(CustomText.Large)`
   padding-left: 20px;
 `;
 
-const Input = styled.TextInput`
-  height: 40px;
-  border-bottom-width: 1;
-`;
-
 const Container = styled.View`
   margin-top: 30px;
-`;
-
-const TextContainer = styled.View`
-  flex-direction: row;
-  margin-top: 10px;
-`;
-
-const UnderlinedText = styled(CustomText.Small)`
-  text-decoration-line: underline;
 `;

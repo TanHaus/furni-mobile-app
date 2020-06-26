@@ -26,7 +26,7 @@ export const ProfileHeader = (props) => {
             onPress={() => navigation.navigate("liked")}
           />
           <MaterialCommunityIcons
-            name="account"
+            name="settings-outline"
             size={35}
             onPress={() => navigation.navigate("settings")}
           />
@@ -123,9 +123,9 @@ const FeatureContainer = styled.View`
 
 const FeatureText = styled(CustomText.Small)`
   text-transform: uppercase;
+  text-align: center;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align-vertical: center;
 
   height: 100%;
 

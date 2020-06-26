@@ -99,13 +99,9 @@ import {
   SafeAreaViewWrapper,
   CustomText,
 } from "../../components";
-import { LikedScreen } from "./LikedScreen";
-import { ProfileHelper } from "./ProfileHelper";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SettingsScreen } from "./settings/SettingsScreen";
 
 const Tab = createMaterialTopTabNavigator();
-const Stack = createStackNavigator();
 
 function ProfileScreen() {
   return (

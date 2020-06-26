@@ -73,22 +73,3 @@ function mapDispatchToProps(dispatch) {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withConnect(SearchScreen);
-
-// =============================================================================
-// STYLING
-// =============================================================================
-
-const ButtonWrapper = styled.TouchableOpacity`
-  background-color: ${(props) => props.backgroundColor};
-  border-radius: 10px;
-  border: 2px solid
-    ${(props) => (!!props.borderColor ? props.borderColor : "black")};
-  padding: 10px;
-  margin-top: 20px;
-`;
-
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${(props) => props.color};
-  text-align: center;
-`;

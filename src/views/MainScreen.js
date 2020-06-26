@@ -12,10 +12,10 @@ import LikedScreen from "./profile/LikedScreen";
 const Stack = createStackNavigator();
 
 function MainScreen(props) {
-  // const { navigation, isAuthenticated } = props;
-  // if (!isAuthenticated) {
-  //   navigation.navigate("start");
-  // }
+  const { navigation, isAuthenticated } = props;
+  if (!isAuthenticated) {
+    navigation.navigate("start");
+  }
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="main-tab-nav" component={MainTabNavScreen} />

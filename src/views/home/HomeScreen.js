@@ -11,12 +11,12 @@ const Tab = createMaterialTopTabNavigator();
 function HomeScreen(props) {
   return (
     <SafeAreaViewWrapper>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           props.navigation.navigate("search");
         }}
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      ></TouchableOpacity>
+      ></TouchableOpacity> */}
       <Tab.Navigator tabBar={(props) => <HomeHeader {...props} />}>
         <Tab.Screen name="Market" component={MarketScreen} />
         <Tab.Screen name="Explore" component={ExploreScreen} />

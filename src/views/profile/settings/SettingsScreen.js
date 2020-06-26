@@ -19,24 +19,22 @@ function SettingsScreen(props) {
         <Title weight={TextWeight.Bold}>SETTINGS</Title>
       </TitleContainer>
       <SettingContainer>
-        <SettingButton>
+        <SettingButton onPress={() => navigation.navigate("edit-profile")}>
           <SettingTitle weight={TextWeight.Semibold}>Profile</SettingTitle>
         </SettingButton>
       </SettingContainer>
       <SettingContainer>
-        <SettingButton>
-          <SettingTitle weight={TextWeight.Semibold}>
-            Change Password
-          </SettingTitle>
+        <SettingButton onPress={() => navigation.navigate("change-password")}>
+          <SettingTitle weight={TextWeight.Semibold}>Password</SettingTitle>
         </SettingButton>
       </SettingContainer>
       <SettingContainer>
-        <SettingButton>
+        <SettingButton onPress={() => navigation.navigate("edit-preferences")}>
           <SettingTitle weight={TextWeight.Semibold}>Preferences</SettingTitle>
         </SettingButton>
       </SettingContainer>
       <SettingContainer>
-        <SettingButton>
+        <SettingButton onPress={() => navigation.navigate("purchases")}>
           <SettingTitle weight={TextWeight.Semibold}>Purchases</SettingTitle>
         </SettingButton>
       </SettingContainer>
@@ -50,21 +48,6 @@ function SettingsScreen(props) {
   );
 }
 
-// function mapStateToProps(state) {
-//   return {
-//     isLoggingIn: state.auth.isLoggingIn,
-//     loginError: state.auth.loginError,
-//   };
-// }
-
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     submitLoginData: (loginData) => dispatch(loginUser(loginData)),
-//   };
-// }
-
-// const withConnect = connect(mapStateToProps, mapDispatchToProps);
-// export default withConnect(LoginScreen);
 export default SettingsScreen;
 
 // =============================================================================
