@@ -28,10 +28,38 @@ function AddScreen(props) {
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
-      const pickerResult = await ImagePicker.launchImageLibraryAsync();
-      if (!pickerResult.cancelled)
+      // const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      //   allowsEditing: true,
+      //   aspect: [3, 3],
+      //   quality: 1,
+      //   base64: true,
+      // });
+      let pickerResult = await ImagePicker.launchCameraAsync({
+        // mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        // allowsEditing: true,
+        aspect: [3, 3],
+        quality: 1,
+        // base64: true,
+      });
+      // console.log(pickerResult.base64);
+      console.log(pickerResult.fileName);
+      console.log(pickerResult.type);
+      if (!pickerResult.cancelled) {
+        // const res = await fetch('http://10.0.2.2:4080/listings/44/pics', {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   // send our base64 string as POST request
+        //   body: JSON.stringify({
+        //     imgsource: pickerResult.base64,
+        //   }),
+        // })
+        // console.log(res);
         setPics((pics) => [...pics, pickerResult.uri]);
-      else alert("Permission to access camera roll is required!");
+      } else alert("Permission to access camera roll is required!");
     }
   };
 
@@ -48,16 +76,14 @@ function AddScreen(props) {
       <Container
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        {listing.pics ? (
-          listing.pics.map((pic) => (
+        {pics &&
+          pics.map((pic, index) => (
             <Image
+              key={index}
               source={{ uri: pic }}
               style={{ width: 80, height: 80, margin: 10 }}
             />
-          ))
-        ) : (
-          <View />
-        )}
+          ))}
         <TouchableOpacity onPress={openImagePickerAsync}>
           <AntDesign name="plussquareo" size={80} color="black" />
         </TouchableOpacity>

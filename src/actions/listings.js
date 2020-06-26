@@ -1,4 +1,5 @@
 import { renewToken } from "./auth";
+import { PushNotificationIOS, Platform } from "react-native";
 
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
@@ -152,20 +153,25 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-const addPic = ({ listingId, blob }) =>
-  fetch(`http://localhost:4000/listings/${listingId}/pics`, {
+const addPic = ({ listingId, blob, access_token }) => {
+  // const file = new FormData().append('', blob, `${listingId}_${Date.now()}.jpeg`)
+  const formData = new FormData();
+  formData.append("image", blob, `${listingId}_${Date.now()}.jpeg`);
+  return fetch(`http://localhost:4000/listings/${listingId}/pics`, {
     method: "POST",
     headers: {
-      Authorization: "Bearer " + getState().auth.token.access_token,
+      // "Content-Type": "application/json",
+      Authorization: "Bearer " + access_token,
     },
-    body: blob,
+    body: formData,
   });
+};
 
 export const createListing = ({ listing, pics }) => async (
   dispatch,
   getState
 ) => {
-  const requestUrl = "http://localhost:4000/listings";
+  const requestUrl = "http://10.0.2.2:4000/listings";
   const payload = {
     ...listing,
     sellerId: listing.sellerId || getState().auth.user.userId,
@@ -187,8 +193,21 @@ export const createListing = ({ listing, pics }) => async (
       const listingId = response.data.listingId;
       await Promise.all(
         pics.map((pic) => {
-          const blob = b64toBlob(pic);
-          addPic(listingId, blob);
+          const form = new FormData();
+          form.append("photo", {
+            uri: pic.uri,
+            type: "image/jpg",
+            name: `${listingId}_${Date.now()}.jpeg`,
+          });
+          // console.log(JSON.stringify(pic.replace(/^data:image\/[a-z]+;base64,/, "")));
+          return fetch(`http://10.0.2.2:4000/listings/${listingId}/pics`, {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + getState().auth.token.access_token,
+            },
+            body: form,
+          });
+          // addPic({ listingId, blob, access_token: getState().auth.token.access_token });
         })
       );
       dispatch(createListingSuccess());
@@ -200,7 +219,11 @@ export const createListing = ({ listing, pics }) => async (
         await Promise.all(
           pics.map((pic) => {
             const blob = b64toBlob(pic);
-            addPic(listingId, blob);
+            addPic({
+              listingId,
+              blob,
+              access_token: getState().auth.token.access_token,
+            });
           })
         );
         dispatch(createListingSuccess());
