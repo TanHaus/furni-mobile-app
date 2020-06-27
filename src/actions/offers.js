@@ -25,7 +25,8 @@ const createOfferRequest = () => {
   };
 };
 
-const createOfferSuccess = () => {
+const createOfferSuccess = (setModalVisible) => {
+  setModalVisible(false);
   return {
     type: CREATE_OFFER_SUCCESS,
   };
@@ -131,11 +132,13 @@ const deleteOfferFailure = () => {
   };
 };
 
-export const createOffer = ({ listingId, buyerId, priceBidded }) => async (
-  dispatch,
-  getState
-) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}/offers`;
+export const createOffer = ({
+  listingId,
+  buyerId,
+  priceBidded,
+  setModalVisible,
+}) => async (dispatch, getState) => {
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}/offers`;
   const payload = {
     buyerId: buyerId || getState().auth.user.userId,
     timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -153,11 +156,11 @@ export const createOffer = ({ listingId, buyerId, priceBidded }) => async (
   dispatch(createOfferRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(createOfferSuccess());
+    if (response.success) dispatch(createOfferSuccess(setModalVisible));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(createOfferSuccess());
+      if (response.success) dispatch(createOfferSuccess(setModalVisible));
       else throw "e";
     } else throw "e";
   } catch (e) {
@@ -170,7 +173,7 @@ export const getOffersByListing = ({ listingId, buyerId }) => async (
   getState
 ) => {
   const requestUrl =
-    `http://localhost:4000/listings/${listingId}/offers` +
+    `http://10.0.2.2:4000/listings/${listingId}/offers` +
     (buyerId ? `?buyerId=${buyerId}` : "");
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -224,7 +227,7 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
   dispatch,
   getState
 ) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const payload = { priceBidded, status };
   dispatch(editOfferRequest());
   const makeRequest = () =>
@@ -252,7 +255,7 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
 };
 
 export const deleteOffer = (offerId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",
@@ -277,7 +280,7 @@ export const deleteOffer = (offerId) => async (dispatch, getState) => {
 };
 
 export const getOfferById = (offerId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",

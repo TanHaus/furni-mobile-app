@@ -131,7 +131,7 @@ const getUserListingsFailure = () => {
 };
 
 export const getUser = (userId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/users/${userId}`;
+  const requestUrl = `http://10.0.2.2:4000/users/${userId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -181,7 +181,7 @@ export const editUser = ({ name, email, profilePicUrl }) => async (
   getState
 ) => {
   const userId = getState().auth.user.userId;
-  const requestUrl = `http://localhost:4000/users/${userId}`;
+  const requestUrl = `http://10.0.2.2:4000/users/${userId}`;
   const payload = { name, email, profilePicUrl };
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -210,7 +210,7 @@ export const editUser = ({ name, email, profilePicUrl }) => async (
 
 export const deleteUser = () => async (dispatch, getState) => {
   const userId = getState().auth.user.userId;
-  const requestUrl = `http://localhost:4000/users/${userId}`;
+  const requestUrl = `http://10.0.2.2:4000/users/${userId}`;
   dispatch(deleteUserRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -235,7 +235,7 @@ export const deleteUser = () => async (dispatch, getState) => {
 };
 
 export const getUserListings = (userId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/users/${userId}/listings`;
+  const requestUrl = `http://10.0.2.2:4000/users/${userId}/listings`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
