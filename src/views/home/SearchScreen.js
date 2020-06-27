@@ -18,7 +18,7 @@ function SearchScreen(props) {
   const [searchString, setSearchString] = useState("");
   const handleSubmitSearch = () => {
     submitSearch(searchString);
-    navigation.navigate("search-results");
+    navigation.navigate("search-results"); // should only navigate if the fetch response is successful.
   };
   return (
     <SafeAreaViewWrapper>

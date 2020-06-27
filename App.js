@@ -6,7 +6,6 @@ import { AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import configureStore from './src/configureStore';
 import StartScreen from './src/views/StartScreen';
 import MainScreen from './src/views/MainScreen';

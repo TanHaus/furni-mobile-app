@@ -106,7 +106,7 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const renewToken = () => async (dispatch, getState) => {
-  const refreshTokenUrl = "http://localhost:4000/login/refreshToken";
+  const refreshTokenUrl = "http://10.0.2.2:4000/login/refreshToken";
   const payload = JSON.stringify({
     refreshToken: getState().auth.token.refresh_token,
   });
