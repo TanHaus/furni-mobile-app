@@ -68,8 +68,7 @@ const renewTokenFailure = () => {
 };
 
 export const loginUser = ({ email, password }) => async (dispatch) => {
-  // const requestUrl = "http://10.0.2.2:4000/login";
-  const requestUrl = "http://localhost:4000/login";
+  const requestUrl = "http://10.0.2.2:4000/login";
   const payload = {
     email,
     password,

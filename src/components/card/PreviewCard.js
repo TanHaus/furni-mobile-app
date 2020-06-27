@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CustomText } from "../custom-text/CustomText";

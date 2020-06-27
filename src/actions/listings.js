@@ -1,5 +1,4 @@
 import { renewToken } from "./auth";
-import { PushNotificationIOS, Platform } from "react-native";
 
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
