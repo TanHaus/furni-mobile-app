@@ -30,7 +30,7 @@ function LikedScreen(props) {
       </TitleContainer>
       <Container>
         <CustomText.Regular color={Color.Palette[4]}>
-          LIKED SCREEN THAT SHOWS LIKED LISTINGS
+          You have no liked listings currently.
         </CustomText.Regular>
 
         {/* <Text>{JSON.stringify(listings)}</Text>

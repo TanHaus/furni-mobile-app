@@ -7,7 +7,7 @@ import {
   CustomText,
   SafeAreaViewWrapper,
 } from "../../../components";
-import { TextWeight } from "../../../components/custom-text/types";
+import { TextWeight } from "../../../components/types";
 import { Color } from "../../../styles";
 import { loginUser } from "../../../actions/auth";
 

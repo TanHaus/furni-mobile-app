@@ -7,7 +7,7 @@ import {
   SafeAreaViewWrapper,
 } from "../../../components";
 import styled from "styled-components/native";
-import { TextWeight } from "../../../components/custom-text/types";
+import { TextWeight } from "../../../components/types";
 import { Color } from "../../../styles";
 
 import { getUser, editUser } from "../../../actions/users";

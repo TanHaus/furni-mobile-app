@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
@@ -8,9 +8,13 @@ import {
 } from "../../../components";
 import { TextWeight } from "../../../components/custom-text/types";
 import { Color } from "../../../styles";
+import { logoutUser } from "../../../actions/auth";
 
 function SettingsScreen(props) {
-  const { navigation, submitLoginData, isLoggingIn, isAuthenticated } = props;
+  const { navigation, submitLogout } = props;
+  const handleLogout = () => {
+    submitLogout();
+  };
 
   return (
     <SafeAreaViewWrapper>
@@ -39,7 +43,7 @@ function SettingsScreen(props) {
         </SettingButton>
       </SettingContainer>
       <SettingContainer>
-        <SettingButton>
+        <SettingButton onPress={handleLogout}>
           <SettingTitle weight={TextWeight.Semibold}>Log out</SettingTitle>
         </SettingButton>
       </SettingContainer>
@@ -48,7 +52,21 @@ function SettingsScreen(props) {
   );
 }
 
-export default SettingsScreen;
+function mapStateToProps(state) {
+  return {
+    isLoggingOut: state.auth.isLoggingOut,
+    logoutError: state.auth.logoutError,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    submitLogout: () => dispatch(logoutUser()),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(SettingsScreen);
 
 // =============================================================================
 // STYLING

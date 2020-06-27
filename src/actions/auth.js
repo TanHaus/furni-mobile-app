@@ -98,11 +98,28 @@ export const loginUser = ({ email, password }) => async (dispatch) => {
   }
 };
 
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = () => async (dispatch, getState) => {
+  const refreshTokenUrl = "http://10.0.2.2:4000/login/refreshToken";
+  const payload = JSON.stringify({
+    refreshToken: getState().auth.token.refresh_token,
+  });
   dispatch(logoutRequest());
-  // clear access token from AsyncStorage here
-  //
-  dispatch(logoutSuccess());
+  try {
+    const response = await fetch(refreshTokenUrl, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: payload,
+    }).then((response) => response.json());
+    if (response.success) {
+      dispatch(logoutSuccess());
+    } else {
+      dispatch(logoutFailure());
+    }
+  } catch (err) {
+    dispatch(logoutFailure());
+  }
 };
 
 export const renewToken = () => async (dispatch, getState) => {
