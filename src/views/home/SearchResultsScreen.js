@@ -1,30 +1,24 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { View, Text, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  BackButton,
-  CustomText,
-  SafeAreaViewWrapper,
-  PreviewCard,
-} from "../../components";
-import { getListings } from "../../actions/listings";
+import { CustomText, SafeAreaViewWrapper, PreviewCard } from "../../components";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
 
 function SearchScreen(props) {
-  const { navigation, submitSearch, listings } = props;
-  const [searchString, setSearchString] = useState("");
+  const { navigation, submitSearch, route, listings } = props;
+  const { searchString } = route.params;
+
   return (
     <SafeAreaViewWrapper>
-      <Ionicons
-        name="ios-arrow-back"
-        size={24}
-        color="black"
-        style={{ paddingTop: 10, paddingBottom: 10 }}
-        onPress={() => props.navigation.goBack()}
-      />
+      <SearchbarWrapper onPress={() => navigation.navigate("search")}>
+        <SearchIcon name="ios-search" />
+        <CustomText.Regular>{searchString}</CustomText.Regular>
+      </SearchbarWrapper>
+      <SortButton onPress={() => navigation.navigate("sort-and-filter")}>
+        <SearchIcon name="ios-funnel" />
+        <CustomText.Regular>Sort & Filter</CustomText.Regular>
+      </SortButton>
       <SearchResultsWrapper>
         {listings.map((listing) => (
           <TouchableOpacity
@@ -58,34 +52,31 @@ export default withConnect(SearchScreen);
 // STYLING
 // =============================================================================
 
-const Button = (props) => (
-  <ButtonWrapper
-    onPress={props.onPress}
-    backgroundColor={props.backgroundColor}
-    borderColor={props.borderColor}
-  >
-    <ButtonText color={props.color}>{props.title}</ButtonText>
-  </ButtonWrapper>
-);
+const SearchbarWrapper = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  border-bottom-width: 1px;
+  margin-top: 10px;
+`;
+
+const SearchIcon = styled(Ionicons)`
+  padding-right: 10px;
+  font-size: 24px;
+`;
 
 const SearchResultsWrapper = styled.View`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-around;
 `;
 
-const ButtonWrapper = styled.TouchableOpacity`
-  background-color: ${(props) => props.backgroundColor};
+const SortButton = styled.TouchableOpacity`
+  width: 130px;
+  flex-direction: row;
+  align-items: center;
+  border: 1.5px solid black;
+  padding: 7.5px;
+  margin: 15px 0;
   border-radius: 10px;
-  border: 2px solid
-    ${(props) => (!!props.borderColor ? props.borderColor : "black")};
-  padding: 10px;
-  margin-top: 20px;
-`;
-
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${(props) => props.color};
-  text-align: center;
 `;

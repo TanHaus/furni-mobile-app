@@ -1,5 +1,4 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import styled from "styled-components/native";
 import ExploreScreen from "./ExploreScreen";
@@ -8,15 +7,9 @@ import { HomeHeader, SafeAreaViewWrapper } from "../../components";
 
 const Tab = createMaterialTopTabNavigator();
 
-function HomeScreen(props) {
+function HomeScreen() {
   return (
     <SafeAreaViewWrapper>
-      {/* <TouchableOpacity
-        onPress={() => {
-          props.navigation.navigate("search");
-        }}
-        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-      ></TouchableOpacity> */}
       <Tab.Navigator tabBar={(props) => <HomeHeader {...props} />}>
         <Tab.Screen name="Market" component={MarketScreen} />
         <Tab.Screen name="Explore" component={ExploreScreen} />

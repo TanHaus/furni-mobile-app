@@ -25,6 +25,6 @@ export const PreviewCard = (props) => {
 const Image = styled.ImageBackground`
   height: 160px;
   width: 160px;
-  alignitems: center;
-  justifycontent: center;
+  align-items: center;
+  justify-content: center;
 `;

@@ -69,7 +69,7 @@ function tabGen(state, descriptors, navigation, position) {
 // -----------------------------------------------------------------------------
 // STYLING
 // -----------------------------------------------------------------------------
-const FeatureText = styled(CustomText.Small)`
+const FeatureText = styled(CustomText.Large)`
   text-transform: uppercase;
 
   ${(props) => {
@@ -93,11 +93,14 @@ const Feature = styled.TouchableOpacity`
 const FeatureContainer = styled.View`
   flex-direction: row;
   justify-content: center;
+  margin: 25px 0;
 `;
 
 const SearchbarWrapper = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
+  border-bottom-width: 1px;
+  margin-top: 10px;
 `;
 
 const SearchIcon = styled(Ionicons)`
