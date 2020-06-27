@@ -38,7 +38,11 @@ function ListingScreen(props) {
   }, []);
 
   const handleCreateOffer = () => {
-    submitCreateOffer({ listingId, priceBidded });
+    submitCreateOffer({
+      listingId: listing.listingId,
+      priceBidded,
+      setModalVisible,
+    });
   };
 
   return (

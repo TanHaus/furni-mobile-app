@@ -28,12 +28,12 @@ function SearchScreen(props) {
       <SearchResultsWrapper>
         {listings.map((listing) => (
           <TouchableOpacity
-            onPress={() => {
-              console.log("going to listing");
-              navigation.navigate("listing", { listingId: listing.listingId });
-            }}
+            key={listing.listingId}
+            onPress={() =>
+              navigation.navigate("listing", { listingId: listing.listingId })
+            }
           >
-            <PreviewCard key={listing.listingId} listing={listing} />
+            <PreviewCard listing={listing} />
           </TouchableOpacity>
         ))}
       </SearchResultsWrapper>
