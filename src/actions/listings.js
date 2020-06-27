@@ -97,7 +97,9 @@ const getListingsRequest = () => {
   };
 };
 
-const getListingsSuccess = (listings) => {
+const getListingsSuccess = ({ listings, props }) => {
+  props.navigation.navigate("search-results");
+  console.log("test");
   return {
     type: GET_LISTINGS_SUCCESS,
     listings,
@@ -282,8 +284,12 @@ export const deleteListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const getListings = (q) => async (dispatch, getState) => {
-  const requestUrl = "http://10.0.2.2:4000/listings" + (q && `?q=${q}`);
+export const getListings = ({ queryString, props }) => async (
+  dispatch,
+  getState
+) => {
+  const requestUrl =
+    "http://10.0.2.2:4000/listings" + (queryString ? `?q=${queryString}` : "");
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -301,7 +307,7 @@ export const getListings = (q) => async (dispatch, getState) => {
         const picUrls = listing.picUrls.split(",");
         return { ...listing, picUrls };
       });
-      dispatch(getListingsSuccess(listings));
+      dispatch(getListingsSuccess({ listings, props }));
     } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
@@ -310,7 +316,7 @@ export const getListings = (q) => async (dispatch, getState) => {
           listing.picUrls = listing.picUrls.split(",");
           return listing;
         });
-        dispatch(getListingsSuccess(listings));
+        dispatch(getListingsSuccess({ listings, props }));
       } else throw "e";
     } else throw "e";
   } catch (e) {

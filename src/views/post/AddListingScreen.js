@@ -81,7 +81,10 @@ function AddScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>Price</CustomText.Regular>
         <Input
           value={listing.price}
-          onChangeText={(value) => setListing({ ...listing, price: value })}
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            setListing({ ...listing, price: value.toFixed(2) })
+          }
         />
       </Container>
       <Container>
@@ -95,7 +98,7 @@ function AddScreen(props) {
           }
         >
           {["new", "used"].map((condition) => (
-            <Picker.Item label={condition} value={condition} />
+            <Picker.Item key={condition} label={condition} value={condition} />
           ))}
         </Picker>
       </Container>
