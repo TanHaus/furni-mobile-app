@@ -111,19 +111,8 @@ const getListingsFailure = () => {
   };
 };
 
-const b64toBlob = (dataURI) => {
-  var byteString = atob(dataURI.split(",")[1]);
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([ab], { type: "image/jpeg" });
-};
-
 export const getListing = (listingId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -153,31 +142,21 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-const addPic = ({ listingId, blob, access_token }) => {
-  // const file = new FormData().append('', blob, `${listingId}_${Date.now()}.jpeg`)
-  const formData = new FormData();
-  formData.append("image", blob, `${listingId}_${Date.now()}.jpeg`);
-  return fetch(`http://localhost:4000/listings/${listingId}/pics`, {
-    method: "POST",
-    headers: {
-      // "Content-Type": "application/json",
-      Authorization: "Bearer " + access_token,
-    },
-    body: formData,
-  });
-};
-
 export const createListing = ({ listing, pics }) => async (
   dispatch,
   getState
 ) => {
   const requestUrl = "http://10.0.2.2:4000/listings";
-  const payload = {
-    ...listing,
-    sellerId: listing.sellerId || getState().auth.user.userId,
-    timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
+  const makePayload = ({ listing, picUrls }) => {
+    return {
+      ...listing,
+      sellerId: listing.sellerId || getState().auth.user.userId,
+      timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
+      picUrls,
+    };
   };
-  const makeRequest = () =>
+
+  const makeRequest = (payload) =>
     fetch(requestUrl, {
       method: "POST",
       headers: {
@@ -186,48 +165,46 @@ export const createListing = ({ listing, pics }) => async (
       },
       body: JSON.stringify(payload),
     }).then((response) => response.json());
+
+  const picUrls = [];
+
+  const uploadPicToS3 = async (uri) => {
+    try {
+      const file = await fetch(uri).then((response) => response.blob());
+      const response = await fetch(
+        "http://10.0.2.2:4000/listings/S3SignedUrl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + getState().auth.token.access_token,
+          },
+        }
+      ).then((response) => response.json()); // need to take into account when access token expires
+      const { signedUrl, fileLocation } = response.data;
+      await fetch(signedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "image/jpeg",
+        },
+        body: file,
+      });
+      picUrls.push(fileLocation);
+    } catch (err) {
+      throw err;
+    }
+  };
+
   dispatch(createListingRequest());
   try {
-    let response = await makeRequest();
-    if (response.success) {
-      const listingId = response.data.listingId;
-      await Promise.all(
-        pics.map((pic) => {
-          const form = new FormData();
-          form.append("photo", {
-            uri: pic.uri,
-            type: "image/jpg",
-            name: `${listingId}_${Date.now()}.jpeg`,
-          });
-          // console.log(JSON.stringify(pic.replace(/^data:image\/[a-z]+;base64,/, "")));
-          return fetch(`http://10.0.2.2:4000/listings/${listingId}/pics`, {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + getState().auth.token.access_token,
-            },
-            body: form,
-          });
-          // addPic({ listingId, blob, access_token: getState().auth.token.access_token });
-        })
-      );
-      dispatch(createListingSuccess());
-    } else if (response.message === "Expired access token") {
+    await Promise.all(pics.map((pic) => uploadPicToS3(pic.uri)));
+    let response = await makeRequest(makePayload({ listing, picUrls }));
+    if (response.success) dispatch(createListingSuccess());
+    else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = await makeRequest();
-      if (response.success) {
-        const listingId = response.data.listingId;
-        await Promise.all(
-          pics.map((pic) => {
-            const blob = b64toBlob(pic);
-            addPic({
-              listingId,
-              blob,
-              access_token: getState().auth.token.access_token,
-            });
-          })
-        );
-        dispatch(createListingSuccess());
-      } else throw "e";
+      response = await makeRequest(makePayload({ listing, picUrls }));
+      if (response.success) dispatch(createListingSuccess());
+      else throw "e";
     } else throw "e";
   } catch (e) {
     console.log(e);
@@ -236,7 +213,7 @@ export const createListing = ({ listing, pics }) => async (
 };
 
 export const editListing = (editedListing) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const payload = {
     ...editedListing,
     timeUpdated: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -282,7 +259,7 @@ export const editListing = (editedListing) => async (dispatch, getState) => {
 };
 
 export const deleteListing = (listingId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",
@@ -307,7 +284,7 @@ export const deleteListing = (listingId) => async (dispatch, getState) => {
 };
 
 export const getListings = (q) => async (dispatch, getState) => {
-  const requestUrl = "http://localhost:4000/listings" + (q ? `?q=${q}` : "");
+  const requestUrl = "http://10.0.2.2:4000/listings" + (q && `?q=${q}`);
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -320,12 +297,12 @@ export const getListings = (q) => async (dispatch, getState) => {
   try {
     let response = await makeRequest();
     if (response.success) {
-      let listings = response.data;
-      listings = listings.map((listing) => {
-        listing.picUrls = listing.picUrls.split(",");
-        return listing;
+      const listings = response.data.map((listing) => {
+        if (!listing.picUrls) return listing;
+        const picUrls = listing.picUrls.split(",");
+        return { ...listing, picUrls };
       });
-      dispatch(getListingsSuccess(response.data));
+      dispatch(getListingsSuccess(listings));
     } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
@@ -334,7 +311,7 @@ export const getListings = (q) => async (dispatch, getState) => {
           listing.picUrls = listing.picUrls.split(",");
           return listing;
         });
-        dispatch(getListingsSuccess(response.data));
+        dispatch(getListingsSuccess(listings));
       } else throw "e";
     } else throw "e";
   } catch (e) {

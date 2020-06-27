@@ -16,7 +16,7 @@ import { Color } from "../../styles";
 import { AntDesign } from "@expo/vector-icons";
 
 function AddScreen(props) {
-  const { navigation, submitListingData } = props;
+  const { navigation, submitListingData, auth } = props;
   const [listing, setListing] = useState({
     title: "",
     price: 0,
@@ -25,40 +25,21 @@ function AddScreen(props) {
     deliveryOption: "",
   });
   const [pics, setPics] = useState([]);
+
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
-      // const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      //   allowsEditing: true,
-      //   aspect: [3, 3],
-      //   quality: 1,
-      //   base64: true,
-      // });
-      let pickerResult = await ImagePicker.launchCameraAsync({
-        // mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        // allowsEditing: true,
+      // const pickerResult = await ImagePicker.launchCameraAsync({
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
         aspect: [3, 3],
         quality: 1,
-        // base64: true,
+        base64: true,
       });
-      // console.log(pickerResult.base64);
-      console.log(pickerResult.fileName);
-      console.log(pickerResult.type);
       if (!pickerResult.cancelled) {
-        // const res = await fetch('http://10.0.2.2:4080/listings/44/pics', {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   // send our base64 string as POST request
-        //   body: JSON.stringify({
-        //     imgsource: pickerResult.base64,
-        //   }),
-        // })
-        // console.log(res);
-        setPics((pics) => [...pics, pickerResult.uri]);
+        // setPics((pics) => [...pics, pickerResult.uri]);
+        setPics((píc) => [...pics, pickerResult]);
       } else alert("Permission to access camera roll is required!");
     }
   };
@@ -80,7 +61,8 @@ function AddScreen(props) {
           pics.map((pic, index) => (
             <Image
               key={index}
-              source={{ uri: pic }}
+              // source={{ uri: pic }}
+              source={{ uri: pic.uri }}
               style={{ width: 80, height: 80, margin: 10 }}
             />
           ))}
@@ -146,7 +128,9 @@ function AddScreen(props) {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    auth: state.auth,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
