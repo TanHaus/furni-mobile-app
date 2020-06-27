@@ -16,7 +16,7 @@ import { Color } from "../../styles";
 import { AntDesign } from "@expo/vector-icons";
 
 function AddScreen(props) {
-  const { navigation, submitListingData } = props;
+  const { navigation, submitListingData, auth } = props;
   const [listing, setListing] = useState({
     title: "",
     price: 0,
@@ -25,13 +25,22 @@ function AddScreen(props) {
     deliveryOption: "",
   });
   const [pics, setPics] = useState([]);
+
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
-      const pickerResult = await ImagePicker.launchImageLibraryAsync();
-      if (!pickerResult.cancelled)
-        setPics((pics) => [...pics, pickerResult.uri]);
-      else alert("Permission to access camera roll is required!");
+      // const pickerResult = await ImagePicker.launchCameraAsync({
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [3, 3],
+        quality: 1,
+        base64: true,
+      });
+      if (!pickerResult.cancelled) {
+        // setPics((pics) => [...pics, pickerResult.uri]);
+        setPics((píc) => [...pics, pickerResult]);
+      } else alert("Permission to access camera roll is required!");
     }
   };
 
@@ -48,16 +57,15 @@ function AddScreen(props) {
       <Container
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        {pics ? (
-          pics.map((pic) => (
+        {pics &&
+          pics.map((pic, index) => (
             <Image
-              source={{ uri: pic }}
+              key={index}
+              // source={{ uri: pic }}
+              source={{ uri: pic.uri }}
               style={{ width: 80, height: 80, margin: 10 }}
             />
-          ))
-        ) : (
-          <View />
-        )}
+          ))}
         <TouchableOpacity onPress={openImagePickerAsync}>
           <AntDesign name="plussquareo" size={80} color="black" />
         </TouchableOpacity>
@@ -73,7 +81,10 @@ function AddScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>Price</CustomText.Regular>
         <Input
           value={listing.price}
-          onChangeText={(value) => setListing({ ...listing, price: value })}
+          keyboardType="numeric"
+          onChangeText={(value) =>
+            setListing({ ...listing, price: value.toFixed(2) })
+          }
         />
       </Container>
       <Container>
@@ -87,7 +98,7 @@ function AddScreen(props) {
           }
         >
           {["new", "used"].map((condition) => (
-            <Picker.Item label={condition} value={condition} />
+            <Picker.Item key={condition} label={condition} value={condition} />
           ))}
         </Picker>
       </Container>
@@ -120,7 +131,9 @@ function AddScreen(props) {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    auth: state.auth,
+  };
 }
 
 function mapDispatchToProps(dispatch) {

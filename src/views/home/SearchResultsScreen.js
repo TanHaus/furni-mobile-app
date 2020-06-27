@@ -25,17 +25,18 @@ function SearchScreen(props) {
         style={{ paddingTop: 10, paddingBottom: 10 }}
         onPress={() => props.navigation.goBack()}
       />
-      <Text>{JSON.stringify(listings)}</Text>
-      {listings.map((listing) => (
-        <TouchableOpacity
-          onPress={() => {
-            console.log("going to listing");
-            navigation.navigate("listing", { listingId: listing.listingId });
-          }}
-        >
-          <PreviewCard key={listing.listingId} listing={listing} />
-        </TouchableOpacity>
-      ))}
+      <SearchResultsWrapper>
+        {listings.map((listing) => (
+          <TouchableOpacity
+            onPress={() => {
+              console.log("going to listing");
+              navigation.navigate("listing", { listingId: listing.listingId });
+            }}
+          >
+            <PreviewCard key={listing.listingId} listing={listing} />
+          </TouchableOpacity>
+        ))}
+      </SearchResultsWrapper>
     </SafeAreaViewWrapper>
   );
 }
@@ -66,6 +67,13 @@ const Button = (props) => (
     <ButtonText color={props.color}>{props.title}</ButtonText>
   </ButtonWrapper>
 );
+
+const SearchResultsWrapper = styled.View`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
 
 const ButtonWrapper = styled.TouchableOpacity`
   background-color: ${(props) => props.backgroundColor};

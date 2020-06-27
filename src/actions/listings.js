@@ -97,7 +97,9 @@ const getListingsRequest = () => {
   };
 };
 
-const getListingsSuccess = (listings) => {
+const getListingsSuccess = ({ listings, props }) => {
+  props.navigation.navigate("search-results");
+  console.log("test");
   return {
     type: GET_LISTINGS_SUCCESS,
     listings,
@@ -111,7 +113,7 @@ const getListingsFailure = () => {
 };
 
 export const getListing = (listingId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -145,70 +147,63 @@ export const createListing = ({ listing, pics }) => async (
   dispatch,
   getState
 ) => {
-  const {
-    sellerId,
-    title,
-    price,
-    itemCondition,
-    description,
-    category,
-    deliveryOption,
-  } = listing;
-  const requestUrl = "http://localhost:4000/listings";
-  const s3Config = {
-    // region: process.env.S3_REGION,
-    // accessKeyId: process.env.ACCESS_KEY_ID,
-    // secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  const requestUrl = "http://10.0.2.2:4000/listings";
+  const makePayload = ({ listing, picUrls }) => {
+    return {
+      ...listing,
+      sellerId: listing.sellerId || getState().auth.user.userId,
+      timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
+      picUrls,
+    };
   };
-  const s3 = new AWS.S3(s3Config);
+
+  const makeRequest = (payload) =>
+    fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
+
   const picUrls = [];
+
+  const uploadPicToS3 = async (uri) => {
+    try {
+      const file = await fetch(uri).then((response) => response.blob());
+      const response = await fetch(
+        "http://10.0.2.2:4000/listings/S3SignedUrl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + getState().auth.token.access_token,
+          },
+        }
+      ).then((response) => response.json()); // need to take into account when access token expires
+      const { signedUrl, fileLocation } = response.data;
+      await fetch(signedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "image/jpeg",
+        },
+        body: file,
+      });
+      picUrls.push(fileLocation);
+    } catch (err) {
+      throw err;
+    }
+  };
+
   dispatch(createListingRequest());
   try {
-    await Promise.all(
-      pics.map(async (pic) => {
-        const buf = Buffer.from(
-          pic.replace(/^data:image\/\w+;base64,/, ""),
-          "base64"
-        );
-        const params = {
-          Bucket: "furni-s3-bucket",
-          // Key: `${process.env.LISTING_PICS_DIRNAME}/${Date.now()}`,
-          Key: `${Date.now()}`,
-          Body: buf,
-          ACL: "public-read",
-          ContentEncoding: "base64",
-          ContentType: "image/jpeg",
-          ContentDisposition: "attachment",
-        };
-        const data = await s3.upload(params).promise();
-        picUrls.push(data.Location);
-      })
-    );
-    const payload = {
-      sellerId: sellerId || getState().auth.user.userId,
-      title,
-      timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
-      price,
-      itemCondition,
-      description,
-      category,
-      deliveryOption,
-      picUrls: picUrls.join(","),
-    };
-    const makeRequest = () =>
-      fetch(requestUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + getState().auth.token.access_token,
-        },
-        body: JSON.stringify(payload),
-      }).then((response) => response.json());
-    let response = await makeRequest();
+    await Promise.all(pics.map((pic) => uploadPicToS3(pic.uri)));
+    let response = await makeRequest(makePayload({ listing, picUrls }));
     if (response.success) dispatch(createListingSuccess());
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
-      response = await makeRequest();
+      response = await makeRequest(makePayload({ listing, picUrls }));
       if (response.success) dispatch(createListingSuccess());
       else throw "e";
     } else throw "e";
@@ -218,27 +213,12 @@ export const createListing = ({ listing, pics }) => async (
   }
 };
 
-export const editListing = ({
-  listingId,
-  name,
-  price,
-  itemCondition,
-  description,
-  category,
-  deliveryOption,
-  picUrls,
-}) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+export const editListing = (editedListing) => async (dispatch, getState) => {
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const payload = {
-    name,
-    price,
-    itemCondition,
-    description,
-    category,
-    deliveryOption,
-    picUrls,
+    ...editedListing,
+    timeUpdated: new Date().toISOString().slice(0, 19).replace("T", " "),
   };
-  dispatch(editListingRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "PUT",
@@ -248,15 +228,31 @@ export const editListing = ({
       },
       body: JSON.stringify(payload),
     }).then((response) => response.json());
+  dispatch(editListingRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(editListingSuccess());
-    // need to update store with updated data
-    else if (response.message === "Expired access token") {
+    if (response.success) {
+      const listingId = response.data.listingId;
+      await Promise.all(
+        pics.map((pic) => {
+          const blob = b64toBlob(pic);
+          addPic(listingId, blob);
+        })
+      );
+      dispatch(editListingSuccess());
+    } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(editListingSuccess());
-      else throw "e";
+      if (response.success) {
+        const listingId = response.data.listingId;
+        await Promise.all(
+          pics.map((pic) => {
+            const blob = b64toBlob(pic);
+            addPic(listingId, blob);
+          })
+        );
+        dispatch(editListingSuccess());
+      } else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(editListingFailure());
@@ -264,7 +260,7 @@ export const editListing = ({
 };
 
 export const deleteListing = (listingId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}`;
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",
@@ -288,8 +284,12 @@ export const deleteListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const getListings = (q) => async (dispatch, getState) => {
-  const requestUrl = "http://localhost:4000/listings" + (q ? `?q=${q}` : "");
+export const getListings = ({ queryString, props }) => async (
+  dispatch,
+  getState
+) => {
+  const requestUrl =
+    "http://10.0.2.2:4000/listings" + (queryString ? `?q=${queryString}` : "");
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -302,12 +302,12 @@ export const getListings = (q) => async (dispatch, getState) => {
   try {
     let response = await makeRequest();
     if (response.success) {
-      let listings = response.data;
-      listings = listings.map((listing) => {
-        listing.picUrls = listing.picUrls.split(",");
-        return listing;
+      const listings = response.data.map((listing) => {
+        if (!listing.picUrls) return listing;
+        const picUrls = listing.picUrls.split(",");
+        return { ...listing, picUrls };
       });
-      dispatch(getListingsSuccess(response.data));
+      dispatch(getListingsSuccess({ listings, props }));
     } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
@@ -316,7 +316,7 @@ export const getListings = (q) => async (dispatch, getState) => {
           listing.picUrls = listing.picUrls.split(",");
           return listing;
         });
-        dispatch(getListingsSuccess(response.data));
+        dispatch(getListingsSuccess({ listings, props }));
       } else throw "e";
     } else throw "e";
   } catch (e) {

@@ -10,11 +10,11 @@ export const PreviewCard = (props) => {
   return (
     <TouchableOpacity>
       {listing.picUrls ? (
-        <Image source={listing.picUrls[0]} />
+        <Image source={{ uri: listing.picUrls[0] }} />
       ) : (
         <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
       )}
-      <CustomText.Regular color="white">{listing.title}</CustomText.Regular>
+      <CustomText.Regular>{listing.title}</CustomText.Regular>
     </TouchableOpacity>
   );
 };
@@ -23,8 +23,8 @@ export const PreviewCard = (props) => {
 // STYLING
 // -----------------------------------------------------------------------------
 const Image = styled.ImageBackground`
-  height: 120px;
+  height: 160px;
   width: 160px;
-  alignitems: center;
-  justifycontent: center;
+  align-items: center;
+  justify-content: center;
 `;
