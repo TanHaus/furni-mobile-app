@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { View, Text, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  BackButton,
+  Button,
+  CustomText,
+  SafeAreaViewWrapper,
+} from "../../../components";
 import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
+import { TextWeight } from "../../../components/types";
+import { Color } from "../../../styles";
 
 import { getUser, editUser } from "../../../actions/users";
 
 function EditProfileScreen(props) {
   const { navigation, userId, user, loadUserData, submitEditData } = props;
   const [editUser, setEditUser] = useState({ name: "", email: "" });
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     loadUserData(userId);
@@ -20,57 +26,40 @@ function EditProfileScreen(props) {
   }, [user]);
 
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
-      <Ionicons
-        name="ios-arrow-back"
-        size={24}
-        color="black"
-        style={{ paddingTop: 10, paddingBottom: 10 }}
-        onPress={() => navigation.goBack()}
-      />
-      <Text
-        style={{ fontWeight: "bold", textTransform: "uppercase", fontSize: 18 }}
-      >
-        Edit my account
-      </Text>
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        Username
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        value={editUser.name}
-        onChangeText={(text) => setEditUser({ ...editUser, name: text })}
-      />
-      <Text
-        style={{
-          color: "#d0d0d0",
-          textTransform: "uppercase",
-          fontSize: 16,
-          paddingTop: 20,
-        }}
-      >
-        Email
-      </Text>
-      <TextInput
-        style={{ height: 40, borderBottomWidth: 1 }}
-        disabled={true}
-        value={editUser.email}
-        onChangeText={(text) => setEditUser({ ...editUser, email: text })}
-      />
+    <SafeAreaViewWrapper>
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <Title weight={TextWeight.Bold}>PROFILE</Title>
+      </TitleContainer>
+      <Image source={require("../../../assets/listings/purple-chair.png")} />
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          USERNAME
+        </CustomText.Regular>
+        <Input
+          value={editUser.name}
+          onChangeText={(text) => setEditUser({ ...editUser, name: text })}
+        />
+      </Container>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>EMAIL</CustomText.Regular>
+        <Input
+          disabled={true}
+          value={editUser.email}
+          onChangeText={(text) => setEditUser({ ...editUser, email: text })}
+        />
+      </Container>
+      <PasswordContainer>
+        <CustomText.Regular>
+          Enter your password to confirm the changes.
+        </CustomText.Regular>
+        <Input value={password} onChangeText={setPassword} />
+      </PasswordContainer>
       <Button
         title="Confirm changes"
         onPress={() => submitEditData(editUser)}
-        backgroundColor="black"
-        color="white"
       />
-    </SafeAreaView>
+    </SafeAreaViewWrapper>
   );
 }
 
@@ -94,28 +83,34 @@ export default withConnect(EditProfileScreen);
 // =============================================================================
 // STYLING
 // =============================================================================
-
-const Button = (props) => (
-  <ButtonWrapper
-    onPress={props.onPress}
-    backgroundColor={props.backgroundColor}
-    borderColor={props.borderColor}
-  >
-    <ButtonText color={props.color}>{props.title}</ButtonText>
-  </ButtonWrapper>
-);
-
-const ButtonWrapper = styled.TouchableOpacity`
-  background-color: ${(props) => props.backgroundColor};
-  border-radius: 10px;
-  border: 2px solid
-    ${(props) => (!!props.borderColor ? props.borderColor : "black")};
-  padding: 10px;
-  margin-top: 20px;
+const TitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 30px;
 `;
 
-const ButtonText = styled.Text`
-  font-size: 18px;
-  color: ${(props) => props.color};
-  text-align: center;
+const Title = styled(CustomText.Large)`
+  padding-left: 20px;
+`;
+
+const Input = styled.TextInput`
+  height: 40px;
+  border-bottom-width: 1px;
+`;
+
+const Container = styled.View`
+  margin-top: 30px;
+`;
+
+const PasswordContainer = styled.View`
+  margin: 80px 0 20px 0;
+`;
+
+const Image = styled.ImageBackground`
+  height: 150px;
+  width: 150px;
+  border-radius: 300px;
+  overflow: hidden;
+  margin-left: 25%;
 `;

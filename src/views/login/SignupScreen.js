@@ -19,8 +19,8 @@ function SignupScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmitSignup = () => {
-    navigation.navigate("verification", { email: email });
-    // submitSignupData({ name: username, email, password });
+    // navigation.navigate("verification", { email: email });
+    submitSignupData({ name: username, email, password });
   };
   return (
     <SafeAreaViewWrapper>

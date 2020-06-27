@@ -24,7 +24,6 @@ const Main = styled.TouchableOpacity`
   padding: 10px;
   margin: 5px 0;
   width: 100%;
-  text-align: center;
   border-radius: 10px;
   ${(props) => {
     switch (props.buttonType) {
@@ -43,6 +42,7 @@ const Main = styled.TouchableOpacity`
 `;
 
 const ButtonText = styled(CustomText.Large)`
+  text-align: center;
   margin-bottom: 0;
   ${(props) => {
     switch (props.buttonType) {

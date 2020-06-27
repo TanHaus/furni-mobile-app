@@ -29,7 +29,7 @@ export const ExploreCard = (props) => {
 // STYLING
 // -----------------------------------------------------------------------------
 const Card = styled.TouchableOpacity`
-  margin: 50px 0;
+  margin-bottom: 50px;
   border: 1px solid ${Color.Palette[6]};
 `;
 

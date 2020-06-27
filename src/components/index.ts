@@ -7,3 +7,4 @@ export * from "./card/ExploreCard";
 export * from "./card/MarketCard";
 export * from "./card/PreviewCard";
 export * from "./ionicons/BackButton";
+export * from "./ProfileHeader";

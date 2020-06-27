@@ -5,6 +5,7 @@ import MainTabNavScreen from "./MainTabNavScreen";
 import ListingScreen from "./listing/ListingScreen";
 import SearchScreen from "./home/SearchScreen";
 import SearchResultsScreen from "./home/SearchResultsScreen";
+import SortAndFilterScreen from "./home/SortAndFilterScreen";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ function MainScreen(props) {
       <Stack.Screen name="listing" component={ListingScreen} />
       <Stack.Screen name="search-results" component={SearchResultsScreen} />
       <Stack.Screen name="search" component={SearchScreen} />
+      <Stack.Screen name="sort-and-filter" component={SortAndFilterScreen} />
     </Stack.Navigator>
   );
 }

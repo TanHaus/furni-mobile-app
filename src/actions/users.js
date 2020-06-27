@@ -156,7 +156,7 @@ export const getUser = (userId) => async (dispatch, getState) => {
 };
 
 export const createUser = ({ name, email, password }) => async (dispatch) => {
-  const requestUrl = "http://localhost:4000/users";
+  const requestUrl = "http://10.0.2.2:4000/users";
   const payload = { name, email, password };
   const makeRequest = () =>
     fetch(requestUrl, {
