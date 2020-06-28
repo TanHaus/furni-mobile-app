@@ -1,12 +1,12 @@
 export enum TextWeight {
-	Default,
-	Regular,
-	Semibold,
-	Bold,
-	Light
+  Default,
+  Regular = "regular",
+  Semibold = "semibold",
+  Bold = "bold",
+  Light = "light",
 }
 
 export interface TextProps {
-	weight?: TextWeight;
-	color?: string;
+  weight?: TextWeight;
+  color?: string;
 }

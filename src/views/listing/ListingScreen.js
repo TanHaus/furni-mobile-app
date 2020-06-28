@@ -4,14 +4,10 @@ import { connect } from "react-redux";
 import { getListing } from "actions/listings";
 import { getOffersByListing, createOffer, editOffer } from "actions/offers";
 import styled from "styled-components/native";
-import {
-  BackButton,
-  Button,
-  CustomText,
-  SafeAreaViewWrapper,
-} from "components";
+import { BackButton, CustomText, SafeAreaViewWrapper } from "components";
 import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function ListingScreen(props) {
   const {
@@ -25,7 +21,7 @@ function ListingScreen(props) {
     submitCreateOffer,
   } = props;
 
-  const deviceWidth = Dimensions.get("window").width;
+  const deviceWidth = Dimensions.get("window").width * 0.9;
   const listingId = route.params.listingId;
   const [isSeller, setIsSeller] = useState();
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +41,32 @@ function ListingScreen(props) {
     });
   };
 
+  const renderButton = () => {
+    return isSeller ? (
+      listingOffers.length ? (
+        <ActionButton
+          onPress={() => navigation.navigate("listing-offers", { listingId })}
+        >
+          <CustomText.Large weight="semibold">View offers</CustomText.Large>
+        </ActionButton>
+      ) : (
+        <ActionBox>
+          <CustomText.Large weight="semibold">No offer</CustomText.Large>
+        </ActionBox>
+      )
+    ) : listingOffers.length ? (
+      <ActionButton
+        onPress={() => navigation.navigate("chat-session", { listingId })}
+      >
+        <CustomText.Large weight="semibold">See chat</CustomText.Large>
+      </ActionButton>
+    ) : (
+      <ActionButton onPress={() => setModalVisible(true)}>
+        <CustomText.Large weight="semibold">Chat/Make offer</CustomText.Large>
+      </ActionButton>
+    );
+  };
+
   return (
     <SafeAreaViewWrapper>
       <Modal visible={modalVisible}>
@@ -53,10 +75,13 @@ function ListingScreen(props) {
             Your bid:{" "}
           </CustomText.Regular>
           <Input value={priceBidded} onChangeText={setPriceBidded} />
-          <Button title="Confirm" onPress={handleCreateOffer} />
+          <ActionButton title="Confirm" onPress={handleCreateOffer} />
         </View>
       </Modal>
-      <BackButton onPress={() => navigation.goBack()} />
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <Title weight={TextWeight.Bold}>LISTING</Title>
+      </TitleContainer>
       {listing.picUrls ? (
         <Image
           source={{ uri: listing.picUrls[0] }}
@@ -66,32 +91,33 @@ function ListingScreen(props) {
       ) : (
         <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
       )}
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.title}
-      </CustomText.Regular>
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.price}
-      </CustomText.Regular>
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.itemCondition}
-      </CustomText.Regular>
-      {isSeller ? (
-        listingOffers.length ? (
-          <Button
-            title="View offers"
-            onPress={() => navigation.navigate("listing-offers", { listingId })}
-          />
-        ) : (
-          <Button title="No offer" />
-        )
-      ) : listingOffers.length ? (
-        <Button
-          title="Go to chat"
-          onPress={() => navigation.navigate("chat-session", { listingId })}
+
+      <ListingTitle>{listing.title}</ListingTitle>
+      <Container>
+        <CustomText.Large weight="semibold">${listing.price} </CustomText.Large>
+        <CustomText.Large>{listing.itemCondition}</CustomText.Large>
+      </Container>
+      <Container>
+        <MaterialCommunityIcons name="heart-outline" size={35} onPress={null} />
+        <CustomText.Regular weight="bold">20</CustomText.Regular>
+        {renderButton()}
+      </Container>
+
+      <Description>
+        Faux leather with timbre frames. Perfect for any customer.
+      </Description>
+      <ProfileDescription>
+        <ProfilePic
+          source={require("../../assets/listings/purple-chair.png")}
         />
-      ) : (
-        <Button title="Make offer" onPress={() => setModalVisible(true)} />
-      )}
+        <TextContainer>
+          <CustomText.Large weight={TextWeight.Bold}>SELLER</CustomText.Large>
+          <CustomText.Large weight={TextWeight.SemiBold}>
+            Furni
+          </CustomText.Large>
+          <CustomText.Regular>★★★★★</CustomText.Regular>
+        </TextContainer>
+      </ProfileDescription>
     </SafeAreaViewWrapper>
   );
 }
@@ -122,6 +148,7 @@ const TitleContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 20px;
 `;
 
 const Title = styled(CustomText.Large)`
@@ -133,15 +160,54 @@ const Input = styled.TextInput`
   border-bottom-width: 1px;
 `;
 
+const ListingTitle = styled(CustomText.Large)`
+  margin: 20px 0 5px 0;
+`;
+
 const Container = styled.View`
-  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+  position: relative;
+`;
+
+const ProfileDescription = styled.View`
+  flex-direction: row;
+  margin: 5px;
+  position: relative;
+`;
+
+const ProfilePic = styled.ImageBackground`
+  height: 75px;
+  width: 75px;
+  border-radius: 150px;
+  overflow: hidden;
 `;
 
 const TextContainer = styled.View`
-  flex-direction: row;
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 20px;
 `;
 
-const RegisterText = styled(CustomText.Small)`
-  text-decoration-line: underline;
+const ActionButton = styled.TouchableOpacity`
+  border: 1.5px solid black;
+  padding: 10px 30px;
+  border-radius: 5px;
+  position: absolute;
+  right: 0;
+`;
+
+const ActionBox = styled.View`
+  border: 1.5px solid black;
+  padding: 10px 30px;
+  border-radius: 5px;
+  position: absolute;
+  right: 0;
+`;
+
+const Description = styled(CustomText.Regular)`
+  margin: 15px 0;
 `;

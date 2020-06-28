@@ -7,10 +7,10 @@ import {
   Button,
   CustomText,
   SafeAreaViewWrapper,
-} from "../../components";
-import { TextWeight } from "../../components/types";
-import { Color } from "../../styles";
-import { getListings } from "../../actions/listings";
+} from "components";
+import { TextWeight } from "components/types";
+import { Color } from "styles";
+import { getListings } from "actions/listings";
 
 function SearchScreen(props) {
   const { navigation, submitSearch } = props;

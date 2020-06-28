@@ -52,13 +52,6 @@ const SearchIcon = styled(Ionicons)`
   font-size: 24px;
 `;
 
-const SearchResultsWrapper = styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-`;
-
 const SortButton = styled.TouchableOpacity`
   width: 130px;
   flex-direction: row;
