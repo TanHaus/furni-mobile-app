@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, Modal, View, Image } from "react-native";
 import { connect } from "react-redux";
-import { getListing } from "../../actions/listings";
-import { createOffer, editOffer } from "../../actions/offers";
+import { getListing } from "actions/listings";
+import { getOffersByListing, createOffer, editOffer } from "actions/offers";
 import styled from "styled-components/native";
 import {
   BackButton,
   Button,
   CustomText,
   SafeAreaViewWrapper,
-} from "../../components";
-import { Picker } from "@react-native-community/picker";
+} from "components";
 import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
@@ -20,6 +19,7 @@ function ListingScreen(props) {
     navigation,
     user,
     listing,
+    listingOffers,
     loadListingData,
     loadOffersData,
     submitCreateOffer,
@@ -73,12 +73,21 @@ function ListingScreen(props) {
         {listing.price}
       </CustomText.Regular>
       <CustomText.Regular color={Color.Palette[4]}>
-        {listing.condition}
+        {listing.itemCondition}
       </CustomText.Regular>
       {isSeller ? (
+        listingOffers.length ? (
+          <Button
+            title="View offers"
+            onPress={() => navigation.navigate("listing-offers", { listingId })}
+          />
+        ) : (
+          <Button title="No offer" />
+        )
+      ) : listingOffers.length ? (
         <Button
-          title="View offers"
-          onPress={() => navigation.navigate("ListingOffers", { listingId })}
+          title="Go to chat"
+          onPress={() => navigation.navigate("chat-session", { listingId })}
         />
       ) : (
         <Button title="Make offer" onPress={() => setModalVisible(true)} />
@@ -91,6 +100,7 @@ function mapStateToProps(state) {
   return {
     user: state.auth.user,
     listing: state.listings.listing,
+    listingOffers: state.offers.listingOffers,
   };
 }
 

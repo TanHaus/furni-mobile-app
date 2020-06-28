@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, Modal, View, Image } from "react-native";
 import { connect } from "react-redux";
-import { getListing } from "../../actions/listings";
-import { createOffer } from "../../actions/offers";
+import { getListing } from "actions/listings";
+import { createOffer, getOffersByListing } from "actions/offers";
 import styled from "styled-components/native";
 import {
   BackButton,
@@ -15,11 +15,17 @@ import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
 function ListingScreen(props) {
-  const { route, navigation, listing, listingOffers } = props;
+  const { route, navigation, listingOffers } = props;
   const listingId = route.params.listingId;
-  useEffect(() => {
-    loadOffersData(listingId);
-  }, [listingId]);
+  if (
+    !(
+      listingId &&
+      listingOffers &&
+      listingOffers.length &&
+      listingId !== listingOffers[0].listingId
+    )
+  )
+    navigation.goBack();
   return (
     <SafeAreaViewWrapper>
       <BackButton onPress={() => navigation.goBack()} />
@@ -58,10 +64,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    loadOffersData: (listingId) => dispatch(getListing(listingId)),
-    submitCreateOffer: (offerData) => dispatch(createOffer(offerData)),
-  };
+  return {};
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
-import { CustomText, SafeAreaViewWrapper, PreviewCard } from "../../components";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { CustomText, SafeAreaViewWrapper, ListingCardsGrid } from "components";
 import { Ionicons } from "@expo/vector-icons";
 
 function SearchScreen(props) {
@@ -19,18 +18,7 @@ function SearchScreen(props) {
         <SearchIcon name="ios-funnel" />
         <CustomText.Regular>Sort & Filter</CustomText.Regular>
       </SortButton>
-      <SearchResultsWrapper>
-        {listings.map((listing) => (
-          <TouchableOpacity
-            key={listing.listingId}
-            onPress={() =>
-              navigation.navigate("listing", { listingId: listing.listingId })
-            }
-          >
-            <PreviewCard listing={listing} />
-          </TouchableOpacity>
-        ))}
-      </SearchResultsWrapper>
+      <ListingCardsGrid listings={listings} navigation={navigation} />
     </SafeAreaViewWrapper>
   );
 }

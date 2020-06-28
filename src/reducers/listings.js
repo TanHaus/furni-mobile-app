@@ -27,7 +27,6 @@ const defaultState = {
 };
 
 export default (state = defaultState, action) => {
-  console.log(action.listings);
   switch (action.type) {
     case CREATE_LISTING_REQUEST:
       return {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
+import { connect } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getOffersByBuyer, editOffer } from "../../actions/offers";
 

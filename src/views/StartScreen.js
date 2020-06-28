@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 function StartScreen(props) {
   const { isAuthenticated, navigation } = props;
   if (isAuthenticated) {
-    navigation.popToTop();
+    if (navigation.dangerouslyGetParent()) navigation.popToTop();
     navigation.navigate("main");
   }
   return (
