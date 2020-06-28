@@ -1,59 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import { connect } from "react-redux";
 import styled from "styled-components/native";
-import { MarketCard } from "../../components";
+import { ListingCardsGrid } from "components";
+import { getUserListings } from "actions/users";
 
-function ProfileListingsScreen() {
-  const categories = CategoryList.map((category) => {
-    return (
-      <MarketCard
-        key={category.title}
-        title={category.title}
-        imgSrc={category.src}
-      />
-    );
-  });
-
-  return <CategoryWrapper>{categories}</CategoryWrapper>;
+function ProfileListingsScreen(props) {
+  const { navigation, listings, loadUserListings } = props;
+  useEffect(() => {
+    loadUserListings();
+  }, []);
+  return <ListingCardsGrid listings={listings} navigation={navigation} />;
 }
 
-export default ProfileListingsScreen;
+function mapStateToProps(state) {
+  return {
+    listings: state.listings.listings,
+  };
+}
 
-// -----------------------------------------------------------------------------
-// CONSTANT DECLARATIONS
-// -----------------------------------------------------------------------------
-const CategoryList = [
-  {
-    title: "Bedroom",
-    src: require("../../assets/categories/bedroom.png"),
-  },
-  {
-    title: "Dining room",
-    src: require("../../assets/categories/dining-room.png"),
-  },
-  {
-    title: "Bathroom",
-    src: require("../../assets/categories/bathroom.png"),
-  },
-  {
-    title: "Living room",
-    src: require("../../assets/categories/living-room.png"),
-  },
-  {
-    title: "Study",
-    src: require("../../assets/categories/study.png"),
-  },
-  {
-    title: "Kitchen",
-    src: require("../../assets/categories/kitchen.png"),
-  },
-];
+function mapDispatchToProps(dispatch) {
+  return {
+    loadUserListings: () => dispatch(getUserListings()),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(ProfileListingsScreen);
 
 // ---------------------------------------------------------------------------
 // STYLING
 // ---------------------------------------------------------------------------
-const CategoryWrapper = styled.View`
+const ListingsWrapper = styled.View`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
 `;

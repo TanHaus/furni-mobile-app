@@ -112,11 +112,8 @@ export const logoutUser = () => async (dispatch, getState) => {
       },
       body: payload,
     }).then((response) => response.json());
-    if (response.success) {
-      dispatch(logoutSuccess());
-    } else {
-      dispatch(logoutFailure());
-    }
+    if (response.success) dispatch(logoutSuccess());
+    else dispatch(logoutFailure());
   } catch (err) {
     dispatch(logoutFailure());
   }

@@ -3,9 +3,12 @@ import { renewToken } from "./auth";
 export const CREATE_OFFER_REQUEST = "CREATE_OFFER_REQUEST";
 export const CREATE_OFFER_SUCCESS = "CREATE_OFFER_SUCCESS";
 export const CREATE_OFFER_FAILURE = "CREATE_OFFER_FAILURE";
-export const GET_OFFERS_REQUEST = "GET_OFFERS_REQUEST";
-export const GET_OFFERS_SUCCESS = "GET_OFFERS_SUCCESS";
-export const GET_OFFERS_FAILURE = "GET_OFFERS_FAILURE";
+export const GET_BUYER_OFFERS_REQUEST = "GET_BUYER_OFFERS_REQUEST";
+export const GET_BUYER_OFFERS_SUCCESS = "GET_BUYER_OFFERS_SUCCESS";
+export const GET_BUYER_OFFERS_FAILURE = "GET_BUYER_OFFERS_FAILURE";
+export const GET_LISTING_OFFERS_REQUEST = "GET_LISTING_OFFERS_REQUEST";
+export const GET_LISTING_OFFERS_SUCCESS = "GET_LISTING_OFFERS_SUCCESS";
+export const GET_LISTING_OFFERS_FAILURE = "GET_LISTING_OFFERS_FAILURE";
 export const GET_OFFER_REQUEST = "GET_OFFER_REQUEST";
 export const GET_OFFER_SUCCESS = "GET_OFFER_SUCCESS";
 export const GET_OFFER_FAILURE = "GET_OFFER_FAILURE";
@@ -22,7 +25,8 @@ const createOfferRequest = () => {
   };
 };
 
-const createOfferSuccess = () => {
+const createOfferSuccess = (setModalVisible) => {
+  setModalVisible(false);
   return {
     type: CREATE_OFFER_SUCCESS,
   };
@@ -53,22 +57,41 @@ const getOfferFailure = () => {
   };
 };
 
-const getOffersRequest = () => {
+const getListingOffersRequest = () => {
   return {
-    type: GET_OFFERS_REQUEST,
+    type: GET_LISTING_OFFERS_REQUEST,
   };
 };
 
-const getOffersSuccess = (offer) => {
+const getListingOffersSuccess = (listingOffers) => {
   return {
-    type: GET_OFFERS_SUCCESS,
-    offer,
+    type: GET_LISTING_OFFERS_SUCCESS,
+    listingOffers,
   };
 };
 
-const getOffersFailure = () => {
+const getListingOffersFailure = () => {
   return {
-    type: GET_OFFERS_FAILURE,
+    type: GET_LISTING_OFFERS_FAILURE,
+  };
+};
+
+const getBuyerOffersRequest = () => {
+  return {
+    type: GET_BUYER_OFFERS_REQUEST,
+  };
+};
+
+const getBuyerOffersSuccess = (buyerOffers) => {
+  return {
+    type: GET_BUYER_OFFERS_SUCCESS,
+    buyerOffers,
+  };
+};
+
+const getBuyerOffersFailure = () => {
+  return {
+    type: GET_BUYER_OFFERS_FAILURE,
   };
 };
 
@@ -109,11 +132,13 @@ const deleteOfferFailure = () => {
   };
 };
 
-export const createOffer = ({ listingId, buyerId, priceBidded }) => async (
-  dispatch,
-  getState
-) => {
-  const requestUrl = `http://localhost:4000/listings/${listingId}/offers`;
+export const createOffer = ({
+  listingId,
+  buyerId,
+  priceBidded,
+  setModalVisible,
+}) => async (dispatch, getState) => {
+  const requestUrl = `http://10.0.2.2:4000/listings/${listingId}/offers`;
   const payload = {
     buyerId: buyerId || getState().auth.user.userId,
     timeCreated: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -131,11 +156,11 @@ export const createOffer = ({ listingId, buyerId, priceBidded }) => async (
   dispatch(createOfferRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(createOfferSuccess());
+    if (response.success) dispatch(createOfferSuccess(setModalVisible));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(createOfferSuccess());
+      if (response.success) dispatch(createOfferSuccess(setModalVisible));
       else throw "e";
     } else throw "e";
   } catch (e) {
@@ -148,7 +173,7 @@ export const getOffersByListing = ({ listingId, buyerId }) => async (
   getState
 ) => {
   const requestUrl =
-    `http://localhost:4000/listings/${listingId}/offers` +
+    `http://10.0.2.2:4000/listings/${listingId}/offers` +
     (buyerId ? `?buyerId=${buyerId}` : "");
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -158,18 +183,43 @@ export const getOffersByListing = ({ listingId, buyerId }) => async (
         Authorization: "Bearer " + getState().auth.token.access_token,
       },
     }).then((response) => response.json());
-  dispatch(getOffersRequest());
+  dispatch(getListingOffersRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(getOffersSuccess(response.data));
+    if (response.success) dispatch(getListingOffersSuccess(response.data));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(getOffersSuccess(response.data));
+      if (response.success) dispatch(getListingOffersSuccess(response.data));
       else throw "e";
     } else throw "e";
   } catch (e) {
-    dispatch(getOffersFailure());
+    dispatch(getListingOffersFailure());
+  }
+};
+
+export const getOffersByBuyer = (buyerId) => async (dispatch, getState) => {
+  const requestUrl = `http://localhost:4000/users/${buyerId}/offers`;
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getBuyerOffersRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getBuyerOffersSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getBuyerOffersSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getBuyerOffersFailure());
   }
 };
 
@@ -177,7 +227,7 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
   dispatch,
   getState
 ) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const payload = { priceBidded, status };
   dispatch(editOfferRequest());
   const makeRequest = () =>
@@ -205,7 +255,7 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
 };
 
 export const deleteOffer = (offerId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "DELETE",
@@ -230,7 +280,7 @@ export const deleteOffer = (offerId) => async (dispatch, getState) => {
 };
 
 export const getOfferById = (offerId) => async (dispatch, getState) => {
-  const requestUrl = `http://localhost:4000/offers/${offerId}`;
+  const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",

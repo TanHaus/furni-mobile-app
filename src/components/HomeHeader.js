@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import { CustomText, Searchbar } from "./index";
+import { CustomText } from "./index";
 import { TextWeight } from "./types";
 import { Color } from "../styles";
 import { Ionicons } from "@expo/vector-icons";

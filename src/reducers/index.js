@@ -2,9 +2,18 @@ import { combineReducers } from "redux";
 import auth from "./auth";
 import users from "./users";
 import listings from "./listings";
+import offers from "./offers";
+import { LOGOUT_SUCCESS } from "actions/auth";
 
-export default combineReducers({
+const appReducer = combineReducers({
   auth,
   users,
   listings,
+  offers,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === LOGOUT_SUCCESS) state = undefined;
+  return appReducer(state, action);
+};
+export default rootReducer;
