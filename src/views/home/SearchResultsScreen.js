@@ -6,7 +6,13 @@ import { Ionicons } from "@expo/vector-icons";
 
 function SearchScreen(props) {
   const { navigation, submitSearch, route, listings } = props;
-  const { searchString } = route.params;
+  const {
+    searchString,
+    prevSort,
+    prevMaxPrice,
+    prevCondition,
+    prevMinPrice,
+  } = route.params;
 
   return (
     <SafeAreaViewWrapper>
@@ -14,7 +20,17 @@ function SearchScreen(props) {
         <SearchIcon name="ios-search" />
         <CustomText.Regular>{searchString}</CustomText.Regular>
       </SearchbarWrapper>
-      <SortButton onPress={() => navigation.navigate("sort-and-filter")}>
+      <SortButton
+        onPress={() =>
+          navigation.navigate("sort-and-filter", {
+            searchString,
+            prevSort,
+            prevMaxPrice,
+            prevCondition,
+            prevMinPrice,
+          })
+        }
+      >
         <SearchIcon name="ios-funnel" />
         <CustomText.Regular>Sort & Filter</CustomText.Regular>
       </SortButton>

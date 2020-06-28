@@ -97,8 +97,22 @@ const getListingsRequest = () => {
   };
 };
 
-const getListingsSuccess = ({ listings, searchString, props }) => {
-  props.navigation.navigate("search-results", { searchString });
+const getListingsSuccess = ({
+  listings,
+  sort,
+  condition,
+  maxPrice,
+  minPrice,
+  searchString,
+  props,
+}) => {
+  props.navigation.navigate("search-results", {
+    searchString,
+    prevSort: sort,
+    prevCondition: condition,
+    prevMaxPrice: maxPrice,
+    prevMinPrice: minPrice,
+  });
   return {
     type: GET_LISTINGS_SUCCESS,
     listings,
@@ -282,13 +296,25 @@ export const deleteListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const getListings = ({ searchString, props }) => async (
-  dispatch,
-  getState
-) => {
-  const requestUrl =
-    "http://10.0.2.2:4000/listings" +
-    (searchString ? `?q=${searchString}` : "");
+export const getListings = ({
+  searchString,
+  sort,
+  condition,
+  maxPrice,
+  minPrice,
+  props,
+}) => async (dispatch, getState) => {
+  let requestUrl = "http://10.0.2.2:4000/listings";
+  const query_params_present =
+    searchString || sort || condition || maxPrice || minPrice;
+  if (query_params_present) requestUrl += "?";
+  if (searchString) requestUrl += `q=${searchString.replace(" ", "+")}&`;
+  if (sort) requestUrl += `sort=${sort}&`;
+  if (condition) requestUrl += `condition=${condition}&`;
+  if (maxPrice) requestUrl += `maxPrice=${maxPrice}&`;
+  if (minPrice) requestUrl += `minPrice=${minPrice}&`;
+  if (query_params_present) requestUrl = requestUrl.slice(0, -1);
+
   const makeRequest = () =>
     fetch(requestUrl, {
       method: "GET",
@@ -306,7 +332,17 @@ export const getListings = ({ searchString, props }) => async (
         const picUrls = listing.picUrls.split(",");
         return { ...listing, picUrls };
       });
-      dispatch(getListingsSuccess({ listings, searchString, props }));
+      dispatch(
+        getListingsSuccess({
+          listings,
+          searchString,
+          sort,
+          condition,
+          maxPrice,
+          minPrice,
+          props,
+        })
+      );
     } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
@@ -315,7 +351,17 @@ export const getListings = ({ searchString, props }) => async (
           listing.picUrls = listing.picUrls.split(",");
           return listing;
         });
-        dispatch(getListingsSuccess({ listings, searchString, props }));
+        dispatch(
+          getListingsSuccess({
+            listings,
+            searchString,
+            sort,
+            condition,
+            maxPrice,
+            minPrice,
+            props,
+          })
+        );
       } else throw "e";
     } else throw "e";
   } catch (e) {

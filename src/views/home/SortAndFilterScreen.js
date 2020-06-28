@@ -7,17 +7,38 @@ import {
   Button,
   CustomText,
   SafeAreaViewWrapper,
-} from "../../components";
-import { TextWeight } from "../../components/types";
-import { Color } from "../../styles";
-import { getListings } from "../../actions/listings";
+} from "components";
+import { TextWeight } from "components/types";
+import { Picker } from "@react-native-community/picker";
+import { Color } from "styles";
+import { getListings } from "actions/listings";
 
 function SortAndFilterScreen(props) {
-  const { navigation, submitSearch } = props;
-  const [searchString, setSearchString] = useState("");
-  const handleSubmitSearch = () => {
-    submitSearch(searchString);
-    navigation.navigate("search-results", { searchString: searchString }); // should only navigate if the fetch response is successful.
+  const { navigation, submitSortAndFilter, route } = props;
+  const {
+    searchString,
+    prevSort,
+    prevMaxPrice,
+    prevCondition,
+    prevMinPrice,
+  } = route.params;
+
+  const [sort, setSort] = useState(prevSort || SortAttributes[0].value);
+  const [condition, setCondition] = useState(
+    prevCondition || ConditionAttributes[0].value
+  );
+  const [maxPrice, setMaxPrice] = useState(prevMaxPrice || "");
+  const [minPrice, setMinPrice] = useState(prevMinPrice || "");
+
+  const handleSortAndFilter = () => {
+    submitSortAndFilter({
+      searchString,
+      sort,
+      condition,
+      maxPrice,
+      minPrice,
+      props,
+    });
   };
   return (
     <SafeAreaViewWrapper>
@@ -27,56 +48,58 @@ function SortAndFilterScreen(props) {
       </TitleContainer>
       <Header weight={TextWeight.SemiBold}>SORT BY</Header>
       <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>Popular</CustomTitle>
-        </CustomButton>
-      </CustomContainer>
-      <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>Recent</CustomTitle>
-        </CustomButton>
-      </CustomContainer>
-      <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>
-            Price - High to Low
-          </CustomTitle>
-        </CustomButton>
-      </CustomContainer>
-      <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>
-            Price - Low to High
-          </CustomTitle>
-        </CustomButton>
+        <Picker
+          selectedValue={sort}
+          onValueChange={(value, index) => setSort(value)}
+        >
+          {SortAttributes.map((condition) => (
+            <Picker.Item
+              key={condition.value}
+              label={condition.label}
+              value={condition.value}
+            />
+          ))}
+        </Picker>
       </CustomContainer>
       <CustomContainer />
+
       <Header weight={TextWeight.SemiBold}>FILTER BY</Header>
       <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>Condition</CustomTitle>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Choose
-          </CustomText.Regular>
-        </CustomButton>
+        <CustomTitle weight={TextWeight.Semibold}>Item Condition</CustomTitle>
+        <Picker
+          selectedValue={condition}
+          onValueChange={(value, index) => setCondition(value)}
+        >
+          {ConditionAttributes.map((condition) => (
+            <Picker.Item
+              key={condition.value}
+              label={condition.label}
+              value={condition.value}
+            />
+          ))}
+        </Picker>
+      </CustomContainer>
+
+      <CustomContainer>
+        <CustomTitle weight={TextWeight.Semibold}>Minimum Price</CustomTitle>
+        <Input
+          value={minPrice}
+          placeholder="Set a price"
+          onChangeText={setMinPrice}
+          keyboardType="numeric"
+        />
       </CustomContainer>
       <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>Minimum Price</CustomTitle>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Set a price
-          </CustomText.Regular>
-        </CustomButton>
-      </CustomContainer>
-      <CustomContainer>
-        <CustomButton onPress={null}>
-          <CustomTitle weight={TextWeight.Semibold}>Maximum Price</CustomTitle>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Set a price
-          </CustomText.Regular>
-        </CustomButton>
+        <CustomTitle weight={TextWeight.Semibold}>Maximum Price</CustomTitle>
+        <Input
+          value={maxPrice}
+          placeholder="Set a price"
+          onChangeText={setMaxPrice}
+          keyboardType="numeric"
+        />
       </CustomContainer>
       <CustomContainer />
+      <Button title="Apply sort and filter" onPress={handleSortAndFilter} />
     </SafeAreaViewWrapper>
   );
 }
@@ -89,12 +112,49 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    submitSearch: (searchString) => dispatch(getListings(searchString)),
+    submitSortAndFilter: (searchString) => dispatch(getListings(searchString)),
   };
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withConnect(SortAndFilterScreen);
+
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+const SortAttributes = [
+  {
+    label: "Popular",
+    value: "liked_descending",
+  },
+  {
+    label: "Recent",
+    value: "timeCreated_descending",
+  },
+  {
+    label: "Price - High to Low",
+    value: "price_descending",
+  },
+  {
+    label: "Price - Low to High",
+    value: "price_ascending",
+  },
+];
+
+const ConditionAttributes = [
+  {
+    label: "-",
+    value: "",
+  },
+  {
+    label: "New",
+    value: "new",
+  },
+  {
+    label: "Used",
+    value: "used",
+  },
+];
 
 // =============================================================================
 // STYLING
@@ -119,11 +179,10 @@ const CustomContainer = styled.View`
   border-top-color: ${Color.Palette[5]};
 `;
 
-const CustomButton = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
+const CustomTitle = styled(CustomText.Regular)`
+  padding: 10px 0 0 10px;
 `;
 
-const CustomTitle = styled(CustomText.Regular)`
-  padding: 10px;
+const Input = styled.TextInput`
+  padding: 0 0 5px 10px;
 `;
