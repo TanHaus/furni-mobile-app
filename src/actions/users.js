@@ -235,7 +235,6 @@ export const deleteUser = () => async (dispatch, getState) => {
 };
 
 export const getUserListings = (userId) => async (dispatch, getState) => {
-  console.log("from action");
   const requestUrl = `http://10.0.2.2:4000/users/${
     userId || getState().auth.user.userId
   }/listings`;
