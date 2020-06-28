@@ -29,8 +29,8 @@ function AddScreen(props) {
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
-      // const pickerResult = await ImagePicker.launchCameraAsync({
-      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      const pickerResult = await ImagePicker.launchCameraAsync({
+      // const pickerResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [3, 3],
@@ -45,7 +45,7 @@ function AddScreen(props) {
   };
 
   const handleSubmit = () => {
-    submitListingData({ listing, pics });
+    submitListingData({ listing, pics, props });
   };
 
   return (
@@ -83,7 +83,7 @@ function AddScreen(props) {
           value={listing.price}
           keyboardType="numeric"
           onChangeText={(value) =>
-            setListing({ ...listing, price: value.toFixed(2) })
+            setListing({ ...listing, price: value })
           }
         />
       </Container>

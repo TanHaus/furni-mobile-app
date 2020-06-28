@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { View } from "react-native";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
@@ -6,16 +7,16 @@ import { ListingCardsGrid } from "components";
 import { getUserListings } from "actions/users";
 
 function ProfileListingsScreen(props) {
-  const { navigation, listings, loadUserListings } = props;
-  useEffect(() => {
+  const { navigation, userListings, loadUserListings } = props;
+  useFocusEffect(useCallback(() => {
     loadUserListings();
-  }, []);
-  return <ListingCardsGrid listings={listings} navigation={navigation} />;
+  }, []));
+  return <ListingCardsGrid listings={userListings} navigation={navigation} />;
 }
 
 function mapStateToProps(state) {
   return {
-    listings: state.listings.listings,
+    userListings: state.users.userListings,
   };
 }
 

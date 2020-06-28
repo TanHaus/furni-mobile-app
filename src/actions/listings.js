@@ -22,7 +22,9 @@ const createListingRequest = () => {
   };
 };
 
-const createListingSuccess = () => {
+const createListingSuccess = ({ listing, props }) => {
+  console.log(listing);
+  props.navigation.navigate("add-listing-success", { listing });
   return {
     type: CREATE_LISTING_SUCCESS,
   };
@@ -106,6 +108,11 @@ const getListingsSuccess = ({
   searchString,
   props,
 }) => {
+  const processedListings = listings.map((listing) => {
+    if (!listing.picUrls) return listing;
+    const picUrls = listing.picUrls.split(",");
+    return { ...listing, picUrls };
+  });
   props.navigation.navigate("search-results", {
     searchString,
     prevSort: sort,
@@ -115,7 +122,7 @@ const getListingsSuccess = ({
   });
   return {
     type: GET_LISTINGS_SUCCESS,
-    listings,
+    listings: processedListings,
   };
 };
 
@@ -156,7 +163,7 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const createListing = ({ listing, pics }) => async (
+export const createListing = ({ listing, pics, props }) => async (
   dispatch,
   getState
 ) => {
@@ -213,11 +220,11 @@ export const createListing = ({ listing, pics }) => async (
   try {
     await Promise.all(pics.map((pic) => uploadPicToS3(pic.uri)));
     let response = await makeRequest(makePayload({ listing, picUrls }));
-    if (response.success) dispatch(createListingSuccess());
+    if (response.success) dispatch(createListingSuccess({ listing: {...listing, picUrls}, props }));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest(makePayload({ listing, picUrls }));
-      if (response.success) dispatch(createListingSuccess());
+      if (response.success) dispatch(createListingSuccess({ listing: {...listing, picUrls}, props }));
       else throw "e";
     } else throw "e";
   } catch (e) {
@@ -326,43 +333,30 @@ export const getListings = ({
   dispatch(getListingsRequest());
   try {
     let response = await makeRequest();
-    if (response.success) {
-      const listings = response.data.map((listing) => {
-        if (!listing.picUrls) return listing;
-        const picUrls = listing.picUrls.split(",");
-        return { ...listing, picUrls };
-      });
-      dispatch(
-        getListingsSuccess({
-          listings,
+    if (response.success) 
+      dispatch(getListingsSuccess({
+        listings: response.data,
+        searchString,
+        sort,
+        condition,
+        maxPrice,
+        minPrice,
+        props,
+      }));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) 
+        dispatch(getListingsSuccess({
+          listings: response.data,
           searchString,
           sort,
           condition,
           maxPrice,
           minPrice,
           props,
-        })
-      );
-    } else if (response.message === "Expired access token") {
-      await dispatch(renewToken());
-      response = await makeRequest();
-      if (response.success) {
-        listings = listings.map((listing) => {
-          listing.picUrls = listing.picUrls.split(",");
-          return listing;
-        });
-        dispatch(
-          getListingsSuccess({
-            listings,
-            searchString,
-            sort,
-            condition,
-            maxPrice,
-            minPrice,
-            props,
-          })
-        );
-      } else throw "e";
+        }));
+      else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(getListingsFailure());

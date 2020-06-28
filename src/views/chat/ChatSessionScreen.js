@@ -12,7 +12,7 @@ import styled from "styled-components/native";
 import { Color } from "styles";
 
 function ChatSessionScreen(props) {
-  const { route, listing, listingOffers, submitEditOffer } = props;
+  const { route, navigation, listing, listingOffers, submitEditOffer } = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [editedPriceBidded, setEditedPriceBidded] = useState(
     listingOffers[0].priceBidded
@@ -52,19 +52,30 @@ function ChatSessionScreen(props) {
       <CustomText.Regular>
         {`You made an offer: S\$${listingOffers[0].priceBidded}`}
       </CustomText.Regular>
-      <Button title="Edit" onPress={() => setModalVisible(true)} />
-      <Modal visible={modalVisible}>
-        <View>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Your bid:{" "}
-          </CustomText.Regular>
-          <Input
-            value={editedPriceBidded}
-            onChangeText={setEditedPriceBidded}
-            keyboardType={"numeric"}
-          />
-          <Button title="Confirm" onPress={handleEditOffer} />
-        </View>
+      <Button
+        title="Edit"
+        type="secondary"
+        onPress={() => setModalVisible(true)}
+      />
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <CenteredView>
+          <ModalView>
+            <CustomText.Regular color={Color.Palette[4]}>
+              Your bid:{" "}
+            </CustomText.Regular>
+            <Input
+              value={editedPriceBidded.toString()}
+              onChangeText={setEditedPriceBidded}
+              keyboardType={"numeric"}
+            />
+            <Button title="Confirm" onPress={handleEditOffer} />
+            <Button
+              title="Cancel"
+              type="secondary"
+              onPress={() => setModalVisible(false)}
+            />
+          </ModalView>
+        </CenteredView>
       </Modal>
     </SafeAreaViewWrapper>
   );
@@ -80,6 +91,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     submitEditOffer: (editOfferData) => dispatch(editOffer(editOfferData)),
+    submitDeleteOffer: (offerId) => dispatch(deleteOffer(offerId)),
   };
 }
 
@@ -92,4 +104,21 @@ export default withConnect(ChatSessionScreen);
 const Input = styled.TextInput`
   height: 40px;
   border-bottom-width: 1px;
+  width: 100px;
+  margin-bottom: 15px;
+  text-align: center;
+`;
+
+const CenteredView = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const ModalView = styled.View`
+  margin: 20px;
+  padding: 30px;
+  width: 80%;
+  align-items: center;
+  background-color: white;
 `;

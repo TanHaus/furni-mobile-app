@@ -32,7 +32,6 @@ const defaultState = {
 };
 
 export default (state = defaultState, action) => {
-  console.log(action.listings);
   switch (action.type) {
     case CREATE_OFFER_REQUEST:
       return {
