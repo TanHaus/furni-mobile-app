@@ -29,7 +29,7 @@ function EditProfileScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>PROFILE</Title>
+        <Title weight={TextWeight.Bold}>EDIT PROFILE</Title>
       </TitleContainer>
       <Image source={require("../../../assets/listings/purple-chair.png")} />
       <Container>

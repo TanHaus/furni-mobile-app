@@ -4,8 +4,8 @@ import styled from "styled-components/native";
 import { ExploreCard } from "../../components";
 
 function ExploreScreen() {
-  const recommendations = RecommendationList.map((category) => {
-    return <ExploreCard key={category.title} {...category} />;
+  const recommendations = RecommendationList.map((listing) => {
+    return <ExploreCard key={listing.title} {...listing} />;
   });
 
   return <View>{recommendations}</View>;
