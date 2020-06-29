@@ -53,7 +53,11 @@ function EditProfileScreen(props) {
         <CustomText.Regular>
           Enter your password to confirm the changes.
         </CustomText.Regular>
-        <Input value={password} onChangeText={setPassword} />
+        <Input
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
       </PasswordContainer>
       <Button
         title="Confirm changes"

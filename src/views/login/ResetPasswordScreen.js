@@ -31,13 +31,21 @@ function ResetPasswordScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>
           NEW PASSWORD
         </CustomText.Regular>
-        <Input value={newPassword} onChangeText={setNewPassword} />
+        <Input
+          secureTextEntry={true}
+          value={newPassword}
+          onChangeText={setNewPassword}
+        />
       </Container>
       <Container>
         <CustomText.Regular color={Color.Palette[4]}>
           RE-ENTER PASSWORD
         </CustomText.Regular>
-        <Input value={reEnterPassword} onChangeText={setReEnterPassword} />
+        <Input
+          secureTextEntry={true}
+          value={reEnterPassword}
+          onChangeText={setReEnterPassword}
+        />
       </Container>
       <Container>
         <Button title="Reset Password" onPress={handleSubmitLogin} />

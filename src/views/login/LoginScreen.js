@@ -36,7 +36,11 @@ function LoginScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>
           PASSWORD
         </CustomText.Regular>
-        <Input value={password} onChangeText={setPassword} />
+        <Input
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
         <TextContainer>
           <UnderlinedText
             onPress={() => navigation.navigate("forgot-password")}

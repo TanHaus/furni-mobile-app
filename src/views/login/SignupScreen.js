@@ -42,7 +42,11 @@ function SignupScreen(props) {
         <CustomText.Regular color={Color.Palette[4]}>
           PASSWORD
         </CustomText.Regular>
-        <Input value={password} onChangeText={setPassword} />
+        <Input
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
       </Container>
       <Container>
         <Button title="Sign up" onPress={handleSubmitSignup} />
