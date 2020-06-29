@@ -1,19 +1,13 @@
 import React from "react";
 import styled from "styled-components/native";
-import { MarketCard } from "../../components";
+import { CustomText, MarketCard } from "../../components";
 
 function ProfileReviewsScreen() {
-  const categories = CategoryList.map((category) => {
-    return (
-      <MarketCard
-        key={category.title}
-        title={category.title}
-        imgSrc={category.src}
-      />
-    );
-  });
-
-  return <CategoryWrapper>{categories}</CategoryWrapper>;
+  return (
+    <CategoryWrapper>
+      <CustomText.Large>You have no reviews currently</CustomText.Large>
+    </CategoryWrapper>
+  );
 }
 
 export default ProfileReviewsScreen;

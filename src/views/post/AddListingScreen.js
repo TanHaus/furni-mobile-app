@@ -19,7 +19,7 @@ function AddScreen(props) {
   const { navigation, submitListingData, auth } = props;
   const [listing, setListing] = useState({
     title: "",
-    price: 0,
+    price: "",
     itemCondition: "new",
     description: "",
     deliveryOption: "",

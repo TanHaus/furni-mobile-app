@@ -24,12 +24,14 @@ function SettingsScreen(props) {
       </TitleContainer>
       <SettingContainer>
         <SettingButton onPress={() => navigation.navigate("edit-profile")}>
-          <SettingTitle weight={TextWeight.Semibold}>Profile</SettingTitle>
+          <SettingTitle weight={TextWeight.Semibold}>Edit Profile</SettingTitle>
         </SettingButton>
       </SettingContainer>
       <SettingContainer>
         <SettingButton onPress={() => navigation.navigate("change-password")}>
-          <SettingTitle weight={TextWeight.Semibold}>Password</SettingTitle>
+          <SettingTitle weight={TextWeight.Semibold}>
+            Change Password
+          </SettingTitle>
         </SettingButton>
       </SettingContainer>
       <SettingContainer>

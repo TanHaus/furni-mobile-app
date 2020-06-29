@@ -6,5 +6,5 @@ export interface ButtonProps {
 
 export enum ButtonType {
   Default,
-  Secondary,
+  Secondary = "secondary",
 }
