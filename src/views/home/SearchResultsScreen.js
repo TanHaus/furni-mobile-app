@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { CustomText, SafeAreaViewWrapper, ListingCardsGrid } from "components";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,28 +23,30 @@ function SearchScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
-      <SearchbarWrapper onPress={() => navigation.navigate("search")}>
-        <SearchIcon name="ios-search" />
-        <CustomText.Regular>{searchString}</CustomText.Regular>
-      </SearchbarWrapper>
-      <SortButton
-        onPress={() =>
-          navigation.navigate("sort-and-filter", {
-            searchString,
-            prevSort,
-            prevMaxPrice,
-            prevCondition,
-            prevMinPrice,
-          })
-        }
-      >
-        <SearchIcon name="ios-funnel" />
-        <CustomText.Regular>Sort & Filter</CustomText.Regular>
-      </SortButton>
-      <View>
-        <ListingCardsGrid listings={listings} navigation={navigation} />
-        {getListingsLoading && <StyledActivityIndicator size="large" />}
-      </View>
+      <ScrollView>
+        <SearchbarWrapper onPress={() => navigation.navigate("search")}>
+          <SearchIcon name="ios-search" />
+          <CustomText.Regular>{searchString}</CustomText.Regular>
+        </SearchbarWrapper>
+        <SortButton
+          onPress={() =>
+            navigation.navigate("sort-and-filter", {
+              searchString,
+              prevSort,
+              prevMaxPrice,
+              prevCondition,
+              prevMinPrice,
+            })
+          }
+        >
+          <SearchIcon name="ios-funnel" />
+          <CustomText.Regular>Sort & Filter</CustomText.Regular>
+        </SortButton>
+        <View>
+          <ListingCardsGrid listings={listings} navigation={navigation} />
+          {getListingsLoading && <StyledActivityIndicator size="large" />}
+        </View>
+      </ScrollView>
     </SafeAreaViewWrapper>
   );
 }
