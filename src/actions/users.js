@@ -118,9 +118,14 @@ const getUserListingsRequest = () => {
 };
 
 const getUserListingsSuccess = (userListings) => {
+  const processedUserListings = userListings.map((listing) => {
+    if (!listing.picUrls) return listing;
+    const picUrls = listing.picUrls.split(",");
+    return { ...listing, picUrls };
+  });
   return {
     type: GET_USER_LISTINGS_SUCCESS,
-    userListings,
+    userListings: processedUserListings,
   };
 };
 

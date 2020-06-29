@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
@@ -32,9 +32,3 @@ export default withConnect(ProfileListingsScreen);
 // ---------------------------------------------------------------------------
 // STYLING
 // ---------------------------------------------------------------------------
-const ListingsWrapper = styled.View`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-`;

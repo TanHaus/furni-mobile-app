@@ -333,21 +333,9 @@ export const getListings = ({
   dispatch(getListingsRequest());
   try {
     let response = await makeRequest();
-    if (response.success) 
-      dispatch(getListingsSuccess({
-        listings: response.data,
-        searchString,
-        sort,
-        condition,
-        maxPrice,
-        minPrice,
-        props,
-      }));
-    else if (response.message === "Expired access token") {
-      await dispatch(renewToken());
-      response = await makeRequest();
-      if (response.success) 
-        dispatch(getListingsSuccess({
+    if (response.success)
+      dispatch(
+        getListingsSuccess({
           listings: response.data,
           searchString,
           sort,
@@ -355,7 +343,23 @@ export const getListings = ({
           maxPrice,
           minPrice,
           props,
-        }));
+        })
+      );
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success)
+        dispatch(
+          getListingsSuccess({
+            listings: response.data,
+            searchString,
+            sort,
+            condition,
+            maxPrice,
+            minPrice,
+            props,
+          })
+        );
       else throw "e";
     } else throw "e";
   } catch (e) {
