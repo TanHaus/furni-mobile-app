@@ -6,12 +6,19 @@ import { CustomText } from "../custom-text/CustomText";
 
 export const PreviewCard = (props) => {
   const { listing } = props;
-  
+
   return (
     <Wrapper>
       <TouchableOpacity>
-        <Text>{JSON.stringify(listing.picUrls)}</Text>
-        <Image key={listing.listingId} source={{ uri: (listing.picUrls && listing.picUrls.length) ? listing.picUrls[0] : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png" }} />
+        <Image
+          key={listing.listingId}
+          source={{
+            uri:
+              listing.picUrls && listing.picUrls.length
+                ? listing.picUrls[0]
+                : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png",
+          }}
+        />
         <CustomText.Regular>{listing.title}</CustomText.Regular>
         <Container>
           <CustomText.Regular weight="bold">

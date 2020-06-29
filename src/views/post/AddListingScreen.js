@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { createListing } from "../../actions/listings";
-import { TouchableOpacity, Image, View } from "react-native";
+import { TouchableOpacity, Image, View, ActivityIndicator } from "react-native";
 import styled from "styled-components/native";
 import {
   BackButton,
@@ -16,7 +16,7 @@ import { Color } from "../../styles";
 import { AntDesign } from "@expo/vector-icons";
 
 function AddScreen(props) {
-  const { navigation, submitListingData, auth } = props;
+  const { navigation, submitListingData, createListingLoading } = props;
   const [listing, setListing] = useState({
     title: "",
     price: "",
@@ -30,7 +30,7 @@ function AddScreen(props) {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
       const pickerResult = await ImagePicker.launchCameraAsync({
-      // const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        // const pickerResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [3, 3],
@@ -50,6 +50,7 @@ function AddScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
+      <ActivityIndicator animating={createListingLoading} />
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
         <Title weight={TextWeight.Bold}>NEW LISTING</Title>
@@ -82,9 +83,7 @@ function AddScreen(props) {
         <Input
           value={listing.price}
           keyboardType="numeric"
-          onChangeText={(value) =>
-            setListing({ ...listing, price: value })
-          }
+          onChangeText={(value) => setListing({ ...listing, price: value })}
         />
       </Container>
       <Container>
@@ -132,7 +131,7 @@ function AddScreen(props) {
 
 function mapStateToProps(state) {
   return {
-    auth: state.auth,
+    createListingLoading: state.listings.createListingLoading,
   };
 }
 

@@ -5,19 +5,19 @@ import { PreviewCard } from "components";
 
 export const ListingCardsGrid = (props) => {
   const { navigation, listings } = props;
+  if (!(listings && listings.length)) return <ListingsWrapper />;
   return (
     <ListingsWrapper>
-      {listings &&
-        listings.map((listing) => (
-          <TouchableOpacity
-            key={listing.listingId}
-            onPress={() =>
-              navigation.navigate("listing", { listingId: listing.listingId })
-            }
-          >
-            <PreviewCard listing={listing} />
-          </TouchableOpacity>
-        ))}
+      {listings.map((listing) => (
+        <TouchableOpacity
+          key={listing.listingId}
+          onPress={() =>
+            navigation.navigate("listing", { listingId: listing.listingId })
+          }
+        >
+          <PreviewCard listing={listing} />
+        </TouchableOpacity>
+      ))}
     </ListingsWrapper>
   );
 };

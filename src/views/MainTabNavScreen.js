@@ -8,7 +8,7 @@ import ChatOverviewScreen from "./chat/ChatOverviewScreen";
 import AddListingScreen from "./post/AddListingScreen";
 import ActivityScreen from "./activity/ActivityScreen";
 import ProfileMainScreen from "./profile/ProfileMainScreen";
-import AddListingSuccessScreen from "./post/AddListingSuccessScreen";
+// import AddListingSuccessScreen from "./post/AddListingSuccessScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,7 @@ function MainTabNavScreen(props) {
       }}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Chat" component={AddListingSuccessScreen} />
+      <Tab.Screen name="Chat" component={ChatOverviewScreen} />
       <Tab.Screen
         name="Add"
         component={AddListingScreen}
