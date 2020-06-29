@@ -22,7 +22,7 @@ import {
 const defaultState = {
   listingOffers: [],
   buyerOffers: [],
-  offer: {},
+  // offer: {},
   createOfferLoading: false,
   getBuyerOffersLoading: false,
   getListingOffersLoading: false,
@@ -32,7 +32,6 @@ const defaultState = {
 };
 
 export default (state = defaultState, action) => {
-  console.log(action.listings);
   switch (action.type) {
     case CREATE_OFFER_REQUEST:
       return {
@@ -103,9 +102,17 @@ export default (state = defaultState, action) => {
         editOfferLoading: true,
       };
     case EDIT_OFFER_SUCCESS:
+      const listingOffers = state.listingOffers;
+      console.log(listingOffers);
+      const idx = listingOffers.indexOf(
+        (offer) => offer.offerId === action.editedOffer.offerId
+      );
+      const targetOffer = listingOffers[idx];
+      targetOffer = { ...targetOffer, ...action.editedOffer };
+      console.log(listingOffers);
       return {
         ...state,
-        offer: action.editedOffer,
+        listingOffers,
         editOfferLoading: false,
       };
     case EDIT_OFFER_FAILURE:

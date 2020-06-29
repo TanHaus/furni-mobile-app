@@ -1,3 +1,5 @@
+import Toast from "react-native-root-toast";
+import { Color } from "styles";
 import { renewToken } from "./auth";
 export const CREATE_USER_REQUEST = "CREATE_USER_REQUEST";
 export const CREATE_USER_SUCCESS = "CREATE_USER_SUCCESS";
@@ -25,12 +27,24 @@ const createUserRequest = () => {
 };
 
 const createUserSuccess = () => {
+  Toast.show("Your account has been created! Wait no more to explore FURNI", {
+    duration: 5000,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Green,
+    opacity: 1,
+  });
   return {
     type: CREATE_USER_SUCCESS,
   };
 };
 
 const createUserFailure = () => {
+  Toast.show("Error. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: CREATE_USER_FAILURE,
   };
@@ -118,9 +132,14 @@ const getUserListingsRequest = () => {
 };
 
 const getUserListingsSuccess = (userListings) => {
+  const processedUserListings = userListings.map((listing) => {
+    if (!listing.picUrls) return listing;
+    const picUrls = listing.picUrls.split(",");
+    return { ...listing, picUrls };
+  });
   return {
     type: GET_USER_LISTINGS_SUCCESS,
-    userListings,
+    userListings: processedUserListings,
   };
 };
 

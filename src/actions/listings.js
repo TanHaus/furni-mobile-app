@@ -1,5 +1,5 @@
+import Toast from "react-native-root-toast";
 import { renewToken } from "./auth";
-
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
 export const CREATE_LISTING_FAILURE = "CREATE_LISTING_FAILURE";
@@ -22,13 +22,21 @@ const createListingRequest = () => {
   };
 };
 
-const createListingSuccess = () => {
+const createListingSuccess = ({ listing, props }) => {
+  console.log(listing);
+  props.navigation.navigate("add-listing-success", { listing });
   return {
     type: CREATE_LISTING_SUCCESS,
   };
 };
 
 const createListingFailure = () => {
+  Toast.show("Error. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: CREATE_LISTING_FAILURE,
   };
@@ -97,29 +105,25 @@ const getListingsRequest = () => {
   };
 };
 
-const getListingsSuccess = ({
-  listings,
-  sort,
-  condition,
-  maxPrice,
-  minPrice,
-  searchString,
-  props,
-}) => {
-  props.navigation.navigate("search-results", {
-    searchString,
-    prevSort: sort,
-    prevCondition: condition,
-    prevMaxPrice: maxPrice,
-    prevMinPrice: minPrice,
+const getListingsSuccess = (listings) => {
+  const processedListings = listings.map((listing) => {
+    if (!listing.picUrls) return listing;
+    const picUrls = listing.picUrls.split(",");
+    return { ...listing, picUrls };
   });
   return {
     type: GET_LISTINGS_SUCCESS,
-    listings,
+    listings: processedListings,
   };
 };
 
 const getListingsFailure = () => {
+  Toast.show("Error. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: GET_LISTINGS_FAILURE,
   };
@@ -156,7 +160,7 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   }
 };
 
-export const createListing = ({ listing, pics }) => async (
+export const createListing = ({ listing, pics, props }) => async (
   dispatch,
   getState
 ) => {
@@ -213,11 +217,17 @@ export const createListing = ({ listing, pics }) => async (
   try {
     await Promise.all(pics.map((pic) => uploadPicToS3(pic.uri)));
     let response = await makeRequest(makePayload({ listing, picUrls }));
-    if (response.success) dispatch(createListingSuccess());
+    if (response.success)
+      dispatch(
+        createListingSuccess({ listing: { ...listing, picUrls }, props })
+      );
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest(makePayload({ listing, picUrls }));
-      if (response.success) dispatch(createListingSuccess());
+      if (response.success)
+        dispatch(
+          createListingSuccess({ listing: { ...listing, picUrls }, props })
+        );
       else throw "e";
     } else throw "e";
   } catch (e) {
@@ -326,43 +336,12 @@ export const getListings = ({
   dispatch(getListingsRequest());
   try {
     let response = await makeRequest();
-    if (response.success) {
-      const listings = response.data.map((listing) => {
-        if (!listing.picUrls) return listing;
-        const picUrls = listing.picUrls.split(",");
-        return { ...listing, picUrls };
-      });
-      dispatch(
-        getListingsSuccess({
-          listings,
-          searchString,
-          sort,
-          condition,
-          maxPrice,
-          minPrice,
-          props,
-        })
-      );
-    } else if (response.message === "Expired access token") {
+    if (response.success) dispatch(getListingsSuccess(response.data));
+    else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) {
-        listings = listings.map((listing) => {
-          listing.picUrls = listing.picUrls.split(",");
-          return listing;
-        });
-        dispatch(
-          getListingsSuccess({
-            listings,
-            searchString,
-            sort,
-            condition,
-            maxPrice,
-            minPrice,
-            props,
-          })
-        );
-      } else throw "e";
+      if (response.success) dispatch(getListingsSuccess(response.data));
+      else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(getListingsFailure());

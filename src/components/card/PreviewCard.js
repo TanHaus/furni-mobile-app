@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import styled from "styled-components/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CustomText } from "../custom-text/CustomText";
@@ -10,11 +10,15 @@ export const PreviewCard = (props) => {
   return (
     <Wrapper>
       <TouchableOpacity>
-        {listing.picUrls ? (
-          <Image source={{ uri: listing.picUrls[0] }} />
-        ) : (
-          <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
-        )}
+        <Image
+          key={listing.listingId}
+          source={{
+            uri:
+              listing.picUrls && listing.picUrls.length
+                ? listing.picUrls[0]
+                : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png",
+          }}
+        />
         <CustomText.Regular>{listing.title}</CustomText.Regular>
         <Container>
           <CustomText.Regular weight="bold">

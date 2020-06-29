@@ -228,7 +228,11 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
   getState
 ) => {
   const requestUrl = `http://10.0.2.2:4000/offers/${offerId}`;
-  const payload = { priceBidded, status };
+  const payload = {
+    priceBidded,
+    status,
+    timeUpdated: new Date().toISOString().slice(0, 19).replace("T", " "),
+  };
   dispatch(editOfferRequest());
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -241,12 +245,12 @@ export const editOffer = ({ offerId, priceBidded, status }) => async (
     }).then((response) => response.json());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(editOfferSuccess());
+    if (response.success) dispatch(editOfferSuccess({ ...payload, offerId }));
     // need to update store with updated data
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(editOfferSuccess());
+      if (response.success) dispatch(editOfferSuccess({ ...payload, offerId }));
       else throw "e";
     } else throw "e";
   } catch (e) {

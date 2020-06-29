@@ -5,33 +5,19 @@ import {
   CustomText,
   SafeAreaViewWrapper,
   PreviewCard,
-} from "../../components";
-import { TextWeight } from "../../components/types";
+} from "components";
+import { TextWeight } from "components/types";
 
 function AddListingSuccessScreen(props) {
   const { navigation, route } = props;
-  const listing = route.params;
+  const { listing } = route.params;
 
   return (
     <SafeAreaViewWrapper>
       <Title weight={TextWeight.Bold}>LISTING PUBLISHED</Title>
 
       <ListingsWrapper>
-        <PreviewCard
-          listing={{
-            listingId: 55,
-            sellerId: "Furni",
-            title: "Random Chair",
-            timeCreated: null,
-            price: 150,
-            itemCondition: "used",
-            description: "very awesome chair",
-            category: "",
-            deliveryOption: "",
-            status: "open",
-            picUrls: "",
-          }}
-        />
+        <PreviewCard listing={listing} />
       </ListingsWrapper>
       <Subtitle>What would you like to do next?</Subtitle>
       <Button

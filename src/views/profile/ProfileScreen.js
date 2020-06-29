@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollView } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ProfileListingsScreen from "./ProfileListingsScreen";
 import ProfileReviewsScreen from "./ProfileReviewsScreen";
@@ -9,10 +10,14 @@ const Tab = createMaterialTopTabNavigator();
 function ProfileScreen() {
   return (
     <SafeAreaViewWrapper>
-      <Tab.Navigator tabBar={(props) => <ProfileHeader {...props} />}>
-        <Tab.Screen name="Listings" component={ProfileListingsScreen} />
-        <Tab.Screen name="Reviews" component={ProfileReviewsScreen} />
-      </Tab.Navigator>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+      >
+        <Tab.Navigator tabBar={(props) => <ProfileHeader {...props} />}>
+          <Tab.Screen name="Listings" component={ProfileListingsScreen} />
+          <Tab.Screen name="Reviews" component={ProfileReviewsScreen} />
+        </Tab.Navigator>
+      </ScrollView>
     </SafeAreaViewWrapper>
   );
 }

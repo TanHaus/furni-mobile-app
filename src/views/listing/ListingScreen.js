@@ -84,8 +84,8 @@ function ListingScreen(props) {
       </TitleContainer>
       {listing.picUrls ? (
         <Image
-          source={{ uri: listing.picUrls[0] }}
-          key={listing.picUrls[0]}
+          source={{ uri: (listing.picUrls && listing.picUrls.length) ? listing.picUrls[0] : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png" }}
+          // key={listing.picUrls[0]}
           style={{ width: deviceWidth, height: deviceWidth }}
         />
       ) : (

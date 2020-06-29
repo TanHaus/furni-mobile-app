@@ -8,6 +8,7 @@ import SearchScreen from "./home/SearchScreen";
 import SearchResultsScreen from "./home/SearchResultsScreen";
 import SortAndFilterScreen from "./home/SortAndFilterScreen";
 import ChatSessionScreen from "views/chat/ChatSessionScreen";
+import AddListingSuccessScreen from "./post/AddListingSuccessScreen";
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ function MainScreen(props) {
       <Stack.Screen name="search" component={SearchScreen} />
       <Stack.Screen name="sort-and-filter" component={SortAndFilterScreen} />
       <Stack.Screen name="chat-session" component={ChatSessionScreen} />
+      <Stack.Screen name="add-listing-success" component={AddListingSuccessScreen} />
     </Stack.Navigator>
   );
 }

@@ -37,9 +37,16 @@ function SortAndFilterScreen(props) {
       condition,
       maxPrice,
       minPrice,
-      props,
+    });
+    navigation.navigate("search-results", {
+      searchString,
+      prevSort: sort,
+      prevCondition: condition,
+      prevMaxPrice: maxPrice,
+      prevMinPrice: minPrice,
     });
   };
+
   return (
     <SafeAreaViewWrapper>
       <TitleContainer>

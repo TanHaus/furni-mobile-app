@@ -13,10 +13,11 @@ import { Color } from "styles";
 import { getListings } from "actions/listings";
 
 function SearchScreen(props) {
-  const { navigation, submitSearch } = props;
+  const { navigation, submitSearch, getListingsLoading } = props;
   const [searchString, setSearchString] = useState("");
   const handleSubmitSearch = () => {
     submitSearch({ searchString, props });
+    navigation.navigate("search-results", { searchString });
   };
   return (
     <SafeAreaViewWrapper>
@@ -38,9 +39,7 @@ function SearchScreen(props) {
 }
 
 function mapStateToProps(state) {
-  return {
-    listings: state.listings.listings,
-  };
+  return {};
 }
 
 function mapDispatchToProps(dispatch) {
