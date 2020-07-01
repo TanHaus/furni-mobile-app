@@ -5,8 +5,9 @@ import { getListing } from "actions/listings";
 import { getOffersByListing, createOffer, editOffer } from "actions/offers";
 import styled from "styled-components/native";
 import { BackButton, CustomText, SafeAreaViewWrapper } from "components";
-import { TextWeight } from "../../components/custom-text/types";
-import { Color } from "../../styles";
+import { TextWeight } from "components/custom-text/types";
+import { Button } from "components";
+import { Color } from "styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function ListingScreen(props) {
@@ -69,14 +70,21 @@ function ListingScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
-      <Modal visible={modalVisible}>
-        <View>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Your bid:{" "}
-          </CustomText.Regular>
-          <Input value={priceBidded} onChangeText={setPriceBidded} />
-          <ActionButton title="Confirm" onPress={handleCreateOffer} />
-        </View>
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <CenteredView>
+          <ModalView>
+            <CustomText.Regular color={Color.Palette[4]}>
+              Your bid:{" "}
+            </CustomText.Regular>
+            <Input value={priceBidded} onChangeText={setPriceBidded} />
+            <Button title="Confirm" onPress={handleCreateOffer} />
+            <Button
+              title="Cancel"
+              type="secondary"
+              onPress={() => setModalVisible(false)}
+            />
+          </ModalView>
+        </CenteredView>
       </Modal>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
@@ -84,7 +92,12 @@ function ListingScreen(props) {
       </TitleContainer>
       {listing.picUrls ? (
         <Image
-          source={{ uri: (listing.picUrls && listing.picUrls.length) ? listing.picUrls[0] : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png" }}
+          source={{
+            uri:
+              listing.picUrls && listing.picUrls.length
+                ? listing.picUrls[0]
+                : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png",
+          }}
           // key={listing.picUrls[0]}
           style={{ width: deviceWidth, height: deviceWidth }}
         />
@@ -210,4 +223,18 @@ const ActionBox = styled.View`
 
 const Description = styled(CustomText.Regular)`
   margin: 15px 0;
+`;
+
+const CenteredView = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const ModalView = styled.View`
+  margin: 20px;
+  padding: 30px;
+  width: 80%;
+  align-items: center;
+  background-color: white;
 `;
