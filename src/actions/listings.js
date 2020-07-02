@@ -1,4 +1,5 @@
 import Toast from "react-native-root-toast";
+import { Color } from "styles";
 import { renewToken } from "./auth";
 export const CREATE_LISTING_REQUEST = "CREATE_LISTING_REQUEST";
 export const CREATE_LISTING_SUCCESS = "CREATE_LISTING_SUCCESS";
@@ -23,7 +24,6 @@ const createListingRequest = () => {
 };
 
 const createListingSuccess = ({ listing, props }) => {
-  console.log(listing);
   props.navigation.navigate("add-listing-success", { listing });
   return {
     type: CREATE_LISTING_SUCCESS,
@@ -31,7 +31,7 @@ const createListingSuccess = ({ listing, props }) => {
 };
 
 const createListingFailure = () => {
-  Toast.show("Error. Please try again!", {
+  Toast.show("Could not add a new listing. Please try again!", {
     duration: Toast.durations.SHORT,
     position: Toast.positions.CENTER,
     backgroundColor: Color.Validation.Red,
@@ -106,20 +106,15 @@ const getListingsRequest = () => {
 };
 
 const getListingsSuccess = (listings) => {
-  const processedListings = listings.map((listing) => {
-    if (!listing.picUrls) return listing;
-    const picUrls = listing.picUrls.split(",");
-    return { ...listing, picUrls };
-  });
   return {
     type: GET_LISTINGS_SUCCESS,
-    listings: processedListings,
+    listings,
   };
 };
 
 const getListingsFailure = () => {
   Toast.show("Error. Please try again!", {
-    duration: Toast.durations.SHORT,
+    duration: Toast.duration.LONG,
     position: Toast.positions.CENTER,
     backgroundColor: Color.Validation.Red,
     opacity: 1,
@@ -130,6 +125,7 @@ const getListingsFailure = () => {
 };
 
 export const getListing = (listingId) => async (dispatch, getState) => {
+  console.log("getting");
   const requestUrl = `http://10.0.2.2:4000/listings/${listingId}`;
   const makeRequest = () =>
     fetch(requestUrl, {
@@ -142,18 +138,12 @@ export const getListing = (listingId) => async (dispatch, getState) => {
   dispatch(getListingRequest());
   try {
     let response = await makeRequest();
-    if (response.success) {
-      const listing = response.data;
-      listing.picUrls = listing.picUrls.split(",");
-      dispatch(getListingSuccess(listing));
-    } else if (response.message === "Expired access token") {
+    if (response.success) dispatch(getListingSuccess(response.data));
+    else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) {
-        const listing = response.data;
-        listing.picUrls = listing.picUrls.split(",");
-        dispatch(getListingSuccess(response.data));
-      } else throw "e";
+      if (response.success) dispatch(getListingSuccess(response.data));
+      else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(getListingFailure());
@@ -344,6 +334,7 @@ export const getListings = ({
       else throw "e";
     } else throw "e";
   } catch (e) {
+    console.log(e);
     dispatch(getListingsFailure());
   }
 };
