@@ -102,17 +102,18 @@ export default (state = defaultState, action) => {
         editOfferLoading: true,
       };
     case EDIT_OFFER_SUCCESS:
-      const listingOffers = state.listingOffers;
-      console.log(listingOffers);
-      const idx = listingOffers.indexOf(
+      const editedOffer = action.editedOffer;
+      Object.keys(editedOffer).forEach(
+        (key) => editedOffer[key] == null && delete editedOffer[key]
+      );
+      const idxToEdit = listingOffers.findIndex(
         (offer) => offer.offerId === action.editedOffer.offerId
       );
-      const targetOffer = listingOffers[idx];
-      targetOffer = { ...targetOffer, ...action.editedOffer };
-      console.log(listingOffers);
+      const targetOffer = state.listingOffers[idxToEdit];
+      state.listingOffers[idx] = { ...targetOffer, ...action.editedOffer };
       return {
         ...state,
-        listingOffers,
+        listingOffers: state.listingOffers.slice(),
         editOfferLoading: false,
       };
     case EDIT_OFFER_FAILURE:
@@ -126,16 +127,20 @@ export default (state = defaultState, action) => {
         deleteOfferLoading: true,
       };
     case DELETE_OFFER_SUCCESS:
+      const idxToDelete = state.listingOffers.findIndex(
+        (offer) => offer.offerId === action.deletedOfferId
+      );
+      state.listingOffers.splice(idxToDelete, 1);
       return {
         ...state,
-        offer: action.editedOffer,
-        editOfferLoading: false,
+        listingOffers: state.listingOffers.slice(),
+        deleteOfferLoading: false,
       };
     case DELETE_OFFER_FAILURE:
       return {
         ...state,
         offer: {},
-        editOfferListing: false,
+        deleteOfferListing: false,
       };
     default:
       return state;

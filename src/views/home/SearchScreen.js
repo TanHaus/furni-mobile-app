@@ -17,6 +17,7 @@ function SearchScreen(props) {
   const [searchString, setSearchString] = useState("");
   const handleSubmitSearch = () => {
     submitSearch({ searchString, props });
+    navigation.pop();
     navigation.navigate("search-results", { searchString });
   };
   return (

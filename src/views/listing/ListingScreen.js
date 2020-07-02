@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, Modal, View, Image } from "react-native";
+import { Dimensions, View, Image, Text, ScrollView } from "react-native";
+import Modal from "react-native-modal";
 import { connect } from "react-redux";
 import { getListing } from "actions/listings";
 import { getOffersByListing, createOffer, editOffer } from "actions/offers";
 import styled from "styled-components/native";
 import { BackButton, CustomText, SafeAreaViewWrapper } from "components";
-import { TextWeight } from "../../components/custom-text/types";
-import { Color } from "../../styles";
+import { TextWeight } from "components/custom-text/types";
+import { Button } from "components";
+import { Color } from "styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function ListingScreen(props) {
@@ -23,19 +25,21 @@ function ListingScreen(props) {
 
   const deviceWidth = Dimensions.get("window").width * 0.9;
   const listingId = route.params.listingId;
-  const [isSeller, setIsSeller] = useState();
+  const isSeller = listing.sellerId === user.userId;
   const [modalVisible, setModalVisible] = useState(false);
   const [priceBidded, setPriceBidded] = useState("");
 
   useEffect(() => {
     loadListingData(listingId);
-    setIsSeller(listing.sellerId === user.userId);
-    loadOffersData({ listingId, buyerId: user.userId });
   }, []);
+
+  useEffect(() => {
+    loadOffersData({ listingId, buyerId: isSeller ? "" : user.userId });
+  }, [listing]);
 
   const handleCreateOffer = () => {
     submitCreateOffer({
-      listingId: listing.listingId,
+      listingId: listingId,
       priceBidded,
       setModalVisible,
     });
@@ -69,55 +73,78 @@ function ListingScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
-      <Modal visible={modalVisible}>
-        <View>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Your bid:{" "}
-          </CustomText.Regular>
-          <Input value={priceBidded} onChangeText={setPriceBidded} />
-          <ActionButton title="Confirm" onPress={handleCreateOffer} />
-        </View>
-      </Modal>
-      <TitleContainer>
-        <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>LISTING</Title>
-      </TitleContainer>
-      {listing.picUrls ? (
-        <Image
-          source={{ uri: (listing.picUrls && listing.picUrls.length) ? listing.picUrls[0] : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png" }}
-          // key={listing.picUrls[0]}
-          style={{ width: deviceWidth, height: deviceWidth }}
-        />
-      ) : (
-        <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
-      )}
+      <ScrollView>
+        <Modal
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+        >
+          <ModalContainer>
+            <ModalContent>
+              <CustomText.Regular color={Color.Palette[4]}>
+                Your bid:{" "}
+              </CustomText.Regular>
+              <Input value={priceBidded} onChangeText={setPriceBidded} />
+              <Button title="Confirm" onPress={handleCreateOffer} />
+              <Button
+                title="Cancel"
+                type="secondary"
+                onPress={() => setModalVisible(false)}
+              />
+            </ModalContent>
+          </ModalContainer>
+        </Modal>
+        <TitleContainer>
+          <BackButton onPress={() => navigation.goBack()} />
+          <Title weight={TextWeight.Bold}>LISTING</Title>
+        </TitleContainer>
+        {listing.picUrls ? (
+          <Image
+            source={{
+              uri:
+                listing.picUrls && listing.picUrls.length
+                  ? listing.picUrls[0]
+                  : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png",
+            }}
+            // key={listing.picUrls[0]}
+            style={{ width: deviceWidth, height: deviceWidth }}
+          />
+        ) : (
+          <View style={{ height: 50, width: 50, backgroundColor: "grey" }} />
+        )}
 
-      <ListingTitle>{listing.title}</ListingTitle>
-      <Container>
-        <CustomText.Large weight="semibold">${listing.price} </CustomText.Large>
-        <CustomText.Large>{listing.itemCondition}</CustomText.Large>
-      </Container>
-      <Container>
-        <MaterialCommunityIcons name="heart-outline" size={35} onPress={null} />
-        <CustomText.Regular weight="bold">20</CustomText.Regular>
-        {renderButton()}
-      </Container>
-
-      <Description>
-        Faux leather with timbre frames. Perfect for any customer.
-      </Description>
-      <ProfileDescription>
-        <ProfilePic
-          source={require("../../assets/listings/purple-chair.png")}
-        />
-        <TextContainer>
-          <CustomText.Large weight={TextWeight.Bold}>SELLER</CustomText.Large>
-          <CustomText.Large weight={TextWeight.SemiBold}>
-            Furni
+        <ListingTitle>{listing.title}</ListingTitle>
+        <Container>
+          <CustomText.Large weight="semibold">
+            ${listing.price}{" "}
           </CustomText.Large>
-          <CustomText.Regular>★★★★★</CustomText.Regular>
-        </TextContainer>
-      </ProfileDescription>
+          <CustomText.Large>{listing.itemCondition}</CustomText.Large>
+        </Container>
+        <Container>
+          <MaterialCommunityIcons
+            name="heart-outline"
+            size={35}
+            onPress={null}
+          />
+          <CustomText.Regular weight="bold">20</CustomText.Regular>
+          {renderButton()}
+        </Container>
+
+        <Description>
+          Faux leather with timbre frames. Perfect for any customer.
+        </Description>
+        <ProfileDescription>
+          <ProfilePic
+            source={require("../../assets/listings/purple-chair.png")}
+          />
+          <TextContainer>
+            <CustomText.Large weight={TextWeight.Bold}>SELLER</CustomText.Large>
+            <CustomText.Large weight={TextWeight.SemiBold}>
+              Furni
+            </CustomText.Large>
+            <CustomText.Regular>★★★★★</CustomText.Regular>
+          </TextContainer>
+        </ProfileDescription>
+      </ScrollView>
     </SafeAreaViewWrapper>
   );
 }
@@ -210,4 +237,18 @@ const ActionBox = styled.View`
 
 const Description = styled(CustomText.Regular)`
   margin: 15px 0;
+`;
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.View`
+  display: flex;
+  width: 70%;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
 `;

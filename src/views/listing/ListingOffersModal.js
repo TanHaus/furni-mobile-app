@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dimensions, Modal, View, Image } from "react-native";
+import { Dimensions, Modal, View, Image, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { getListing } from "actions/listings";
 import { createOffer, getOffersByListing } from "actions/offers";
@@ -15,17 +15,9 @@ import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
 function ListingScreen(props) {
-  const { route, navigation, listingOffers } = props;
+  const { route, navigation, listing, listingOffers } = props;
   const listingId = route.params.listingId;
-  if (
-    !(
-      listingId &&
-      listingOffers &&
-      listingOffers.length &&
-      listingId !== listingOffers[0].listingId
-    )
-  )
-    navigation.goBack();
+
   return (
     <SafeAreaViewWrapper>
       <BackButton onPress={() => navigation.goBack()} />
@@ -39,7 +31,10 @@ function ListingScreen(props) {
         {listing.condition}
       </CustomText.Regular>
       {listingOffers.map((offer) => (
-        <TouchableOpacity onPress={() => navigation.navigate("ChatSession")}>
+        <TouchableOpacity
+          key={offer.offerId}
+          onPress={() => navigation.navigate("chat-session")}
+        >
           <CustomText.Regular color={Color.Palette[4]}>
             {`offerId: ${offer.offerId}`}
           </CustomText.Regular>
@@ -47,7 +42,7 @@ function ListingScreen(props) {
             {`priceBidded: ${offer.priceBidded}`}
           </CustomText.Regular>
           <CustomText.Regular color={Color.Palette[4]}>
-            {`priceBidded: ${offer.priceBidded}`}
+            {`status: ${offer.status}`}
           </CustomText.Regular>
         </TouchableOpacity>
       ))}

@@ -13,10 +13,6 @@ function ProfileListingsScreen(props) {
     getUserListingsLoading,
     loadUserListings,
   } = props;
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    setIsLoading(getUserListingsLoading);
-  }, [getUserListingsLoading]);
   useFocusEffect(
     useCallback(() => {
       loadUserListings();
@@ -25,7 +21,7 @@ function ProfileListingsScreen(props) {
   return (
     <View>
       <ListingCardsGrid listings={userListings} navigation={navigation} />
-      {isLoading && <StyledActivityIndicator size="large" />}
+      {getUserListingsLoading && <StyledActivityIndicator size="large" />}
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import Toast from "react-native-root-toast";
 import { renewToken } from "./auth";
 
 export const CREATE_OFFER_REQUEST = "CREATE_OFFER_REQUEST";
@@ -33,6 +34,13 @@ const createOfferSuccess = (setModalVisible) => {
 };
 
 const createOfferFailure = () => {
+  setModalVisible(false);
+  Toast.show("Could not create an offer. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: CREATE_OFFER_FAILURE,
   };
@@ -120,9 +128,10 @@ const deleteOfferRequest = () => {
   };
 };
 
-const deleteOfferSuccess = () => {
+const deleteOfferSuccess = (deletedOfferId) => {
   return {
     type: DELETE_OFFER_SUCCESS,
+    deletedOfferId,
   };
 };
 
@@ -156,12 +165,16 @@ export const createOffer = ({
   dispatch(createOfferRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(createOfferSuccess(setModalVisible));
-    else if (response.message === "Expired access token") {
+    if (response.success) {
+      dispatch(getOffersByListing({ listingId, buyerId }));
+      dispatch(createOfferSuccess(setModalVisible));
+    } else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(createOfferSuccess(setModalVisible));
-      else throw "e";
+      if (response.success) {
+        dispatch(getOffersByListing({ listingId, buyerId }));
+        dispatch(createOfferSuccess(setModalVisible));
+      } else throw "e";
     } else throw "e";
   } catch (e) {
     dispatch(createOfferFailure());
@@ -271,11 +284,11 @@ export const deleteOffer = (offerId) => async (dispatch, getState) => {
   dispatch(deleteOfferRequest());
   try {
     let response = await makeRequest();
-    if (response.success) dispatch(deleteOfferSuccess());
+    if (response.success) dispatch(deleteOfferSuccess(offerId));
     else if (response.message === "Expired access token") {
       await dispatch(renewToken());
       response = await makeRequest();
-      if (response.success) dispatch(deleteOfferSuccess());
+      if (response.success) dispatch(deleteOfferSuccess(OfferId));
       else throw "e";
     } else throw "e";
   } catch (e) {
