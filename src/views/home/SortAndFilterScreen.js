@@ -106,7 +106,9 @@ function SortAndFilterScreen(props) {
         />
       </CustomContainer>
       <CustomContainer />
-      <Button title="Apply sort and filter" onPress={handleSortAndFilter} />
+      <ButtonContainer>
+        <Button title="Apply" onPress={handleSortAndFilter} />
+      </ButtonContainer>
     </SafeAreaViewWrapper>
   );
 }
@@ -192,4 +194,8 @@ const CustomTitle = styled(CustomText.Regular)`
 
 const Input = styled.TextInput`
   padding: 0 0 5px 10px;
+`;
+
+const ButtonContainer = styled.View`
+  margin-top: 10px;
 `;
