@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/native";
 import {
@@ -6,75 +6,57 @@ import {
   Button,
   CustomText,
   SafeAreaViewWrapper,
-} from "../../../components";
-import { TextWeight } from "../../../components/types";
-import { Color } from "../../../styles";
-import { loginUser } from "../../../actions/auth";
-import MultiSelectView from "react-native-multiselect-view";
+  MultiSelect,
+  MultiSelectOption,
+} from "components";
+import { TextWeight } from "components/types";
+import { Color } from "styles";
+import { getTags } from "actions/tags";
+import { getUserPreferences, editUserPreferences } from "actions/users";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 function EditPreferencesScreen(props) {
-  const { navigation, submitPreferenceData } = props;
+  const {
+    navigation,
+    userId,
+    tags,
+    userPreferences,
+    loadTags,
+    loadUserPreferences,
+    submitUpdatePreferences,
+  } = props;
+
+  const [editUserPreferences, setEditUserPreferences] = useState(
+    userPreferences
+  );
+
+  useEffect(() => {
+    loadTags();
+  }, []);
+
+  useEffect(() => {
+    if (userId) loadUserPreferences(userId);
+  }, [userId]);
+
+  useEffect(() => {
+    setEditUserPreferences(userPreferences);
+  }, [userPreferences]);
   const listRef = useRef("list2");
 
-  const LoremIpsum1 = [
-    "wood",
-    "metal",
-    "fabric",
-    "leather",
-    "glass",
-    "foam",
-    "plastic",
-    "marble",
-    "rock",
-    "rattan",
-    "beds",
-    "chairs",
-    "dressers",
-    "pink",
-    " blue",
-    "black",
-    "green",
-    "yellow",
-    "outdoor",
-    "stools",
-    "rocking chairs",
-    "crib",
-    "mediterranean",
-    "midcentury",
-    "southwestern",
-    "contemporary",
-    "tropical",
-  ];
-
-  const handleSetPreferences = () => {
-    //TODO
+  const handleUpdatePreferences = () => {
+    submitUpdatePreferences({ userId, tagIds: editUserPreferences });
     return null;
   };
 
-  const [show, setShow] = useState(false);
-
-  const onSetPreferences = () => {
-    setShow(true);
-  };
-
-  const renderItems = () => {
-    if (show) {
-      // const items = listRef.current.selectedItems().map((item) => {
-      //   return <Text>{item.value}</Text>;
-      // });
-
-      return (
-        <Container>
-          <Text>
-            How the array looks like for selected items:
-            {JSON.stringify(listRef.current.selectedItems())}
-          </Text>
-          {/* <Text>=================</Text>
-          {items} */}
-        </Container>
+  const handleChange = (value, isActive) => {
+    if (!isActive) {
+      const idx = editUserPreferences.findIndex((tagId) => tagId === value);
+      setEditUserPreferences((prefs) =>
+        prefs.filter((tagId) => tagId != value)
       );
+    } else {
+      setEditUserPreferences((prefs) => [...prefs, value]);
     }
   };
 
@@ -90,28 +72,18 @@ function EditPreferencesScreen(props) {
             Select tags that interest you
           </CustomText.Regular>
         </Container>
-        <MultiSelectView
-          ref={listRef}
-          data={LoremIpsum1}
-          activeContainerStyle={styles.activeCom}
-          inactiveContainerStyle={styles.inactiveCom}
-          activeTextStyle={styles.activeText}
-          inactiveTextStyle={styles.inactiveText}
-        />
-        <Container>
-          <TouchableOpacity onPress={onSetPreferences}>
-            <View style={styles.button}>
-              <Text style={styles.text1}>
-                For Dan: After selecting some tags, click this button to see how
-                the array DS looks like
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Container>
-        {renderItems()}
-        <Container>
-          <Button title="Set preferences" onPress={handleSetPreferences} />
-        </Container>
+        <MultiSelect>
+          {tags.map((tag) => (
+            <MultiSelectOption
+              key={tag.tagId}
+              value={tag.tagId}
+              label={tag.label}
+              active={editUserPreferences.includes(tag.tagId)}
+              onChange={handleChange}
+            />
+          ))}
+        </MultiSelect>
+        <Button title="Set preferences" onPress={handleUpdatePreferences} />
       </ScrollView>
     </SafeAreaViewWrapper>
   );
@@ -119,14 +91,18 @@ function EditPreferencesScreen(props) {
 
 function mapStateToProps(state) {
   return {
-    isLoggingIn: state.auth.isLoggingIn,
-    loginError: state.auth.loginError,
+    userId: state.auth.user.userId,
+    tags: state.tags.tags,
+    userPreferences: state.users.userPreferences,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    submitLoginData: (loginData) => dispatch(loginUser(loginData)),
+    loadTags: () => dispatch(getTags()),
+    loadUserPreferences: (userId) => dispatch(getUserPreferences(userId)),
+    submitUpdatePreferences: (data) => dispatch(editUserPreferences(data)),
+    // submitLoginData: (loginData) => dispatch(loginUser(loginData)),
   };
 }
 

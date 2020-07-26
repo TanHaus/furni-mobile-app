@@ -17,6 +17,12 @@ import {
   GET_USER_LISTINGS_REQUEST,
   GET_USER_LISTINGS_SUCCESS,
   GET_USER_LISTINGS_FAILURE,
+  GET_USER_PREFERENCES_REQUEST,
+  GET_USER_PREFERENCES_SUCCESS,
+  GET_USER_PREFERENCES_FAILURE,
+  EDIT_USER_PREFERENCES_REQUEST,
+  EDIT_USER_PREFERENCES_SUCCESS,
+  EDIT_USER_PREFERENCES_FAILURE,
 } from "../actions/users";
 import { LOGOUT_SUCCESS } from "../actions/auth";
 
@@ -24,12 +30,15 @@ const defaultState = {
   users: [],
   user: {},
   userListings: [],
+  userPreferences: [],
   createUserLoading: false,
   getUsersLoading: false,
   getUserLoading: false,
   editUserLoading: false,
   deleteUserLoading: false,
   getUserListingsLoading: false,
+  getUserPreferencesLoading: false,
+  editUserPreferencesLoading: false,
 };
 
 export default (state = defaultState, action) => {
@@ -129,6 +138,38 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         getUserListingsLoading: false,
+      };
+    case GET_USER_PREFERENCES_REQUEST:
+      return {
+        ...state,
+        getUserPreferencesLoading: true,
+      };
+    case GET_USER_PREFERENCES_SUCCESS:
+      return {
+        ...state,
+        userPreferences: action.userPreferences,
+        getUserPreferencesLoading: false,
+      };
+    case GET_USER_PREFERENCES_FAILURE:
+      return {
+        ...state,
+        getUserPreferencesLoading: false,
+      };
+    case GET_USER_PREFERENCES_REQUEST:
+      return {
+        ...state,
+        editUserPreferencesLoading: true,
+      };
+    case GET_USER_PREFERENCES_SUCCESS:
+      return {
+        ...state,
+        userPreferences: action.userPreferences,
+        editUserPreferencesLoading: false,
+      };
+    case GET_USER_PREFERENCES_FAILURE:
+      return {
+        ...state,
+        editUserPreferencesLoading: false,
       };
     case LOGOUT_SUCCESS:
       return defaultState;

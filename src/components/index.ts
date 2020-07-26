@@ -8,3 +8,5 @@ export * from "./card/PreviewCard";
 export * from "./ionicons/BackButton";
 export * from "./ProfileHeader";
 export * from "./ListingCardsGrid";
+export * from "./MultiSelect/MultiSelect";
+export * from "./MultiSelect/MultiSelectOption";

@@ -19,6 +19,12 @@ export const DELETE_USER_FAILURE = "DELETE_USER_FAILURE";
 export const GET_USER_LISTINGS_REQUEST = "GET_USER_LISTINGS_REQUEST";
 export const GET_USER_LISTINGS_SUCCESS = "GET_USER_LISTINGS_SUCCESS";
 export const GET_USER_LISTINGS_FAILURE = "GET_USER_LISTINGS_FAILURE";
+export const GET_USER_PREFERENCES_REQUEST = "GET_USER_PREFERENCES_REQUEST";
+export const GET_USER_PREFERENCES_SUCCESS = "GET_USER_PREFERENCES_SUCCESS";
+export const GET_USER_PREFERENCES_FAILURE = "GET_USER_PREFERENCES_FAILURE";
+export const EDIT_USER_PREFERENCES_REQUEST = "EDIT_USER_PREFERENCES_REQUEST";
+export const EDIT_USER_PREFERENCES_SUCCESS = "EDIT_USER_PREFERENCES_SUCCESS";
+export const EDIT_USER_PREFERENCES_FAILURE = "EDIT_USER_PREFERENCES_FAILURE";
 
 const createUserRequest = () => {
   return {
@@ -141,6 +147,56 @@ const getUserListingsSuccess = (userListings) => {
 const getUserListingsFailure = () => {
   return {
     type: GET_USER_LISTINGS_FAILURE,
+  };
+};
+
+const getUserPreferencesRequest = () => {
+  return {
+    type: GET_USER_PREFERENCES_REQUEST,
+  };
+};
+
+const getUserPreferencesSuccess = (userPreferences) => {
+  return {
+    type: GET_USER_PREFERENCES_SUCCESS,
+    userPreferences,
+  };
+};
+
+const getUserPreferencesFailure = () => {
+  return {
+    type: GET_USER_PREFERENCES_FAILURE,
+  };
+};
+
+const editUserPreferencesRequest = () => {
+  return {
+    type: EDIT_USER_PREFERENCES_REQUEST,
+  };
+};
+
+const editUserPreferencesSuccess = (userPreferences) => {
+  Toast.show("Your user preferences have been successfully updated!", {
+    duration: 5000,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Green,
+    opacity: 1,
+  });
+  return {
+    type: EDIT_USER_PREFERENCES_SUCCESS,
+    userPreferences,
+  };
+};
+
+const editUserPreferencesFailure = () => {
+  Toast.show("Error. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
+  return {
+    type: EDIT_USER_PREFERENCES_FAILURE,
   };
 };
 
@@ -272,5 +328,64 @@ export const getUserListings = (userId) => async (dispatch, getState) => {
     } else throw "e";
   } catch (e) {
     dispatch(getUserListingsFailure());
+  }
+};
+
+export const getUserPreferences = (userId) => async (dispatch, getState) => {
+  const requestUrl = `http://10.0.2.2:4000/users/${
+    userId || getState().auth.user.userId
+  }/preferences`;
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+    }).then((response) => response.json());
+  dispatch(getUserPreferencesRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(getUserPreferencesSuccess(response.data));
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(getUserPreferencesSuccess(response.data));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(getUserPreferencesFailure());
+  }
+};
+
+export const editUserPreferences = ({ userId, tagIds }) => async (
+  dispatch,
+  getState
+) => {
+  const requestUrl = `http://10.0.2.2:4000/users/${
+    userId || getState().auth.user.userId
+  }/preferences`;
+  const payload = { tagIds };
+  const makeRequest = () =>
+    fetch(requestUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + getState().auth.token.access_token,
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
+  dispatch(editUserPreferencesRequest());
+  try {
+    let response = await makeRequest();
+    if (response.success) dispatch(editUserPreferencesSuccess());
+    else if (response.message === "Expired access token") {
+      await dispatch(renewToken());
+      response = await makeRequest();
+      if (response.success) dispatch(editUserPreferencesSuccess(tagIds));
+      else throw "e";
+    } else throw "e";
+  } catch (e) {
+    dispatch(editUserPreferencesFailure());
   }
 };
