@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
-import { StyleSheet, Text, View, Button, Modal, Input } from "react-native";
 import { connect } from "react-redux";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  BackButton,
-  CustomText,
-  SafeAreaViewWrapper,
-  ChatCard,
-} from "components";
+import { CustomText, SafeAreaViewWrapper, ChatCard } from "components";
 import { getOffersByBuyer, editOffer } from "../../actions/offers";
-import { Color } from "../../styles";
 import { ScrollView } from "react-native-gesture-handler";
 
 function ChatOverviewScreen(props) {
@@ -20,6 +12,7 @@ function ChatOverviewScreen(props) {
     loadBuyerOffersData,
     submitEditOffer,
     submitDeleteOffer,
+    navigation,
   } = props;
   const [editedOffer, setEditedOffer] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,12 +30,22 @@ function ChatOverviewScreen(props) {
     submitEditOffer(editedOffer);
   };
 
+  const handleOnPress = (session) => () => {
+    navigation.navigate("chat-session", { session });
+  };
+
   // ===========================================================================
   // RENDER
   // ===========================================================================
   const renderChatSessions = () => {
     const chatSessions = CHAT_SESSIONS.map((session, index) => {
-      return <ChatCard key={index} session={session} />;
+      return (
+        <ChatCard
+          key={index}
+          session={session}
+          onPress={handleOnPress(session)}
+        />
+      );
     });
 
     return chatSessions;

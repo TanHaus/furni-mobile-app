@@ -19,13 +19,11 @@ function SearchScreen(props) {
   const [pics, setPics] = useState([]);
   const handleSubmitSearch = () => {
     submitSearch({ searchString, props });
-    navigation.pop();
     navigation.navigate("search-results", { searchString });
   };
 
   const handleKeywordsOnPress = (keyword) => () => {
     submitSearch({ searchString: keyword, props });
-    navigation.pop();
     navigation.navigate("search-results", { searchString: keyword });
   };
 
@@ -82,7 +80,7 @@ function SearchScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <Title weight={TextWeight.Bold}>SEARCH</Title>
+        <Title weight="bold">SEARCH</Title>
       </TitleContainer>
       <CustomText.Regular color={Color.Palette[4]}>
         ENTER SEARCH KEYWORD

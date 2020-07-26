@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/native";
-import { StyleSheet, Text, View, Button, Modal, Input } from "react-native";
 import { CustomText } from "../index";
 import { Color } from "../../styles";
 
@@ -26,7 +25,7 @@ export const ChatCard = (props) => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper onPress={props.onPress}>
       <MainContainer>
         <ProfilePic source={profilePic} />
         <Container>
@@ -77,10 +76,11 @@ const Container = styled.View`
 const StatusWrapper = styled.View`
   background-color: ${Color.Palette[1]};
   border-radius: 7px;
-  width: 100px;
   justify-content: center;
   align-items: center;
   margin: 5px 0;
+  align-self: flex-start;
+  padding: 2.5px 10px;
 `;
 
 const StatusText = styled(CustomText.Small)`
