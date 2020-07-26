@@ -9,3 +9,4 @@ export * from "./ionicons/BackButton";
 export * from "./ProfileHeader";
 export * from "./ListingCardsGrid";
 export * from "./card/ChatCard";
+export * from "./card/ActivityCard";
