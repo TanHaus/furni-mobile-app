@@ -75,7 +75,7 @@ function SearchScreen(props) {
       );
     });
 
-    return <>{searchKeylist}</>;
+    return searchKeylist;
   };
 
   return (

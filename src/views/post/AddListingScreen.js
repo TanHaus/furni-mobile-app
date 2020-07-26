@@ -11,7 +11,6 @@ import {
 } from "../../components";
 import { Picker } from "@react-native-community/picker";
 import * as ImagePicker from "expo-image-picker";
-import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
 function AddScreen(props) {
@@ -69,7 +68,7 @@ function AddScreen(props) {
       <ActivityIndicator animating={createListingLoading} />
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <ScreenTitle weight={TextWeight.Bold}>NEW LISTING</ScreenTitle>
+        <ScreenTitle weight="bold">NEW LISTING</ScreenTitle>
       </TitleContainer>
       <FlexRowContainer>
         {renderPickedImages()}

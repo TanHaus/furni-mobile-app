@@ -8,3 +8,4 @@ export * from "./card/PreviewCard";
 export * from "./ionicons/BackButton";
 export * from "./ProfileHeader";
 export * from "./ListingCardsGrid";
+export * from "./card/ChatCard";
