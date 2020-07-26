@@ -6,10 +6,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Color } from "../../styles";
 
 export const ExploreCard = (props) => {
-  const { title, src, price, status, likeCount } = props;
+  const { title, src, price, status, likeCount, listingId } = props;
 
   return (
-    <Card>
+    <Card
+    // onPress={() => navigation.navigate("listing", { listingId })}
+    >
       <Image source={src} />
       <TextContainer>
         <Title weight={TextWeight.Light}>{title}</Title>
@@ -29,12 +31,12 @@ export const ExploreCard = (props) => {
 // STYLING
 // -----------------------------------------------------------------------------
 const Card = styled.TouchableOpacity`
-  margin-bottom: 50px;
+  margin-bottom: 5px;
   border: 1px solid ${Color.Palette[6]};
 `;
 
 const Image = styled.ImageBackground`
-  height: 373px;
+  height: 355px;
 `;
 
 const TextContainer = styled.View`

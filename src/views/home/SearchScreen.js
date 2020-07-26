@@ -23,6 +23,12 @@ function SearchScreen(props) {
     navigation.navigate("search-results", { searchString });
   };
 
+  const handleKeywordsOnPress = (keyword) => () => {
+    submitSearch({ searchString: keyword, props });
+    navigation.pop();
+    navigation.navigate("search-results", { searchString: keyword });
+  };
+
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
     if (permissionResult.granted) {
@@ -44,7 +50,6 @@ function SearchScreen(props) {
   // ===========================================================================
   // RENDER
   // ===========================================================================
-
   const renderPickedImages = () => {
     return (
       pics &&
@@ -56,6 +61,21 @@ function SearchScreen(props) {
         />
       ))
     );
+  };
+
+  const renderSearchKeylist = (list) => {
+    const searchKeylist = list.map((searchKey, index) => {
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={handleKeywordsOnPress(searchKey)}
+        >
+          <ContainerItem>{searchKey}</ContainerItem>
+        </TouchableOpacity>
+      );
+    });
+
+    return <>{searchKeylist}</>;
   };
 
   return (
@@ -89,24 +109,11 @@ function SearchScreen(props) {
       <Button title="Search by Image" onPress={handleSubmitSearch} />
       <Container>
         <ContainerTitle weight="bold">TRENDS</ContainerTitle>
-        <TouchableOpacity>
-          <ContainerItem>Modern Chair</ContainerItem>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <ContainerItem>Midcentury Bed</ContainerItem>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <ContainerItem>Timbre Table</ContainerItem>
-        </TouchableOpacity>
+        {renderSearchKeylist(TRENDS_ATTRIBUTES)}
       </Container>
       <Container>
         <ContainerTitle weight="bold">RECENT</ContainerTitle>
-        <TouchableOpacity>
-          <ContainerItem>Purple Chair</ContainerItem>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <ContainerItem>Rattan Chair</ContainerItem>
-        </TouchableOpacity>
+        {renderSearchKeylist(RECENT_ATTRIBUTES)}
       </Container>
     </SafeAreaViewWrapper>
   );
@@ -125,6 +132,12 @@ function mapDispatchToProps(dispatch) {
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withConnect(SearchScreen);
+
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+const TRENDS_ATTRIBUTES = ["Luxurious", "White", "Table"];
+const RECENT_ATTRIBUTES = ["Purple", "Rattan"];
 
 // =============================================================================
 // STYLING

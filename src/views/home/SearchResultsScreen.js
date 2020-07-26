@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 import { CustomText, SafeAreaViewWrapper, ListingCardsGrid } from "components";
 import { Ionicons } from "@expo/vector-icons";
 
-function SearchScreen(props) {
+function SearchResultsScreen(props) {
   const {
     navigation,
     submitSearch,
@@ -63,7 +63,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default withConnect(SearchScreen);
+export default withConnect(SearchResultsScreen);
 
 // =============================================================================
 // STYLING
