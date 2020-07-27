@@ -7,7 +7,7 @@ const Palette = {
   4: "#8F8F8F",
   5: "#C4C4C4",
   6: "#D0D0D0",
-  7: "#F0F0f0",
+  7: "#F0F0F0",
   8: "#FFFFFF",
 };
 

@@ -5,7 +5,7 @@ import { CustomText, MarketCard } from "../../components";
 function ProfileReviewsScreen() {
   return (
     <CategoryWrapper>
-      <CustomText.Large>You have no reviews currently</CustomText.Large>
+      <CustomText.Large>You have no reviews currently.</CustomText.Large>
     </CategoryWrapper>
   );
 }

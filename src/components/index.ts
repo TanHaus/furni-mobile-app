@@ -10,3 +10,5 @@ export * from "./ProfileHeader";
 export * from "./ListingCardsGrid";
 export * from "./MultiSelect/MultiSelect";
 export * from "./MultiSelect/MultiSelectOption";
+export * from "./card/ChatCard";
+export * from "./card/ActivityCard";
