@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Dimensions, Modal, View, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { Image, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
-import { getListing } from "actions/listings";
 import { createOffer, getOffersByListing } from "actions/offers";
 import styled from "styled-components/native";
 import {
@@ -10,8 +9,6 @@ import {
   CustomText,
   SafeAreaViewWrapper,
 } from "../../components";
-import { Picker } from "@react-native-community/picker";
-import { TextWeight } from "../../components/custom-text/types";
 import { Color } from "../../styles";
 
 function ListingScreen(props) {
@@ -22,44 +19,35 @@ function ListingScreen(props) {
     <SafeAreaViewWrapper>
       <TitleContainer>
         <BackButton onPress={() => navigation.goBack()} />
-        <ProfilePic source={require("../../assets/profiles/standard.png")} />
-        <CustomText.Large weight="bold">{"Furni"}</CustomText.Large>
+        <Title weight="bold">OFFERS</Title>
       </TitleContainer>
-      <ListingContainer>
-        {listing.picUrls && (
-          <Image
-            source={{ uri: listing.picUrls[0] }}
-            key={listing.picUrls[0]}
-            style={{
-              resizeMode: "contain",
-              height: 50,
-              width: 50,
-            }}
-          />
-        )}
-        <TextContainer>
-          <CustomText.Regular>{listing.title}</CustomText.Regular>
-          <CustomText.Regular weight="bold">
-            {`S\$${listing.price}`}
-          </CustomText.Regular>
-          <CustomText.Regular>{listing.itemCondition}</CustomText.Regular>
-        </TextContainer>
-      </ListingContainer>
+
       {listingOffers.map((offer) => (
-        <TouchableOpacity
+        <Wrapper
           key={offer.offerId}
           onPress={() => navigation.navigate("chat-session")}
         >
-          <CustomText.Regular color={Color.Palette[4]}>
-            {`offerId: ${offer.offerId}`}
-          </CustomText.Regular>
-          <CustomText.Regular color={Color.Palette[4]}>
-            {`priceBidded: ${offer.priceBidded}`}
-          </CustomText.Regular>
-          <CustomText.Regular color={Color.Palette[4]}>
-            {`status: ${offer.status}`}
-          </CustomText.Regular>
-        </TouchableOpacity>
+          <MainContainer>
+            <ProfilePic
+              source={require("../../assets/profiles/standard.png")}
+            />
+            <Container>
+              <CustomText.Regular>{`User: fARniture`}</CustomText.Regular>
+              <CustomText.Regular>{`Offer Price: $${offer.priceBidded}`}</CustomText.Regular>
+              <CustomText.Regular color={Color.Palette[3]}>
+                05/18/20
+              </CustomText.Regular>
+            </Container>
+          </MainContainer>
+          <StatusContainer>
+            <StatusWrapper>
+              <StatusText>{offer.status}</StatusText>
+            </StatusWrapper>
+            <CustomText.Regular color={Color.Palette[3]}>
+              Tap to edit
+            </CustomText.Regular>
+          </StatusContainer>
+        </Wrapper>
       ))}
     </SafeAreaViewWrapper>
   );
@@ -87,39 +75,54 @@ const TitleContainer = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 20px;
 `;
 
 const Title = styled(CustomText.Large)`
   padding-left: 20px;
 `;
 
-const Input = styled.TextInput`
-  height: 40px;
-  border-bottom-width: 1px;
-`;
-
-const Container = styled.View`
-  margin-top: 30px;
-`;
-
-const TextContainer = styled.View`
+const Wrapper = styled.TouchableOpacity`
+  display: flex;
   flex-direction: row;
-  margin-top: 10px;
+  margin: 7px 0;
+  justify-content: space-between;
+  width: 100%;
 `;
 
-const RegisterText = styled(CustomText.Small)`
-  text-decoration-line: underline;
+const MainContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ProfilePic = styled.ImageBackground`
-  height: 30px;
-  width: 30px;
+  height: 65px;
+  width: 65px;
   border-radius: 150px;
   overflow: hidden;
-  margin: 0 10px;
+  margin-right: 20px;
 `;
 
-const ListingContainer = styled.View`
-  flex-direction: row;
-  margin: 15px 0;
+const Container = styled.View`
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const StatusContainer = styled(Container)`
+  align-items: center;
+`;
+
+const StatusWrapper = styled.View`
+  background-color: ${Color.Palette[1]};
+  border-radius: 7px;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  align-self: flex-start;
+  padding: 2.5px 10px;
+`;
+
+const StatusText = styled(CustomText.Regular)`
+  color: white;
+  text-transform: uppercase;
 `;
