@@ -1,26 +1,37 @@
 import React from "react";
 import styled from "styled-components/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { CustomText } from "../custom-text/CustomText";
 
 export const MarketCard = (props) => {
-  const { title, imgSrc } = props;
+  const { title, imgSrc, onPress } = props;
 
   return (
-    <TouchableOpacity style={{ padding: 2 }}>
+    <Wrapper onPress={onPress}>
       <Image source={imgSrc}>
-        <CustomText.Regular color="white">{title}</CustomText.Regular>
+        <Overlay>
+          <CustomText.Regular color="white">{title}</CustomText.Regular>
+        </Overlay>
       </Image>
-    </TouchableOpacity>
+    </Wrapper>
   );
 };
 
-// -----------------------------------------------------------------------------
+// =============================================================================
 // STYLING
-// -----------------------------------------------------------------------------
+// =============================================================================
+const Wrapper = styled.TouchableOpacity`
+  margin: 10px;
+`;
+
 const Image = styled.ImageBackground`
   height: 120px;
   width: 150px;
+`;
+
+const Overlay = styled.View`
+  background-color: rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: 100%;
   align-items: center;
   justify-content: center;
 `;

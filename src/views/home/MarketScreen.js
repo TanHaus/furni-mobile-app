@@ -1,15 +1,25 @@
 import React from "react";
-import { Button, View } from "react-native";
+import { connect } from "react-redux";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { MarketCard } from "../../components";
+import { getListings } from "actions/listings";
 
 function MarketScreen(props) {
+  const { navigation, submitSearch } = props;
+
+  const handleOnPress = (category) => () => {
+    submitSearch({ searchString: category, props });
+    navigation.navigate("search-results", { searchString: category });
+  };
+
   const categories = CategoryList.map((category) => {
     return (
       <MarketCard
         key={category.title}
         title={category.title}
         imgSrc={category.src}
+        onPress={handleOnPress(category.title)}
       />
     );
   });
@@ -21,41 +31,55 @@ function MarketScreen(props) {
   );
 }
 
-export default MarketScreen;
+function mapStateToProps(state) {
+  return {};
+}
 
-// -----------------------------------------------------------------------------
-// CONSTANT DECLARATIONS
-// -----------------------------------------------------------------------------
+function mapDispatchToProps(dispatch) {
+  return {
+    submitSearch: ({ searchString, props }) =>
+      dispatch(getListings({ searchString, props })),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(MarketScreen);
+
+// export default MarketScreen;
+
+// =============================================================================
+// CONSTANTS
+// =============================================================================
 const CategoryList = [
   {
-    title: "Bedroom",
-    src: require("../../assets/categories/bedroom.png"),
+    title: "Contemporary",
+    src: require("../../assets/categories/contemporary.jpg"),
   },
   {
-    title: "Dining room",
-    src: require("../../assets/categories/dining-room.png"),
+    title: "Farmhouse",
+    src: require("../../assets/categories/farmhouse.jpg"),
   },
   {
-    title: "Bathroom",
-    src: require("../../assets/categories/bathroom.png"),
+    title: "Mediterranean",
+    src: require("../../assets/categories/mediterranean.jpg"),
   },
   {
-    title: "Living room",
-    src: require("../../assets/categories/living-room.png"),
+    title: "Midcentury",
+    src: require("../../assets/categories/midcentury.jpg"),
   },
   {
-    title: "Study",
-    src: require("../../assets/categories/study.png"),
+    title: "Traditonal",
+    src: require("../../assets/categories/traditional.jpg"),
   },
   {
-    title: "Kitchen",
-    src: require("../../assets/categories/kitchen.png"),
+    title: "Tropical",
+    src: require("../../assets/categories/tropical.jpg"),
   },
 ];
 
-// ---------------------------------------------------------------------------
+// =============================================================================
 // STYLING
-// ---------------------------------------------------------------------------
+// =============================================================================
 const CategoryWrapper = styled.View`
   display: flex;
   flex-direction: row;

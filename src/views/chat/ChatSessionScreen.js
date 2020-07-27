@@ -116,7 +116,7 @@ function ChatSessionScreen(props) {
           }
         />
         <CustomText.Large weight="bold">
-          {session ? session.sellerName : "Furni"}
+          {session ? session.sellerName : "fARniture"}
         </CustomText.Large>
       </TitleContainer>
       <ListingContainer>
@@ -174,7 +174,7 @@ function ChatSessionScreen(props) {
                     weight="semibold"
                     color={Color.Palette[6]}
                   >
-                    Accepted
+                    Accept
                   </CustomText.Regular>
                 </OfferContainer>
                 <OfferContainer onPress={handleRejectOffer}>
@@ -187,7 +187,7 @@ function ChatSessionScreen(props) {
               <View style={{ display: "flex", flexDirection: "row" }}>
                 <OfferContainer onPress={handleAcceptOffer}>
                   <CustomText.Regular weight="semibold">
-                    Accepted
+                    Accept
                   </CustomText.Regular>
                 </OfferContainer>
                 <OfferContainer style={{ backgroundColor: "black" }}>

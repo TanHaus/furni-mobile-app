@@ -2,7 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { View, ActivityIndicator, ScrollView } from "react-native";
 import styled from "styled-components/native";
-import { CustomText, SafeAreaViewWrapper, ListingCardsGrid } from "components";
+import {
+  CustomText,
+  SafeAreaViewWrapper,
+  ListingCardsGrid,
+  BackButton,
+} from "components";
 import { Ionicons } from "@expo/vector-icons";
 
 function SearchResultsScreen(props) {
@@ -24,10 +29,13 @@ function SearchResultsScreen(props) {
   return (
     <SafeAreaViewWrapper>
       <ScrollView>
-        <SearchbarWrapper onPress={() => navigation.navigate("search")}>
-          <SearchIcon name="ios-search" />
-          <CustomText.Regular>{searchString}</CustomText.Regular>
-        </SearchbarWrapper>
+        <TitleContainer>
+          <BackButton onPress={() => navigation.goBack()} />
+          <SearchbarWrapper onPress={() => navigation.navigate("search")}>
+            <SearchIcon name="ios-search" />
+            <CustomText.Regular>{searchString}</CustomText.Regular>
+          </SearchbarWrapper>
+        </TitleContainer>
         <SortButton
           onPress={() =>
             navigation.navigate("sort-and-filter", {
@@ -68,12 +76,17 @@ export default withConnect(SearchResultsScreen);
 // =============================================================================
 // STYLING
 // =============================================================================
+const TitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+`;
 
 const SearchbarWrapper = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   border-bottom-width: 1px;
-  margin-top: 10px;
+  margin: 10px 0 10px 10px;
+  width: 100%;
 `;
 
 const SearchIcon = styled(Ionicons)`
@@ -87,7 +100,7 @@ const SortButton = styled.TouchableOpacity`
   align-items: center;
   border: 1.5px solid black;
   padding: 7.5px;
-  margin: 15px 0;
+  margin: 5px 0 15px 0;
   border-radius: 10px;
 `;
 

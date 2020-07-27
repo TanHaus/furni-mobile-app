@@ -119,6 +119,7 @@ const CHAT_SESSIONS = [
     lastMessage: "I really like THE Chairs!",
     lastActiveDate: new Date("18 May 2020"),
     imgSrc: require("../../assets/listings/purple-chair.png"),
+    status: "REJECTED",
     profilePic: require("../../assets/profiles/standard.png"),
   },
   {
@@ -160,7 +161,7 @@ const CHAT_SESSIONS = [
     lastMessage: "nah.. your offer is too low",
     lastActiveDate: new Date("26 April 2020"),
     imgSrc: require("../../assets/listings/white-chair.png"),
-    status: "DECLINED",
+    status: "REJECTED",
     profilePic: require("../../assets/profiles/standard.png"),
   },
   {

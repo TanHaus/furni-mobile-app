@@ -19,18 +19,3 @@ function HomeScreen() {
 }
 
 export default HomeScreen;
-
-// -----------------------------------------------------------------------------
-// STYLING
-// -----------------------------------------------------------------------------
-const SearchbarWrapper = styled.View`
-  flex-direction: row;
-  align-items: center;
-`;
-
-const SearchField = styled.TextInput`
-  width: 100%;
-  height: 40px;
-  color: black;
-  border-bottom-width: 1px;
-`;

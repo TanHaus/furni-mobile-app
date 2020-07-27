@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components/native";
 import { CustomText } from "./index";
 import { TextWeight } from "./types";

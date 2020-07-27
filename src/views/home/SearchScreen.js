@@ -8,7 +8,6 @@ import {
   CustomText,
   SafeAreaViewWrapper,
 } from "components";
-import { TextWeight } from "components/types";
 import { Color } from "styles";
 import * as ImagePicker from "expo-image-picker";
 import { getListings } from "actions/listings";
