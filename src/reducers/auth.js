@@ -67,6 +67,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         renewTokenLoading: false,
+        isAuthenticated: false,
       };
     default:
       return state;

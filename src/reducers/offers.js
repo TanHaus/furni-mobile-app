@@ -107,13 +107,13 @@ export default (state = defaultState, action) => {
         (key) => editedOffer[key] == null && delete editedOffer[key]
       );
       const idxToEdit = listingOffers.findIndex(
-        (offer) => offer.offerId === action.editedOffer.offerId
+        (offer) => offer.offerId === editedOffer.offerId
       );
       const targetOffer = state.listingOffers[idxToEdit];
       state.listingOffers[idx] = { ...targetOffer, ...action.editedOffer };
       return {
         ...state,
-        listingOffers: state.listingOffers.slice(),
+        listingOffers: JSON.parse(JSON.stringify(state.listingOffers)),
         editOfferLoading: false,
       };
     case EDIT_OFFER_FAILURE:

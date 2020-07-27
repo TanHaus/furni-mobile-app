@@ -1,4 +1,6 @@
 const jwtDecode = require("jwt-decode");
+import { Color } from "styles";
+import Toast from "react-native-root-toast";
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -25,6 +27,12 @@ const loginSuccess = ({ token, user }) => {
 };
 
 const loginFailure = () => {
+  Toast.show("Could not login. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: LOGIN_FAILURE,
   };
@@ -43,6 +51,12 @@ const logoutSuccess = () => {
 };
 
 const logoutFailure = () => {
+  Toast.show("Could not logout. Please try again!", {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.CENTER,
+    backgroundColor: Color.Validation.Red,
+    opacity: 1,
+  });
   return {
     type: LOGOUT_FAILURE,
   };

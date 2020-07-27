@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
+import { logoutUser } from "actions/auth";
 import MainTabNavScreen from "./MainTabNavScreen";
 import ListingScreen from "./listing/ListingScreen";
 import ListingOffersModal from "./listing/ListingOffersModal";
@@ -26,7 +27,10 @@ function MainScreen(props) {
       <Stack.Screen name="search" component={SearchScreen} />
       <Stack.Screen name="sort-and-filter" component={SortAndFilterScreen} />
       <Stack.Screen name="chat-session" component={ChatSessionScreen} />
-      <Stack.Screen name="add-listing-success" component={AddListingSuccessScreen} />
+      <Stack.Screen
+        name="add-listing-success"
+        component={AddListingSuccessScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -37,4 +41,11 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(MainScreen);
+function mapDispatchToProps(dispatch) {
+  return {
+    forceLogout: () => dispatch(logoutUser()),
+  };
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default withConnect(MainScreen);

@@ -20,16 +20,31 @@ function ListingScreen(props) {
 
   return (
     <SafeAreaViewWrapper>
-      <BackButton onPress={() => navigation.goBack()} />
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.title}
-      </CustomText.Regular>
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.price}
-      </CustomText.Regular>
-      <CustomText.Regular color={Color.Palette[4]}>
-        {listing.condition}
-      </CustomText.Regular>
+      <TitleContainer>
+        <BackButton onPress={() => navigation.goBack()} />
+        <ProfilePic source={require("../../assets/profiles/standard.png")} />
+        <CustomText.Large weight="bold">{"Furni"}</CustomText.Large>
+      </TitleContainer>
+      <ListingContainer>
+        {listing.picUrls && (
+          <Image
+            source={{ uri: listing.picUrls[0] }}
+            key={listing.picUrls[0]}
+            style={{
+              resizeMode: "contain",
+              height: 50,
+              width: 50,
+            }}
+          />
+        )}
+        <TextContainer>
+          <CustomText.Regular>{listing.title}</CustomText.Regular>
+          <CustomText.Regular weight="bold">
+            {`S\$${listing.price}`}
+          </CustomText.Regular>
+          <CustomText.Regular>{listing.itemCondition}</CustomText.Regular>
+        </TextContainer>
+      </ListingContainer>
       {listingOffers.map((offer) => (
         <TouchableOpacity
           key={offer.offerId}
@@ -94,4 +109,17 @@ const TextContainer = styled.View`
 
 const RegisterText = styled(CustomText.Small)`
   text-decoration-line: underline;
+`;
+
+const ProfilePic = styled.ImageBackground`
+  height: 30px;
+  width: 30px;
+  border-radius: 150px;
+  overflow: hidden;
+  margin: 0 10px;
+`;
+
+const ListingContainer = styled.View`
+  flex-direction: row;
+  margin: 15px 0;
 `;

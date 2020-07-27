@@ -12,10 +12,6 @@ import PurchasesScreen from "./settings/PurchasesScreen";
 const Stack = createStackNavigator();
 
 function ProfileMainScreen(props) {
-  const { navigation, isAuthenticated } = props;
-  if (!isAuthenticated) {
-    navigation.navigate("start");
-  }
   return (
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="profile-home" component={ProfileScreen} />
@@ -30,9 +26,7 @@ function ProfileMainScreen(props) {
 }
 
 function mapStateToProps(state) {
-  return {
-    isAuthenticated: state.auth.isAuthenticated,
-  };
+  return {};
 }
 
 export default connect(mapStateToProps)(ProfileMainScreen);
