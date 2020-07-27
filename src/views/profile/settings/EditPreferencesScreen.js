@@ -13,7 +13,13 @@ import { TextWeight } from "components/types";
 import { Color } from "styles";
 import { getTags } from "actions/tags";
 import { getUserPreferences, editUserPreferences } from "actions/users";
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 function EditPreferencesScreen(props) {
@@ -25,6 +31,8 @@ function EditPreferencesScreen(props) {
     loadTags,
     loadUserPreferences,
     submitUpdatePreferences,
+    getTagsLoading,
+    getUserPreferencesLoading,
   } = props;
 
   const [editUserPreferences, setEditUserPreferences] = useState(
@@ -84,6 +92,9 @@ function EditPreferencesScreen(props) {
           ))}
         </MultiSelect>
         <Button title="Set preferences" onPress={handleUpdatePreferences} />
+        {getTagsLoading && getUserPreferencesLoading && (
+          <StyledActivityIndicator size="large" />
+        )}
       </ScrollView>
     </SafeAreaViewWrapper>
   );
@@ -94,6 +105,8 @@ function mapStateToProps(state) {
     userId: state.auth.user.userId,
     tags: state.tags.tags,
     userPreferences: state.users.userPreferences,
+    getTagsLoading: state.tags.getTagsLoading,
+    getUserPreferencesLoading: state.users.getUserPreferencesLoading,
   };
 }
 
@@ -149,3 +162,14 @@ const styles = StyleSheet.create({
     color: Color.Palette[2],
   },
 });
+
+const StyledActivityIndicator = styled.ActivityIndicator`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: #f2f2f2;
+`;
