@@ -32,10 +32,10 @@ function ListingScreen(props) {
               source={require("../../assets/profiles/standard.png")}
             />
             <Container>
-              <CustomText.Regular>{`User: fARniture`}</CustomText.Regular>
+              <CustomText.Regular>{`User: /buyerName`}</CustomText.Regular>
               <CustomText.Regular>{`Offer Price: $${offer.priceBidded}`}</CustomText.Regular>
               <CustomText.Regular color={Color.Palette[3]}>
-                05/18/20
+                05/20/20
               </CustomText.Regular>
             </Container>
           </MainContainer>

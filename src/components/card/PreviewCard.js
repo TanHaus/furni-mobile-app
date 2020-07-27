@@ -19,7 +19,9 @@ export const PreviewCard = (props) => {
                 : "https://furni-s3-bucket.s3-ap-southeast-1.amazonaws.com/placeholder-furniture.png",
           }}
         />
-        <CustomText.Regular>{listing.title}</CustomText.Regular>
+        <Container>
+          <CustomText.Regular>{listing.title}</CustomText.Regular>
+        </Container>
         <Container>
           <CustomText.Regular weight="bold">
             ${listing.price}{" "}
@@ -48,4 +50,5 @@ const Image = styled.ImageBackground`
 const Container = styled.View`
   display: flex;
   flex-direction: row;
+  width: 160px;
 `;

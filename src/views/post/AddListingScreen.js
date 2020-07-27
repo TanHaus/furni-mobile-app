@@ -120,19 +120,11 @@ function AddScreen(props) {
       </Container>
       <Container>
         <Title>Suggested Furni Tags</Title>
-        <Input
-          value={listing.description}
-          placeholder=""
-          onChangeText={(text) => setListing({ ...listing, description: text })}
-        />
+        <Input value={""} placeholder="" onChangeText={null} />
       </Container>
       <Container>
         <Title>Add Furni Tags</Title>
-        <Input
-          value={listing.description}
-          placeholder=""
-          onChangeText={(text) => setListing({ ...listing, description: text })}
-        />
+        <Input value={""} placeholder="" onChangeText={null} />
       </Container>
       <Container>
         <Title>Delivery option</Title>

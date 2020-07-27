@@ -116,7 +116,7 @@ function ChatSessionScreen(props) {
           }
         />
         <CustomText.Large weight="bold">
-          {session ? session.sellerName : "fARniture"}
+          {session ? session.sellerName : "/sellerName"}
         </CustomText.Large>
       </TitleContainer>
       <ListingContainer>

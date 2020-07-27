@@ -1,5 +1,4 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Color } from "styles";
 import styled from "styled-components/native";
 import { Entypo } from "@expo/vector-icons";
@@ -27,15 +26,13 @@ export const MultiSelectOption = (props) => {
     </Container>
   );
 };
-//
-//
-// ---------------------------------------------------------------------------
+
+// =============================================================================
 // STYLING
-// ---------------------------------------------------------------------------
+// =============================================================================
 const Container = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   padding: 5px 5px 5px 10px;
   margin: 5px;

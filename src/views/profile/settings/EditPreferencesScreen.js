@@ -13,13 +13,7 @@ import { TextWeight } from "components/types";
 import { Color } from "styles";
 import { getTags } from "actions/tags";
 import { getUserPreferences, editUserPreferences } from "actions/users";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 function EditPreferencesScreen(props) {
@@ -74,12 +68,12 @@ function EditPreferencesScreen(props) {
         <BackButton onPress={() => navigation.goBack()} />
         <Title weight={TextWeight.Bold}>PREFERENCES</Title>
       </TitleContainer>
+      <Container>
+        <CustomText.Regular color={Color.Palette[4]}>
+          Select tags that interest you
+        </CustomText.Regular>
+      </Container>
       <ScrollView>
-        <Container>
-          <CustomText.Regular color={Color.Palette[4]}>
-            Select tags that interest you
-          </CustomText.Regular>
-        </Container>
         <MultiSelect>
           {tags.map((tag) => (
             <MultiSelectOption
@@ -91,11 +85,11 @@ function EditPreferencesScreen(props) {
             />
           ))}
         </MultiSelect>
-        <Button title="Set preferences" onPress={handleUpdatePreferences} />
-        {getTagsLoading && getUserPreferencesLoading && (
-          <StyledActivityIndicator size="large" />
-        )}
       </ScrollView>
+      <Button title="Set preferences" onPress={handleUpdatePreferences} />
+      {getTagsLoading && getUserPreferencesLoading && (
+        <StyledActivityIndicator size="large" />
+      )}
     </SafeAreaViewWrapper>
   );
 }
@@ -136,7 +130,7 @@ const Title = styled(CustomText.Large)`
 `;
 
 const Container = styled.View`
-  margin-top: 30px;
+  margin: 10px;
 `;
 
 const styles = StyleSheet.create({

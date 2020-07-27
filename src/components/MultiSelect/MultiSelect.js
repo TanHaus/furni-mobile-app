@@ -7,12 +7,11 @@ export const MultiSelect = (props) => {
   return <MultiSelectWrapper>{children}</MultiSelectWrapper>;
 };
 
-// ---------------------------------------------------------------------------
+// =============================================================================
 // STYLING
-// ---------------------------------------------------------------------------
+// =============================================================================
 const MultiSelectWrapper = styled.View`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
 `;

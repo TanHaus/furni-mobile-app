@@ -15,7 +15,7 @@ export const ProfileHeader = (props) => {
         <Image source={require("../assets/listings/purple-chair.png")} />
         <TextContainer>
           <CustomText.Large weight={TextWeight.SemiBold}>
-            Furni
+            /username
           </CustomText.Large>
           <CustomText.Regular>★★★★★</CustomText.Regular>
         </TextContainer>

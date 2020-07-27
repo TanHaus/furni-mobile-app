@@ -125,13 +125,11 @@ function ListingScreen(props) {
             size={35}
             onPress={null}
           />
-          <CustomText.Regular weight="bold">20</CustomText.Regular>
+          <CustomText.Regular weight="bold">0</CustomText.Regular>
           {renderButton()}
         </Container>
 
-        <Description>
-          Faux leather with timbre frames. Perfect for any customer.
-        </Description>
+        <Description>{listing.description}</Description>
         <ProfileDescription>
           <ProfilePic
             source={require("../../assets/listings/purple-chair.png")}
@@ -139,7 +137,7 @@ function ListingScreen(props) {
           <TextContainer>
             <CustomText.Large weight={TextWeight.Bold}>SELLER</CustomText.Large>
             <CustomText.Large weight={TextWeight.SemiBold}>
-              Furni
+              /sellerName
             </CustomText.Large>
             <CustomText.Regular>★★★★★</CustomText.Regular>
           </TextContainer>
